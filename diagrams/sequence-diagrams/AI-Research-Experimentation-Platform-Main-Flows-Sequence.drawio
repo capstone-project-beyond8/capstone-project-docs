@@ -1,0 +1,1502 @@
+<?xml version='1.0' encoding='utf-8'?>
+<mxfile host="app.diagrams.net" version="26.0.0" type="device">
+  <diagram id="uc-01" name="UC-01 Authenticate - Main Flow">
+    <mxGraphModel dx="800" dy="600" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="860" pageHeight="1000" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="page_title" value="UC-01 Authenticate - Main Flow" style="text;html=1;align=left;verticalAlign=middle;fontFamily=Helvetica;fontSize=18;fontStyle=1;fontColor=#1e3a5f;" vertex="1" parent="1">
+          <mxGeometry x="40" y="0" width="780" height="24" as="geometry" />
+        </mxCell>
+        <mxCell id="page_notation" value="Solid = call / request  ·  grey dashed = return  ·  vertical order = time" style="text;html=1;align=left;verticalAlign=middle;fontFamily=Helvetica;fontSize=10;fontColor=#6b7280;" vertex="1" parent="1">
+          <mxGeometry x="40" y="25" width="780" height="15" as="geometry" />
+        </mxCell>
+        <mxCell id="user" value="User" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;size=40;participant=umlActor;verticalAlign=bottom;spacingBottom=-10;labelBackgroundColor=#ffffff;" vertex="1" parent="1">
+          <mxGeometry x="70" y="40" width="20" height="430" as="geometry" />
+        </mxCell>
+        <mxCell id="web_app" value="Web App" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;size=40;" vertex="1" parent="1">
+          <mxGeometry x="240" y="40" width="80" height="430" as="geometry" />
+        </mxCell>
+        <mxCell id="auth" value="Auth Service" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;size=40;" vertex="1" parent="1">
+          <mxGeometry x="440" y="40" width="80" height="430" as="geometry" />
+        </mxCell>
+        <mxCell id="workspace" value="Workspace Service" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;size=40;" vertex="1" parent="1">
+          <mxGeometry x="640" y="40" width="80" height="430" as="geometry" />
+        </mxCell>
+        <mxCell id="act0" value="" style="html=1;points=[];perimeter=orthogonalPerimeter;outlineConnect=0;fillColor=#ffffff;" vertex="1" parent="auth">
+          <mxGeometry x="36" y="140" width="8" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="act1" value="" style="html=1;points=[];perimeter=orthogonalPerimeter;outlineConnect=0;fillColor=#ffffff;" vertex="1" parent="workspace">
+          <mxGeometry x="36" y="240" width="8" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="act2" value="" style="html=1;points=[];perimeter=orthogonalPerimeter;outlineConnect=0;fillColor=#ffffff;" vertex="1" parent="web_app">
+          <mxGeometry x="36" y="90" width="8" height="250" as="geometry" />
+        </mxCell>
+        <mxCell id="m0" value="01. Submit credential" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;exitX=0.5;exitY=0.2093;entryX=0;entryY=0.0;" edge="1" parent="1" source="user" target="act2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="m1" value="02. Authenticate" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;exitX=1;exitY=0.2;entryX=0;entryY=0.0;" edge="1" parent="1" source="act2" target="act0">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="m2" value="03. Session / token" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;curved=0;rounded=0;strokeColor=#999999;fontColor=#999999;exitX=0;exitY=1.0;entryX=1;entryY=0.4;" edge="1" parent="1" source="act0" target="act2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="m3" value="04. Load roles + project memberships" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;exitX=1;exitY=0.6;entryX=0;entryY=0.0;" edge="1" parent="1" source="act2" target="act1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="m4" value="05. Workspace context" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;curved=0;rounded=0;strokeColor=#999999;fontColor=#999999;exitX=0;exitY=1.0;entryX=1;entryY=0.8;" edge="1" parent="1" source="act1" target="act2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="m5" value="06. Open suitable workspace" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;curved=0;rounded=0;strokeColor=#999999;fontColor=#999999;exitX=0;exitY=1.0;entryX=0.5;entryY=0.7907;" edge="1" parent="1" source="act2" target="user">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="uc-02" name="UC-02 Create / Manage Research Project - Main Flow">
+    <mxGraphModel dx="800" dy="600" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="890" pageHeight="1000" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="page_title" value="UC-02 Create / Manage Research Project - Main Flow" style="text;html=1;align=left;verticalAlign=middle;fontFamily=Helvetica;fontSize=18;fontStyle=1;fontColor=#1e3a5f;" vertex="1" parent="1">
+          <mxGeometry x="40" y="0" width="810" height="24" as="geometry" />
+        </mxCell>
+        <mxCell id="page_notation" value="Solid = call / request  ·  grey dashed = return  ·  vertical order = time" style="text;html=1;align=left;verticalAlign=middle;fontFamily=Helvetica;fontSize=10;fontColor=#6b7280;" vertex="1" parent="1">
+          <mxGeometry x="40" y="25" width="810" height="15" as="geometry" />
+        </mxCell>
+        <mxCell id="user" value="User" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;size=40;participant=umlActor;verticalAlign=bottom;spacingBottom=-10;labelBackgroundColor=#ffffff;" vertex="1" parent="1">
+          <mxGeometry x="70" y="40" width="20" height="500" as="geometry" />
+        </mxCell>
+        <mxCell id="web_app" value="Web App" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;size=40;" vertex="1" parent="1">
+          <mxGeometry x="250" y="40" width="80" height="500" as="geometry" />
+        </mxCell>
+        <mxCell id="project" value="Project Service" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;size=40;" vertex="1" parent="1">
+          <mxGeometry x="460" y="40" width="80" height="500" as="geometry" />
+        </mxCell>
+        <mxCell id="membership" value="Membership Service" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;size=40;" vertex="1" parent="1">
+          <mxGeometry x="670" y="40" width="80" height="500" as="geometry" />
+        </mxCell>
+        <mxCell id="act0" value="" style="html=1;points=[];perimeter=orthogonalPerimeter;outlineConnect=0;fillColor=#ffffff;" vertex="1" parent="membership">
+          <mxGeometry x="36" y="260" width="8" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="act1" value="" style="html=1;points=[];perimeter=orthogonalPerimeter;outlineConnect=0;fillColor=#ffffff;" vertex="1" parent="project">
+          <mxGeometry x="36" y="140" width="8" height="220" as="geometry" />
+        </mxCell>
+        <mxCell id="act2" value="" style="html=1;points=[];perimeter=orthogonalPerimeter;outlineConnect=0;fillColor=#ffffff;" vertex="1" parent="web_app">
+          <mxGeometry x="36" y="90" width="8" height="320" as="geometry" />
+        </mxCell>
+        <mxCell id="m0" value="01. Submit project details&#10;Name, domain, objective, tags" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;exitX=0.5;exitY=0.18;entryX=0;entryY=0.0;" edge="1" parent="1" source="user" target="act2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="m1" value="02. Validate input" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;exitX=1;exitY=0.1562;entryX=0;entryY=0.0;" edge="1" parent="1" source="act2" target="act1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="m2" value="03. Create Project" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;exitX=1;exitY=0.2273;entryX=1;entryY=0.3636;" edge="1" parent="1" source="act1" target="act1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="560" y="230" />
+              <mxPoint x="560" y="260" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m3" value="04. Assign Owner / Project Manager" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;exitX=1;exitY=0.5455;entryX=0;entryY=0.0;" edge="1" parent="1" source="act1" target="act0">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="m4" value="05. Membership saved" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;curved=0;rounded=0;strokeColor=#999999;fontColor=#999999;exitX=0;exitY=1.0;entryX=1;entryY=0.7727;" edge="1" parent="1" source="act0" target="act1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="m5" value="06. Project + membership saved" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;curved=0;rounded=0;strokeColor=#999999;fontColor=#999999;exitX=0;exitY=1.0;entryX=1;entryY=0.8438;" edge="1" parent="1" source="act1" target="act2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="m6" value="07. Open Project Dashboard" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;curved=0;rounded=0;strokeColor=#999999;fontColor=#999999;exitX=0;exitY=1.0;entryX=0.5;entryY=0.82;" edge="1" parent="1" source="act2" target="user">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="uc-03" name="UC-03 Manage Project Members - Main Flow">
+    <mxGraphModel dx="800" dy="600" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="890" pageHeight="1000" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="page_title" value="UC-03 Manage Project Members - Main Flow" style="text;html=1;align=left;verticalAlign=middle;fontFamily=Helvetica;fontSize=18;fontStyle=1;fontColor=#1e3a5f;" vertex="1" parent="1">
+          <mxGeometry x="40" y="0" width="810" height="24" as="geometry" />
+        </mxCell>
+        <mxCell id="page_notation" value="Solid = call / request  ·  grey dashed = return  ·  vertical order = time" style="text;html=1;align=left;verticalAlign=middle;fontFamily=Helvetica;fontSize=10;fontColor=#6b7280;" vertex="1" parent="1">
+          <mxGeometry x="40" y="25" width="810" height="15" as="geometry" />
+        </mxCell>
+        <mxCell id="pm" value="Project Manager" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;size=40;participant=umlActor;verticalAlign=bottom;spacingBottom=-10;labelBackgroundColor=#ffffff;" vertex="1" parent="1">
+          <mxGeometry x="70" y="40" width="20" height="480" as="geometry" />
+        </mxCell>
+        <mxCell id="web_app" value="Web App" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;size=40;" vertex="1" parent="1">
+          <mxGeometry x="250" y="40" width="80" height="480" as="geometry" />
+        </mxCell>
+        <mxCell id="membership" value="Membership Service" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;size=40;" vertex="1" parent="1">
+          <mxGeometry x="460" y="40" width="80" height="480" as="geometry" />
+        </mxCell>
+        <mxCell id="permission" value="Permission Service" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;size=40;" vertex="1" parent="1">
+          <mxGeometry x="670" y="40" width="80" height="480" as="geometry" />
+        </mxCell>
+        <mxCell id="act0" value="" style="html=1;points=[];perimeter=orthogonalPerimeter;outlineConnect=0;fillColor=#ffffff;" vertex="1" parent="permission">
+          <mxGeometry x="36" y="240" width="8" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="act1" value="" style="html=1;points=[];perimeter=orthogonalPerimeter;outlineConnect=0;fillColor=#ffffff;" vertex="1" parent="membership">
+          <mxGeometry x="36" y="190" width="8" height="150" as="geometry" />
+        </mxCell>
+        <mxCell id="act2" value="" style="html=1;points=[];perimeter=orthogonalPerimeter;outlineConnect=0;fillColor=#ffffff;" vertex="1" parent="web_app">
+          <mxGeometry x="36" y="90" width="8" height="300" as="geometry" />
+        </mxCell>
+        <mxCell id="m0" value="01. Open Members" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;exitX=0.5;exitY=0.1875;entryX=0;entryY=0.0;" edge="1" parent="1" source="pm" target="act2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="m1" value="02. Add member + choose user" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;exitX=0.5;exitY=0.2917;entryX=0;entryY=0.1667;" edge="1" parent="1" source="pm" target="act2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="m2" value="03. Save user + project role" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;exitX=1;exitY=0.3333;entryX=0;entryY=0.0;" edge="1" parent="1" source="act2" target="act1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="m3" value="04. Apply effective permission" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;exitX=1;exitY=0.3333;entryX=0;entryY=0.0;" edge="1" parent="1" source="act1" target="act0">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="m4" value="05. Permission active" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;curved=0;rounded=0;strokeColor=#999999;fontColor=#999999;exitX=0;exitY=1.0;entryX=1;entryY=0.6667;" edge="1" parent="1" source="act0" target="act1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="m5" value="06. Member + permission saved" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;curved=0;rounded=0;strokeColor=#999999;fontColor=#999999;exitX=0;exitY=1.0;entryX=1;entryY=0.8333;" edge="1" parent="1" source="act1" target="act2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="m6" value="07. Refresh member list" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;curved=0;rounded=0;strokeColor=#999999;fontColor=#999999;exitX=0;exitY=1.0;entryX=0.5;entryY=0.8125;" edge="1" parent="1" source="act2" target="pm">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="uc-04" name="UC-04 Upload &amp; Validate Dataset - Main Flow">
+    <mxGraphModel dx="800" dy="600" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1060" pageHeight="1000" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="page_title" value="UC-04 Upload &amp; Validate Dataset - Main Flow" style="text;html=1;align=left;verticalAlign=middle;fontFamily=Helvetica;fontSize=18;fontStyle=1;fontColor=#1e3a5f;" vertex="1" parent="1">
+          <mxGeometry x="40" y="0" width="980" height="24" as="geometry" />
+        </mxCell>
+        <mxCell id="page_notation" value="Solid = call / request  ·  grey dashed = return  ·  vertical order = time" style="text;html=1;align=left;verticalAlign=middle;fontFamily=Helvetica;fontSize=10;fontColor=#6b7280;" vertex="1" parent="1">
+          <mxGeometry x="40" y="25" width="980" height="15" as="geometry" />
+        </mxCell>
+        <mxCell id="researcher" value="Researcher" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;size=40;participant=umlActor;verticalAlign=bottom;spacingBottom=-10;labelBackgroundColor=#ffffff;" vertex="1" parent="1">
+          <mxGeometry x="70" y="40" width="20" height="670" as="geometry" />
+        </mxCell>
+        <mxCell id="web_app" value="Web App" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;size=40;" vertex="1" parent="1">
+          <mxGeometry x="240" y="40" width="80" height="670" as="geometry" />
+        </mxCell>
+        <mxCell id="dataset" value="Dataset Service" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;size=40;" vertex="1" parent="1">
+          <mxGeometry x="440" y="40" width="80" height="670" as="geometry" />
+        </mxCell>
+        <mxCell id="validator" value="Dataset Validator" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;size=40;" vertex="1" parent="1">
+          <mxGeometry x="640" y="40" width="80" height="670" as="geometry" />
+        </mxCell>
+        <mxCell id="profiler" value="Profiler / Queue" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;size=40;" vertex="1" parent="1">
+          <mxGeometry x="840" y="40" width="80" height="670" as="geometry" />
+        </mxCell>
+        <mxCell id="act0" value="" style="html=1;points=[];perimeter=orthogonalPerimeter;outlineConnect=0;fillColor=#ffffff;" vertex="1" parent="validator">
+          <mxGeometry x="36" y="330" width="8" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="act1" value="" style="html=1;points=[];perimeter=orthogonalPerimeter;outlineConnect=0;fillColor=#ffffff;" vertex="1" parent="profiler">
+          <mxGeometry x="36" y="430" width="8" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="act2" value="" style="html=1;points=[];perimeter=orthogonalPerimeter;outlineConnect=0;fillColor=#ffffff;" vertex="1" parent="dataset">
+          <mxGeometry x="36" y="140" width="8" height="390" as="geometry" />
+        </mxCell>
+        <mxCell id="act3" value="" style="html=1;points=[];perimeter=orthogonalPerimeter;outlineConnect=0;fillColor=#ffffff;" vertex="1" parent="web_app">
+          <mxGeometry x="36" y="90" width="8" height="490" as="geometry" />
+        </mxCell>
+        <mxCell id="m0" value="01. Select CSV / XLSX" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;exitX=0.5;exitY=0.1343;entryX=0;entryY=0.0;" edge="1" parent="1" source="researcher" target="act3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="m1" value="02. Upload file" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;exitX=1;exitY=0.102;entryX=0;entryY=0.0;" edge="1" parent="1" source="act3" target="act2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="m2" value="03. Store immutable original" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;exitX=1;exitY=0.1282;entryX=1;entryY=0.2051;" edge="1" parent="1" source="act2" target="act2">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="540" y="230" />
+              <mxPoint x="540" y="260" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m3" value="04. Create dataset ID + Version v1" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;exitX=1;exitY=0.3077;entryX=1;entryY=0.3846;" edge="1" parent="1" source="act2" target="act2">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="540" y="300" />
+              <mxPoint x="540" y="330" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m4" value="05. Validate readability, schema, types, size" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;exitX=1;exitY=0.4872;entryX=0;entryY=0.0;" edge="1" parent="1" source="act2" target="act0">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="m5" value="06. Validation pass" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;curved=0;rounded=0;strokeColor=#999999;fontColor=#999999;exitX=0;exitY=1.0;entryX=1;entryY=0.6154;" edge="1" parent="1" source="act0" target="act2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="m6" value="07. Enqueue profiling" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;exitX=1;exitY=0.7436;entryX=0;entryY=0.0;" edge="1" parent="1" source="act2" target="act1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="m7" value="08. Profiling queued / completed" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;curved=0;rounded=0;strokeColor=#999999;fontColor=#999999;exitX=0;exitY=1.0;entryX=1;entryY=0.8718;" edge="1" parent="1" source="act1" target="act2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="m8" value="09. Status = Validating / Profiled" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;curved=0;rounded=0;strokeColor=#999999;fontColor=#999999;exitX=0;exitY=1.0;entryX=1;entryY=0.898;" edge="1" parent="1" source="act2" target="act3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="m9" value="10. Show dataset status" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;curved=0;rounded=0;strokeColor=#999999;fontColor=#999999;exitX=0;exitY=1.0;entryX=0.5;entryY=0.8657;" edge="1" parent="1" source="act3" target="researcher">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="uc-05" name="UC-05 Review Profiling &amp; Data Card - Main Flow">
+    <mxGraphModel dx="800" dy="600" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1000" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="page_title" value="UC-05 Review Profiling &amp; Data Card - Main Flow" style="text;html=1;align=left;verticalAlign=middle;fontFamily=Helvetica;fontSize=18;fontStyle=1;fontColor=#1e3a5f;" vertex="1" parent="1">
+          <mxGeometry x="40" y="0" width="770" height="24" as="geometry" />
+        </mxCell>
+        <mxCell id="page_notation" value="Solid = call / request  ·  grey dashed = return  ·  vertical order = time" style="text;html=1;align=left;verticalAlign=middle;fontFamily=Helvetica;fontSize=10;fontColor=#6b7280;" vertex="1" parent="1">
+          <mxGeometry x="40" y="25" width="770" height="15" as="geometry" />
+        </mxCell>
+        <mxCell id="researcher" value="Researcher" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;size=40;participant=umlActor;verticalAlign=bottom;spacingBottom=-10;labelBackgroundColor=#ffffff;" vertex="1" parent="1">
+          <mxGeometry x="70" y="40" width="20" height="580" as="geometry" />
+        </mxCell>
+        <mxCell id="web_app" value="Web App" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;size=40;" vertex="1" parent="1">
+          <mxGeometry x="230" y="40" width="80" height="580" as="geometry" />
+        </mxCell>
+        <mxCell id="dataset" value="Dataset Service" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;size=40;" vertex="1" parent="1">
+          <mxGeometry x="420" y="40" width="80" height="580" as="geometry" />
+        </mxCell>
+        <mxCell id="profiler" value="Profiler" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;size=40;" vertex="1" parent="1">
+          <mxGeometry x="610" y="40" width="80" height="580" as="geometry" />
+        </mxCell>
+        <mxCell id="act0" value="" style="html=1;points=[];perimeter=orthogonalPerimeter;outlineConnect=0;fillColor=#ffffff;" vertex="1" parent="profiler">
+          <mxGeometry x="36" y="190" width="8" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="act1" value="" style="html=1;points=[];perimeter=orthogonalPerimeter;outlineConnect=0;fillColor=#ffffff;" vertex="1" parent="dataset">
+          <mxGeometry x="36" y="140" width="8" height="150" as="geometry" />
+        </mxCell>
+        <mxCell id="act2" value="" style="html=1;points=[];perimeter=orthogonalPerimeter;outlineConnect=0;fillColor=#ffffff;" vertex="1" parent="web_app">
+          <mxGeometry x="36" y="90" width="8" height="250" as="geometry" />
+        </mxCell>
+        <mxCell id="act3" value="" style="html=1;points=[];perimeter=orthogonalPerimeter;outlineConnect=0;fillColor=#ffffff;" vertex="1" parent="dataset">
+          <mxGeometry x="36" y="440" width="8" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="act4" value="" style="html=1;points=[];perimeter=orthogonalPerimeter;outlineConnect=0;fillColor=#ffffff;" vertex="1" parent="web_app">
+          <mxGeometry x="36" y="390" width="8" height="150" as="geometry" />
+        </mxCell>
+        <mxCell id="m0" value="01. Open dataset detail" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;exitX=0.5;exitY=0.1552;entryX=0;entryY=0.0;" edge="1" parent="1" source="researcher" target="act2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="m1" value="02. Load profile + Data Card" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;exitX=1;exitY=0.2;entryX=0;entryY=0.0;" edge="1" parent="1" source="act2" target="act1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="m2" value="03. Read profiling outputs" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;exitX=1;exitY=0.3333;entryX=0;entryY=0.0;" edge="1" parent="1" source="act1" target="act0">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="m3" value="04. Counts, types, missingness, warnings" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;curved=0;rounded=0;strokeColor=#999999;fontColor=#999999;exitX=0;exitY=1.0;entryX=1;entryY=0.6667;" edge="1" parent="1" source="act0" target="act1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="m4" value="05. Profile + Data Card" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;curved=0;rounded=0;strokeColor=#999999;fontColor=#999999;exitX=0;exitY=1.0;entryX=1;entryY=0.8;" edge="1" parent="1" source="act1" target="act2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="m5" value="06. Display statistics, distributions, warnings" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;curved=0;rounded=0;strokeColor=#999999;fontColor=#999999;exitX=0;exitY=1.0;entryX=0.5;entryY=0.5862;" edge="1" parent="1" source="act2" target="researcher">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="m6" value="07. Review warnings / add variable meaning" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;exitX=0.5;exitY=0.6724;entryX=0;entryY=0.0;" edge="1" parent="1" source="researcher" target="act4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="m7" value="08. Save domain meaning" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;exitX=1;exitY=0.3333;entryX=0;entryY=0.0;" edge="1" parent="1" source="act4" target="act3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="m8" value="09. Updated Data Card" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;curved=0;rounded=0;strokeColor=#999999;fontColor=#999999;exitX=0;exitY=1.0;entryX=1;entryY=0.6667;" edge="1" parent="1" source="act3" target="act4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="uc-06" name="UC-06 Review Data Quality, Cleaning &amp; Versioning - Main Flow">
+    <mxGraphModel dx="800" dy="600" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="890" pageHeight="1000" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="page_title" value="UC-06 Review Data Quality, Cleaning &amp; Versioning - Main Flow" style="text;html=1;align=left;verticalAlign=middle;fontFamily=Helvetica;fontSize=18;fontStyle=1;fontColor=#1e3a5f;" vertex="1" parent="1">
+          <mxGeometry x="40" y="0" width="810" height="24" as="geometry" />
+        </mxCell>
+        <mxCell id="page_notation" value="Solid = call / request  ·  grey dashed = return  ·  vertical order = time" style="text;html=1;align=left;verticalAlign=middle;fontFamily=Helvetica;fontSize=10;fontColor=#6b7280;" vertex="1" parent="1">
+          <mxGeometry x="40" y="25" width="810" height="15" as="geometry" />
+        </mxCell>
+        <mxCell id="agent" value="AI Research Agent" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;size=40;" vertex="1" parent="1">
+          <mxGeometry x="40" y="40" width="80" height="740" as="geometry" />
+        </mxCell>
+        <mxCell id="quality" value="Data Quality Service" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;size=40;" vertex="1" parent="1">
+          <mxGeometry x="260" y="40" width="80" height="740" as="geometry" />
+        </mxCell>
+        <mxCell id="web_app" value="Web App" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;size=40;" vertex="1" parent="1">
+          <mxGeometry x="480" y="40" width="80" height="740" as="geometry" />
+        </mxCell>
+        <mxCell id="researcher" value="Researcher" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;size=40;participant=umlActor;verticalAlign=bottom;spacingBottom=-10;labelBackgroundColor=#ffffff;" vertex="1" parent="1">
+          <mxGeometry x="730" y="40" width="20" height="740" as="geometry" />
+        </mxCell>
+        <mxCell id="act0" value="" style="html=1;points=[];perimeter=orthogonalPerimeter;outlineConnect=0;fillColor=#ffffff;" vertex="1" parent="quality">
+          <mxGeometry x="36" y="90" width="8" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="act1" value="" style="html=1;points=[];perimeter=orthogonalPerimeter;outlineConnect=0;fillColor=#ffffff;" vertex="1" parent="web_app">
+          <mxGeometry x="36" y="190" width="8" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="act2" value="" style="html=1;points=[];perimeter=orthogonalPerimeter;outlineConnect=0;fillColor=#ffffff;" vertex="1" parent="quality">
+          <mxGeometry x="36" y="340" width="8" height="260" as="geometry" />
+        </mxCell>
+        <mxCell id="act3" value="" style="html=1;points=[];perimeter=orthogonalPerimeter;outlineConnect=0;fillColor=#ffffff;" vertex="1" parent="web_app">
+          <mxGeometry x="36" y="290" width="8" height="360" as="geometry" />
+        </mxCell>
+        <mxCell id="m0" value="01. Detect data issue" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;exitX=0.5;exitY=0.1216;entryX=0;entryY=0.0;" edge="1" parent="1" source="agent" target="act0">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="m1" value="02. Classify issue" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;curved=0;rounded=0;strokeColor=#999999;fontColor=#999999;exitX=0;exitY=1.0;entryX=0.5;entryY=0.1892;" edge="1" parent="1" source="act0" target="agent">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="m2" value="03. Create cleaning proposal&#10;Transformation + rationale + risk" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;exitX=0.5;exitY=0.2568;entryX=0;entryY=0.0;" edge="1" parent="1" source="agent" target="act1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="m3" value="04. Show affected rows / columns + information loss" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;curved=0;rounded=0;strokeColor=#999999;fontColor=#999999;exitX=1;exitY=1.0;entryX=0.5;entryY=0.3243;" edge="1" parent="1" source="act1" target="researcher">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="m4" value="05. Approve cleaning proposal" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;exitX=0.5;exitY=0.3919;entryX=1;entryY=0.0;" edge="1" parent="1" source="researcher" target="act3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="m5" value="06. Save cleaning decision" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;exitX=0;exitY=0.1389;entryX=1;entryY=0.0;" edge="1" parent="1" source="act3" target="act2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="m6" value="07. Execute approved transformation" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;exitX=1;exitY=0.1923;entryX=1;entryY=0.3077;" edge="1" parent="1" source="act2" target="act2">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="360" y="430" />
+              <mxPoint x="360" y="460" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m7" value="08. Create new Dataset Version" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;exitX=1;exitY=0.4615;entryX=1;entryY=0.5769;" edge="1" parent="1" source="act2" target="act2">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="360" y="500" />
+              <mxPoint x="360" y="530" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m8" value="09. Regenerate Data Card" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;exitX=1;exitY=0.7308;entryX=1;entryY=0.8462;" edge="1" parent="1" source="act2" target="act2">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="360" y="570" />
+              <mxPoint x="360" y="600" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m9" value="10. Version + Data Card ready" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;curved=0;rounded=0;strokeColor=#999999;fontColor=#999999;exitX=1;exitY=1.0;entryX=0;entryY=0.8611;" edge="1" parent="1" source="act2" target="act3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="m10" value="11. Show updated dataset state" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;curved=0;rounded=0;strokeColor=#999999;fontColor=#999999;exitX=1;exitY=1.0;entryX=0.5;entryY=0.8784;" edge="1" parent="1" source="act3" target="researcher">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="uc-07" name="UC-07 Define Research Question &amp; Context - Main Flow">
+    <mxGraphModel dx="800" dy="600" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1040" pageHeight="1000" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="page_title" value="UC-07 Define Research Question &amp; Context - Main Flow" style="text;html=1;align=left;verticalAlign=middle;fontFamily=Helvetica;fontSize=18;fontStyle=1;fontColor=#1e3a5f;" vertex="1" parent="1">
+          <mxGeometry x="40" y="0" width="960" height="24" as="geometry" />
+        </mxCell>
+        <mxCell id="page_notation" value="Solid = call / request  ·  grey dashed = return  ·  vertical order = time" style="text;html=1;align=left;verticalAlign=middle;fontFamily=Helvetica;fontSize=10;fontColor=#6b7280;" vertex="1" parent="1">
+          <mxGeometry x="40" y="25" width="960" height="15" as="geometry" />
+        </mxCell>
+        <mxCell id="researcher" value="Researcher" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;size=40;participant=umlActor;verticalAlign=bottom;spacingBottom=-10;labelBackgroundColor=#ffffff;" vertex="1" parent="1">
+          <mxGeometry x="70" y="40" width="20" height="500" as="geometry" />
+        </mxCell>
+        <mxCell id="web_app" value="Web App" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;size=40;" vertex="1" parent="1">
+          <mxGeometry x="300" y="40" width="80" height="500" as="geometry" />
+        </mxCell>
+        <mxCell id="rq_service" value="Research Question Service" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;size=40;" vertex="1" parent="1">
+          <mxGeometry x="560" y="40" width="80" height="500" as="geometry" />
+        </mxCell>
+        <mxCell id="agent" value="AI Research Agent" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;size=40;" vertex="1" parent="1">
+          <mxGeometry x="820" y="40" width="80" height="500" as="geometry" />
+        </mxCell>
+        <mxCell id="act0" value="" style="html=1;points=[];perimeter=orthogonalPerimeter;outlineConnect=0;fillColor=#ffffff;" vertex="1" parent="rq_service">
+          <mxGeometry x="36" y="140" width="8" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="act1" value="" style="html=1;points=[];perimeter=orthogonalPerimeter;outlineConnect=0;fillColor=#ffffff;" vertex="1" parent="agent">
+          <mxGeometry x="36" y="310" width="8" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="act2" value="" style="html=1;points=[];perimeter=orthogonalPerimeter;outlineConnect=0;fillColor=#ffffff;" vertex="1" parent="web_app">
+          <mxGeometry x="36" y="90" width="8" height="320" as="geometry" />
+        </mxCell>
+        <mxCell id="m0" value="01. Create Research Question&#10;Question, goal, context, variables, constraints" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;exitX=0.5;exitY=0.18;entryX=0;entryY=0.0;" edge="1" parent="1" source="researcher" target="act2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="m1" value="02. Validate input" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;exitX=1;exitY=0.1562;entryX=0;entryY=0.0;" edge="1" parent="1" source="act2" target="act0">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="m2" value="03. Persist active question" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;exitX=1;exitY=0.4167;entryX=1;entryY=0.6667;" edge="1" parent="1" source="act0" target="act0">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="660" y="230" />
+              <mxPoint x="660" y="260" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m3" value="04. Active question saved" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;curved=0;rounded=0;strokeColor=#999999;fontColor=#999999;exitX=0;exitY=1.0;entryX=1;entryY=0.5312;" edge="1" parent="1" source="act0" target="act2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="m4" value="05. Provide research context" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;exitX=1;exitY=0.6875;entryX=0;entryY=0.0;" edge="1" parent="1" source="act2" target="act1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="m5" value="06. Context ready for hypothesis / plan" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;curved=0;rounded=0;strokeColor=#999999;fontColor=#999999;exitX=0;exitY=1.0;entryX=1;entryY=0.8438;" edge="1" parent="1" source="act1" target="act2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="m6" value="07. Show active Research Question" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;curved=0;rounded=0;strokeColor=#999999;fontColor=#999999;exitX=0;exitY=1.0;entryX=0.5;entryY=0.82;" edge="1" parent="1" source="act2" target="researcher">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="uc-08" name="UC-08 Define / Confirm Initial H0 &amp; H1 - Main Flow">
+    <mxGraphModel dx="800" dy="600" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1000" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="page_title" value="UC-08 Define / Confirm Initial H0 &amp; H1 - Main Flow" style="text;html=1;align=left;verticalAlign=middle;fontFamily=Helvetica;fontSize=18;fontStyle=1;fontColor=#1e3a5f;" vertex="1" parent="1">
+          <mxGeometry x="40" y="0" width="770" height="24" as="geometry" />
+        </mxCell>
+        <mxCell id="page_notation" value="Solid = call / request  ·  grey dashed = return  ·  vertical order = time" style="text;html=1;align=left;verticalAlign=middle;fontFamily=Helvetica;fontSize=10;fontColor=#6b7280;" vertex="1" parent="1">
+          <mxGeometry x="40" y="25" width="770" height="15" as="geometry" />
+        </mxCell>
+        <mxCell id="researcher" value="Researcher" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;size=40;participant=umlActor;verticalAlign=bottom;spacingBottom=-10;labelBackgroundColor=#ffffff;" vertex="1" parent="1">
+          <mxGeometry x="70" y="40" width="20" height="400" as="geometry" />
+        </mxCell>
+        <mxCell id="web_app" value="Web App" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;size=40;" vertex="1" parent="1">
+          <mxGeometry x="250" y="40" width="80" height="400" as="geometry" />
+        </mxCell>
+        <mxCell id="hypothesis" value="Hypothesis Service" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;size=40;" vertex="1" parent="1">
+          <mxGeometry x="460" y="40" width="80" height="400" as="geometry" />
+        </mxCell>
+        <mxCell id="act0" value="" style="html=1;points=[];perimeter=orthogonalPerimeter;outlineConnect=0;fillColor=#ffffff;" vertex="1" parent="hypothesis">
+          <mxGeometry x="36" y="140" width="8" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="act1" value="" style="html=1;points=[];perimeter=orthogonalPerimeter;outlineConnect=0;fillColor=#ffffff;" vertex="1" parent="web_app">
+          <mxGeometry x="36" y="90" width="8" height="220" as="geometry" />
+        </mxCell>
+        <mxCell id="m0" value="01. Enter H0 + H1" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;exitX=0.5;exitY=0.225;entryX=0;entryY=0.0;" edge="1" parent="1" source="researcher" target="act1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="m1" value="02. Validate and save hypotheses" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;exitX=1;exitY=0.2273;entryX=0;entryY=0.0;" edge="1" parent="1" source="act1" target="act0">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="m2" value="03. Link hypotheses to Research Question" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;exitX=1;exitY=0.4167;entryX=1;entryY=0.6667;" edge="1" parent="1" source="act0" target="act0">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="560" y="230" />
+              <mxPoint x="560" y="260" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m3" value="04. Hypotheses saved; status = Unverified" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;curved=0;rounded=0;strokeColor=#999999;fontColor=#999999;exitX=0;exitY=1.0;entryX=1;entryY=0.7727;" edge="1" parent="1" source="act0" target="act1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="m4" value="05. Display confirmed H0 + H1" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;curved=0;rounded=0;strokeColor=#999999;fontColor=#999999;exitX=0;exitY=1.0;entryX=0.5;entryY=0.775;" edge="1" parent="1" source="act1" target="researcher">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="uc-09" name="UC-09 Generate Experiment Plan - Main Flow">
+    <mxGraphModel dx="800" dy="600" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="980" pageHeight="1000" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="page_title" value="UC-09 Generate Experiment Plan - Main Flow" style="text;html=1;align=left;verticalAlign=middle;fontFamily=Helvetica;fontSize=18;fontStyle=1;fontColor=#1e3a5f;" vertex="1" parent="1">
+          <mxGeometry x="40" y="0" width="900" height="24" as="geometry" />
+        </mxCell>
+        <mxCell id="page_notation" value="Solid = call / request  ·  grey dashed = return  ·  vertical order = time" style="text;html=1;align=left;verticalAlign=middle;fontFamily=Helvetica;fontSize=10;fontColor=#6b7280;" vertex="1" parent="1">
+          <mxGeometry x="40" y="25" width="900" height="15" as="geometry" />
+        </mxCell>
+        <mxCell id="researcher" value="Researcher" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;size=40;participant=umlActor;verticalAlign=bottom;spacingBottom=-10;labelBackgroundColor=#ffffff;" vertex="1" parent="1">
+          <mxGeometry x="70" y="40" width="20" height="650" as="geometry" />
+        </mxCell>
+        <mxCell id="web_app" value="Web App" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;size=40;" vertex="1" parent="1">
+          <mxGeometry x="280" y="40" width="80" height="650" as="geometry" />
+        </mxCell>
+        <mxCell id="agent" value="AI Research Agent" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;size=40;" vertex="1" parent="1">
+          <mxGeometry x="520" y="40" width="80" height="650" as="geometry" />
+        </mxCell>
+        <mxCell id="context" value="Research Context Store" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;size=40;" vertex="1" parent="1">
+          <mxGeometry x="760" y="40" width="80" height="650" as="geometry" />
+        </mxCell>
+        <mxCell id="act0" value="" style="html=1;points=[];perimeter=orthogonalPerimeter;outlineConnect=0;fillColor=#ffffff;" vertex="1" parent="context">
+          <mxGeometry x="36" y="190" width="8" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="act1" value="" style="html=1;points=[];perimeter=orthogonalPerimeter;outlineConnect=0;fillColor=#ffffff;" vertex="1" parent="agent">
+          <mxGeometry x="36" y="140" width="8" height="220" as="geometry" />
+        </mxCell>
+        <mxCell id="act2" value="" style="html=1;points=[];perimeter=orthogonalPerimeter;outlineConnect=0;fillColor=#ffffff;" vertex="1" parent="web_app">
+          <mxGeometry x="36" y="90" width="8" height="320" as="geometry" />
+        </mxCell>
+        <mxCell id="act3" value="" style="html=1;points=[];perimeter=orthogonalPerimeter;outlineConnect=0;fillColor=#ffffff;" vertex="1" parent="agent">
+          <mxGeometry x="36" y="510" width="8" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="act4" value="" style="html=1;points=[];perimeter=orthogonalPerimeter;outlineConnect=0;fillColor=#ffffff;" vertex="1" parent="web_app">
+          <mxGeometry x="36" y="460" width="8" height="150" as="geometry" />
+        </mxCell>
+        <mxCell id="m0" value="01. Select Generate Experiment Plan" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;exitX=0.5;exitY=0.1385;entryX=0;entryY=0.0;" edge="1" parent="1" source="researcher" target="act2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="m1" value="02. Start plan generation" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;exitX=1;exitY=0.1562;entryX=0;entryY=0.0;" edge="1" parent="1" source="act2" target="act1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="m2" value="03. Load RQ, hypothesis, Data Card, history" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;exitX=1;exitY=0.2273;entryX=0;entryY=0.0;" edge="1" parent="1" source="act1" target="act0">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="m3" value="04. Structured research context" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;curved=0;rounded=0;strokeColor=#999999;fontColor=#999999;exitX=0;exitY=1.0;entryX=1;entryY=0.4545;" edge="1" parent="1" source="act0" target="act1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="m4" value="05. Generate plan&#10;Objective, variables, methods, checks, risks, stop conditions" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;exitX=1;exitY=0.6818;entryX=1;entryY=0.8182;" edge="1" parent="1" source="act1" target="act1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="620" y="330" />
+              <mxPoint x="620" y="360" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m5" value="06. Experiment Plan" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;curved=0;rounded=0;strokeColor=#999999;fontColor=#999999;exitX=0;exitY=1.0;entryX=1;entryY=0.8438;" edge="1" parent="1" source="act1" target="act2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="m6" value="07. Display plan for review" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;curved=0;rounded=0;strokeColor=#999999;fontColor=#999999;exitX=0;exitY=1.0;entryX=0.5;entryY=0.6308;" edge="1" parent="1" source="act2" target="researcher">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="m7" value="08. Accept experiment plan" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;exitX=0.5;exitY=0.7077;entryX=0;entryY=0.0;" edge="1" parent="1" source="researcher" target="act4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="m8" value="09. Confirm accepted plan" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;exitX=1;exitY=0.3333;entryX=0;entryY=0.0;" edge="1" parent="1" source="act4" target="act3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="m9" value="10. Plan state = Accepted" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;curved=0;rounded=0;strokeColor=#999999;fontColor=#999999;exitX=0;exitY=1.0;entryX=1;entryY=0.6667;" edge="1" parent="1" source="act3" target="act4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="uc-10" name="UC-10 Review Candidate Method &amp; Assumption Checks - Main Flow">
+    <mxGraphModel dx="800" dy="600" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="860" pageHeight="1000" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="page_title" value="UC-10 Review Candidate Method &amp; Assumption Checks - Main Flow" style="text;html=1;align=left;verticalAlign=middle;fontFamily=Helvetica;fontSize=18;fontStyle=1;fontColor=#1e3a5f;" vertex="1" parent="1">
+          <mxGeometry x="40" y="0" width="780" height="24" as="geometry" />
+        </mxCell>
+        <mxCell id="page_notation" value="Solid = call / request  ·  grey dashed = return  ·  vertical order = time" style="text;html=1;align=left;verticalAlign=middle;fontFamily=Helvetica;fontSize=10;fontColor=#6b7280;" vertex="1" parent="1">
+          <mxGeometry x="40" y="25" width="780" height="15" as="geometry" />
+        </mxCell>
+        <mxCell id="researcher" value="Researcher" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;size=40;participant=umlActor;verticalAlign=bottom;spacingBottom=-10;labelBackgroundColor=#ffffff;" vertex="1" parent="1">
+          <mxGeometry x="70" y="40" width="20" height="640" as="geometry" />
+        </mxCell>
+        <mxCell id="agent" value="AI Research Agent" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;size=40;" vertex="1" parent="1">
+          <mxGeometry x="240" y="40" width="80" height="640" as="geometry" />
+        </mxCell>
+        <mxCell id="tool" value="Tool Layer" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;size=40;" vertex="1" parent="1">
+          <mxGeometry x="440" y="40" width="80" height="640" as="geometry" />
+        </mxCell>
+        <mxCell id="web_app" value="Web App" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;size=40;" vertex="1" parent="1">
+          <mxGeometry x="640" y="40" width="80" height="640" as="geometry" />
+        </mxCell>
+        <mxCell id="act0" value="" style="html=1;points=[];perimeter=orthogonalPerimeter;outlineConnect=0;fillColor=#ffffff;" vertex="1" parent="tool">
+          <mxGeometry x="36" y="190" width="8" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="act1" value="" style="html=1;points=[];perimeter=orthogonalPerimeter;outlineConnect=0;fillColor=#ffffff;" vertex="1" parent="agent">
+          <mxGeometry x="36" y="140" width="8" height="360" as="geometry" />
+        </mxCell>
+        <mxCell id="act2" value="" style="html=1;points=[];perimeter=orthogonalPerimeter;outlineConnect=0;fillColor=#ffffff;" vertex="1" parent="web_app">
+          <mxGeometry x="36" y="90" width="8" height="460" as="geometry" />
+        </mxCell>
+        <mxCell id="m0" value="01. Open candidate method review" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;exitX=0.5;exitY=0.1406;entryX=0;entryY=0.0;" edge="1" parent="1" source="researcher" target="act2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="m1" value="02. Generate candidate methods" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;exitX=0;exitY=0.1087;entryX=1;entryY=0.0;" edge="1" parent="1" source="act2" target="act1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="m2" value="03. Determine required assumptions" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;exitX=1;exitY=0.1389;entryX=0;entryY=0.0;" edge="1" parent="1" source="act1" target="act0">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="m3" value="04. Run assumption checks" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;exitX=1;exitY=0.4167;entryX=1;entryY=0.6667;" edge="1" parent="1" source="act0" target="act0">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="540" y="280" />
+              <mxPoint x="540" y="310" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m4" value="05. Assumption check results" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;curved=0;rounded=0;strokeColor=#999999;fontColor=#999999;exitX=0;exitY=1.0;entryX=1;entryY=0.4722;" edge="1" parent="1" source="act0" target="act1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="m5" value="06. Compare candidates" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;exitX=1;exitY=0.6111;entryX=1;entryY=0.6944;" edge="1" parent="1" source="act1" target="act1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="340" y="400" />
+              <mxPoint x="340" y="430" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m6" value="07. Select suitable method" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;exitX=1;exitY=0.8056;entryX=1;entryY=0.8889;" edge="1" parent="1" source="act1" target="act1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="340" y="470" />
+              <mxPoint x="340" y="500" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m7" value="08. Selected method + rationale" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;curved=0;rounded=0;strokeColor=#999999;fontColor=#999999;exitX=1;exitY=1.0;entryX=0;entryY=0.8913;" edge="1" parent="1" source="act1" target="act2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="m8" value="09. Display method and assumption results" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;curved=0;rounded=0;strokeColor=#999999;fontColor=#999999;exitX=0;exitY=1.0;entryX=0.5;entryY=0.8594;" edge="1" parent="1" source="act2" target="researcher">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="uc-11" name="UC-11 Execute Experiment - Main Flow">
+    <mxGraphModel dx="800" dy="600" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1410" pageHeight="1000" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="page_title" value="UC-11 Execute Experiment - Main Flow" style="text;html=1;align=left;verticalAlign=middle;fontFamily=Helvetica;fontSize=18;fontStyle=1;fontColor=#1e3a5f;" vertex="1" parent="1">
+          <mxGeometry x="40" y="0" width="1330" height="24" as="geometry" />
+        </mxCell>
+        <mxCell id="page_notation" value="Solid = call / request  ·  grey dashed = return  ·  vertical order = time" style="text;html=1;align=left;verticalAlign=middle;fontFamily=Helvetica;fontSize=10;fontColor=#6b7280;" vertex="1" parent="1">
+          <mxGeometry x="40" y="25" width="1330" height="15" as="geometry" />
+        </mxCell>
+        <mxCell id="researcher" value="Researcher" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;size=40;participant=umlActor;verticalAlign=bottom;spacingBottom=-10;labelBackgroundColor=#ffffff;" vertex="1" parent="1">
+          <mxGeometry x="70" y="40" width="20" height="720" as="geometry" />
+        </mxCell>
+        <mxCell id="web_app" value="Web App" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;size=40;" vertex="1" parent="1">
+          <mxGeometry x="270" y="40" width="80" height="720" as="geometry" />
+        </mxCell>
+        <mxCell id="agent" value="AI Research Agent" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;size=40;" vertex="1" parent="1">
+          <mxGeometry x="500" y="40" width="80" height="720" as="geometry" />
+        </mxCell>
+        <mxCell id="router" value="Tool Router" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;size=40;" vertex="1" parent="1">
+          <mxGeometry x="730" y="40" width="80" height="720" as="geometry" />
+        </mxCell>
+        <mxCell id="sandbox" value="Secure Sandbox" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;size=40;" vertex="1" parent="1">
+          <mxGeometry x="960" y="40" width="80" height="720" as="geometry" />
+        </mxCell>
+        <mxCell id="trace" value="Execution Trace Store" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;size=40;" vertex="1" parent="1">
+          <mxGeometry x="1190" y="40" width="80" height="720" as="geometry" />
+        </mxCell>
+        <mxCell id="act0" value="" style="html=1;points=[];perimeter=orthogonalPerimeter;outlineConnect=0;fillColor=#ffffff;" vertex="1" parent="sandbox">
+          <mxGeometry x="36" y="310" width="8" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="act1" value="" style="html=1;points=[];perimeter=orthogonalPerimeter;outlineConnect=0;fillColor=#ffffff;" vertex="1" parent="router">
+          <mxGeometry x="36" y="190" width="8" height="220" as="geometry" />
+        </mxCell>
+        <mxCell id="act2" value="" style="html=1;points=[];perimeter=orthogonalPerimeter;outlineConnect=0;fillColor=#ffffff;" vertex="1" parent="agent">
+          <mxGeometry x="36" y="140" width="8" height="440" as="geometry" />
+        </mxCell>
+        <mxCell id="act3" value="" style="html=1;points=[];perimeter=orthogonalPerimeter;outlineConnect=0;fillColor=#ffffff;" vertex="1" parent="web_app">
+          <mxGeometry x="36" y="90" width="8" height="540" as="geometry" />
+        </mxCell>
+        <mxCell id="act4" value="" style="html=1;points=[];perimeter=orthogonalPerimeter;outlineConnect=0;fillColor=#ffffff;" vertex="1" parent="trace">
+          <mxGeometry x="36" y="530" width="8" height="150" as="geometry" />
+        </mxCell>
+        <mxCell id="m0" value="01. Select Run Experiment" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;exitX=0.5;exitY=0.125;entryX=0;entryY=0.0;" edge="1" parent="1" source="researcher" target="act3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="m1" value="02. Start execution" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;exitX=1;exitY=0.0926;entryX=0;entryY=0.0;" edge="1" parent="1" source="act3" target="act2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="m2" value="03. Send execution request" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;exitX=1;exitY=0.1136;entryX=0;entryY=0.0;" edge="1" parent="1" source="act2" target="act1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="m3" value="04. Select tool" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;exitX=1;exitY=0.2273;entryX=1;entryY=0.3636;" edge="1" parent="1" source="act1" target="act1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="830" y="280" />
+              <mxPoint x="830" y="310" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m4" value="05. Run code / query" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;exitX=1;exitY=0.5455;entryX=0;entryY=0.0;" edge="1" parent="1" source="act1" target="act0">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="m5" value="06. Execution result + runtime metadata" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;curved=0;rounded=0;strokeColor=#999999;fontColor=#999999;exitX=0;exitY=1.0;entryX=1;entryY=0.7727;" edge="1" parent="1" source="act0" target="act1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="m6" value="07. Execution result" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;curved=0;rounded=0;strokeColor=#999999;fontColor=#999999;exitX=0;exitY=1.0;entryX=1;entryY=0.6136;" edge="1" parent="1" source="act1" target="act2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="m7" value="08. Observe result" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;exitX=1;exitY=0.7273;entryX=1;entryY=0.7955;" edge="1" parent="1" source="act2" target="act2">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="600" y="500" />
+              <mxPoint x="600" y="530" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m8" value="09. Save Execution Trace" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;exitX=1;exitY=0.8864;entryX=0;entryY=0.0;" edge="1" parent="1" source="act2" target="act4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="m9" value="10. Success -&gt; Experiment = Validating" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;curved=0;rounded=0;strokeColor=#999999;fontColor=#999999;exitX=0;exitY=1.0;entryX=1;entryY=0.9074;" edge="1" parent="1" source="act2" target="act3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="m10" value="11. Show execution result" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;curved=0;rounded=0;strokeColor=#999999;fontColor=#999999;exitX=0;exitY=1.0;entryX=0.5;entryY=0.875;" edge="1" parent="1" source="act3" target="researcher">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="uc-12" name="UC-12 Validate Experiment Result - Main Flow">
+    <mxGraphModel dx="800" dy="600" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="920" pageHeight="1000" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="page_title" value="UC-12 Validate Experiment Result - Main Flow" style="text;html=1;align=left;verticalAlign=middle;fontFamily=Helvetica;fontSize=18;fontStyle=1;fontColor=#1e3a5f;" vertex="1" parent="1">
+          <mxGeometry x="40" y="0" width="840" height="24" as="geometry" />
+        </mxCell>
+        <mxCell id="page_notation" value="Solid = call / request  ·  grey dashed = return  ·  vertical order = time" style="text;html=1;align=left;verticalAlign=middle;fontFamily=Helvetica;fontSize=10;fontColor=#6b7280;" vertex="1" parent="1">
+          <mxGeometry x="40" y="25" width="840" height="15" as="geometry" />
+        </mxCell>
+        <mxCell id="researcher" value="Researcher" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;size=40;participant=umlActor;verticalAlign=bottom;spacingBottom=-10;labelBackgroundColor=#ffffff;" vertex="1" parent="1">
+          <mxGeometry x="70" y="40" width="20" height="780" as="geometry" />
+        </mxCell>
+        <mxCell id="web_app" value="Web App" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;size=40;" vertex="1" parent="1">
+          <mxGeometry x="260" y="40" width="80" height="780" as="geometry" />
+        </mxCell>
+        <mxCell id="validator" value="Scientific Validator" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;size=40;" vertex="1" parent="1">
+          <mxGeometry x="480" y="40" width="80" height="780" as="geometry" />
+        </mxCell>
+        <mxCell id="store" value="Experiment Store" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;size=40;" vertex="1" parent="1">
+          <mxGeometry x="700" y="40" width="80" height="780" as="geometry" />
+        </mxCell>
+        <mxCell id="act0" value="" style="html=1;points=[];perimeter=orthogonalPerimeter;outlineConnect=0;fillColor=#ffffff;" vertex="1" parent="store">
+          <mxGeometry x="36" y="190" width="8" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="act1" value="" style="html=1;points=[];perimeter=orthogonalPerimeter;outlineConnect=0;fillColor=#ffffff;" vertex="1" parent="validator">
+          <mxGeometry x="36" y="140" width="8" height="500" as="geometry" />
+        </mxCell>
+        <mxCell id="act2" value="" style="html=1;points=[];perimeter=orthogonalPerimeter;outlineConnect=0;fillColor=#ffffff;" vertex="1" parent="web_app">
+          <mxGeometry x="36" y="90" width="8" height="600" as="geometry" />
+        </mxCell>
+        <mxCell id="m0" value="01. Request experiment-result validation" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;exitX=0.5;exitY=0.1154;entryX=0;entryY=0.0;" edge="1" parent="1" source="researcher" target="act2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="m1" value="02. Validate experiment result" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;exitX=1;exitY=0.0833;entryX=0;entryY=0.0;" edge="1" parent="1" source="act2" target="act1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="m2" value="03. Load execution result + artifacts" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;exitX=1;exitY=0.1;entryX=0;entryY=0.0;" edge="1" parent="1" source="act1" target="act0">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="m3" value="04. Run metadata + outputs" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;curved=0;rounded=0;strokeColor=#999999;fontColor=#999999;exitX=0;exitY=1.0;entryX=1;entryY=0.2;" edge="1" parent="1" source="act0" target="act1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="m4" value="05. Check consistency + assumptions + multiple testing" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;exitX=1;exitY=0.3;entryX=1;entryY=0.36;" edge="1" parent="1" source="act1" target="act1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="580" y="330" />
+              <mxPoint x="580" y="360" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m5" value="06. Calculate effect size + confidence interval" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;exitX=1;exitY=0.44;entryX=1;entryY=0.5;" edge="1" parent="1" source="act1" target="act1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="580" y="400" />
+              <mxPoint x="580" y="430" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m6" value="07. Check leakage, stability, replication" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;exitX=1;exitY=0.58;entryX=1;entryY=0.64;" edge="1" parent="1" source="act1" target="act1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="580" y="470" />
+              <mxPoint x="580" y="500" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m7" value="08. Check interpretation strength + causal language" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;exitX=1;exitY=0.72;entryX=1;entryY=0.78;" edge="1" parent="1" source="act1" target="act1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="580" y="540" />
+              <mxPoint x="580" y="570" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m8" value="09. Assign validation status" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;exitX=1;exitY=0.86;entryX=1;entryY=0.92;" edge="1" parent="1" source="act1" target="act1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="580" y="610" />
+              <mxPoint x="580" y="640" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m9" value="10. Validation status + scientific checks" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;curved=0;rounded=0;strokeColor=#999999;fontColor=#999999;exitX=0;exitY=1.0;entryX=1;entryY=0.9167;" edge="1" parent="1" source="act1" target="act2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="m10" value="11. Display validation result" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;curved=0;rounded=0;strokeColor=#999999;fontColor=#999999;exitX=0;exitY=1.0;entryX=0.5;entryY=0.8846;" edge="1" parent="1" source="act2" target="researcher">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="uc-13" name="UC-13 Review Research Finding - Main Flow">
+    <mxGraphModel dx="800" dy="600" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="890" pageHeight="1000" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="page_title" value="UC-13 Review Research Finding - Main Flow" style="text;html=1;align=left;verticalAlign=middle;fontFamily=Helvetica;fontSize=18;fontStyle=1;fontColor=#1e3a5f;" vertex="1" parent="1">
+          <mxGeometry x="40" y="0" width="810" height="24" as="geometry" />
+        </mxCell>
+        <mxCell id="page_notation" value="Solid = call / request  ·  grey dashed = return  ·  vertical order = time" style="text;html=1;align=left;verticalAlign=middle;fontFamily=Helvetica;fontSize=10;fontColor=#6b7280;" vertex="1" parent="1">
+          <mxGeometry x="40" y="25" width="810" height="15" as="geometry" />
+        </mxCell>
+        <mxCell id="researcher" value="Researcher" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;size=40;participant=umlActor;verticalAlign=bottom;spacingBottom=-10;labelBackgroundColor=#ffffff;" vertex="1" parent="1">
+          <mxGeometry x="70" y="40" width="20" height="650" as="geometry" />
+        </mxCell>
+        <mxCell id="web_app" value="Web App" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;size=40;" vertex="1" parent="1">
+          <mxGeometry x="250" y="40" width="80" height="650" as="geometry" />
+        </mxCell>
+        <mxCell id="agent" value="AI Research Agent" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;size=40;" vertex="1" parent="1">
+          <mxGeometry x="460" y="40" width="80" height="650" as="geometry" />
+        </mxCell>
+        <mxCell id="provenance" value="Provenance Service" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;size=40;" vertex="1" parent="1">
+          <mxGeometry x="670" y="40" width="80" height="650" as="geometry" />
+        </mxCell>
+        <mxCell id="act0" value="" style="html=1;points=[];perimeter=orthogonalPerimeter;outlineConnect=0;fillColor=#ffffff;" vertex="1" parent="provenance">
+          <mxGeometry x="36" y="260" width="8" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="act1" value="" style="html=1;points=[];perimeter=orthogonalPerimeter;outlineConnect=0;fillColor=#ffffff;" vertex="1" parent="agent">
+          <mxGeometry x="36" y="140" width="8" height="220" as="geometry" />
+        </mxCell>
+        <mxCell id="act2" value="" style="html=1;points=[];perimeter=orthogonalPerimeter;outlineConnect=0;fillColor=#ffffff;" vertex="1" parent="web_app">
+          <mxGeometry x="36" y="90" width="8" height="320" as="geometry" />
+        </mxCell>
+        <mxCell id="act3" value="" style="html=1;points=[];perimeter=orthogonalPerimeter;outlineConnect=0;fillColor=#ffffff;" vertex="1" parent="provenance">
+          <mxGeometry x="36" y="510" width="8" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="act4" value="" style="html=1;points=[];perimeter=orthogonalPerimeter;outlineConnect=0;fillColor=#ffffff;" vertex="1" parent="web_app">
+          <mxGeometry x="36" y="460" width="8" height="150" as="geometry" />
+        </mxCell>
+        <mxCell id="m0" value="01. Open finding review" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;exitX=0.5;exitY=0.1385;entryX=0;entryY=0.0;" edge="1" parent="1" source="researcher" target="act2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="m1" value="02. Create finding candidate" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;exitX=1;exitY=0.1562;entryX=0;entryY=0.0;" edge="1" parent="1" source="act2" target="act1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="m2" value="03. Build statement, hypothesis, experiment, evidence, CI" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;exitX=1;exitY=0.2273;entryX=1;entryY=0.3636;" edge="1" parent="1" source="act1" target="act1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="560" y="230" />
+              <mxPoint x="560" y="260" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m3" value="04. Check provenance completeness" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;exitX=1;exitY=0.5455;entryX=0;entryY=0.0;" edge="1" parent="1" source="act1" target="act0">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="m4" value="05. Provenance complete" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;curved=0;rounded=0;strokeColor=#999999;fontColor=#999999;exitX=0;exitY=1.0;entryX=1;entryY=0.7727;" edge="1" parent="1" source="act0" target="act1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="m5" value="06. Finding candidate + provenance" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;curved=0;rounded=0;strokeColor=#999999;fontColor=#999999;exitX=0;exitY=1.0;entryX=1;entryY=0.8438;" edge="1" parent="1" source="act1" target="act2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="m6" value="07. Display Finding for review" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;curved=0;rounded=0;strokeColor=#999999;fontColor=#999999;exitX=0;exitY=1.0;entryX=0.5;entryY=0.6308;" edge="1" parent="1" source="act2" target="researcher">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="m7" value="08. Mark finding Validated" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;exitX=0.5;exitY=0.7077;entryX=0;entryY=0.0;" edge="1" parent="1" source="researcher" target="act4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="m8" value="09. Save review decision" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;exitX=1;exitY=0.3333;entryX=0;entryY=0.0;" edge="1" parent="1" source="act4" target="act3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="m9" value="10. Finding state saved" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;curved=0;rounded=0;strokeColor=#999999;fontColor=#999999;exitX=0;exitY=1.0;entryX=1;entryY=0.6667;" edge="1" parent="1" source="act3" target="act4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="uc-14" name="UC-14 Generate / Review Next Hypothesis - Main Flow">
+    <mxGraphModel dx="800" dy="600" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="890" pageHeight="1000" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="page_title" value="UC-14 Generate / Review Next Hypothesis - Main Flow" style="text;html=1;align=left;verticalAlign=middle;fontFamily=Helvetica;fontSize=18;fontStyle=1;fontColor=#1e3a5f;" vertex="1" parent="1">
+          <mxGeometry x="40" y="0" width="810" height="24" as="geometry" />
+        </mxCell>
+        <mxCell id="page_notation" value="Solid = call / request  ·  grey dashed = return  ·  vertical order = time" style="text;html=1;align=left;verticalAlign=middle;fontFamily=Helvetica;fontSize=10;fontColor=#6b7280;" vertex="1" parent="1">
+          <mxGeometry x="40" y="25" width="810" height="15" as="geometry" />
+        </mxCell>
+        <mxCell id="researcher" value="Researcher" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;size=40;participant=umlActor;verticalAlign=bottom;spacingBottom=-10;labelBackgroundColor=#ffffff;" vertex="1" parent="1">
+          <mxGeometry x="70" y="40" width="20" height="650" as="geometry" />
+        </mxCell>
+        <mxCell id="web_app" value="Web App" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;size=40;" vertex="1" parent="1">
+          <mxGeometry x="250" y="40" width="80" height="650" as="geometry" />
+        </mxCell>
+        <mxCell id="agent" value="AI Research Agent" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;size=40;" vertex="1" parent="1">
+          <mxGeometry x="460" y="40" width="80" height="650" as="geometry" />
+        </mxCell>
+        <mxCell id="hypothesis" value="Hypothesis Service" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;size=40;" vertex="1" parent="1">
+          <mxGeometry x="670" y="40" width="80" height="650" as="geometry" />
+        </mxCell>
+        <mxCell id="act0" value="" style="html=1;points=[];perimeter=orthogonalPerimeter;outlineConnect=0;fillColor=#ffffff;" vertex="1" parent="hypothesis">
+          <mxGeometry x="36" y="260" width="8" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="act1" value="" style="html=1;points=[];perimeter=orthogonalPerimeter;outlineConnect=0;fillColor=#ffffff;" vertex="1" parent="web_app">
+          <mxGeometry x="36" y="90" width="8" height="270" as="geometry" />
+        </mxCell>
+        <mxCell id="act2" value="" style="html=1;points=[];perimeter=orthogonalPerimeter;outlineConnect=0;fillColor=#ffffff;" vertex="1" parent="hypothesis">
+          <mxGeometry x="36" y="460" width="8" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="act3" value="" style="html=1;points=[];perimeter=orthogonalPerimeter;outlineConnect=0;fillColor=#ffffff;" vertex="1" parent="agent">
+          <mxGeometry x="36" y="140" width="8" height="470" as="geometry" />
+        </mxCell>
+        <mxCell id="act4" value="" style="html=1;points=[];perimeter=orthogonalPerimeter;outlineConnect=0;fillColor=#ffffff;" vertex="1" parent="web_app">
+          <mxGeometry x="36" y="410" width="8" height="200" as="geometry" />
+        </mxCell>
+        <mxCell id="m0" value="01. Request next hypothesis from finding F(n)" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;exitX=0.5;exitY=0.1385;entryX=0;entryY=0.0;" edge="1" parent="1" source="researcher" target="act1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="m1" value="02. Analyze Finding F(n)" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;exitX=1;exitY=0.1852;entryX=0;entryY=0.0;" edge="1" parent="1" source="act1" target="act3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="m2" value="03. Propose H(n+1) + rationale + parent finding" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;exitX=1;exitY=0.1064;entryX=1;entryY=0.1702;" edge="1" parent="1" source="act3" target="act3">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="560" y="230" />
+              <mxPoint x="560" y="260" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m3" value="04. Save Origin = Post-hoc / Exploratory&#10;Status = Unverified" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;exitX=1;exitY=0.2553;entryX=0;entryY=0.0;" edge="1" parent="1" source="act3" target="act0">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="m4" value="05. H(n+1) with lineage" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;curved=0;rounded=0;strokeColor=#999999;fontColor=#999999;exitX=0;exitY=1.0;entryX=1;entryY=0.8148;" edge="1" parent="1" source="act0" target="act1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="m5" value="06. Display hypothesis for review" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;curved=0;rounded=0;strokeColor=#999999;fontColor=#999999;exitX=0;exitY=1.0;entryX=0.5;entryY=0.5538;" edge="1" parent="1" source="act1" target="researcher">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="m6" value="07. Approve H(n+1)" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;exitX=0.5;exitY=0.6308;entryX=0;entryY=0.0;" edge="1" parent="1" source="researcher" target="act4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="m7" value="08. Activate H(n+1)" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;exitX=1;exitY=0.25;entryX=0;entryY=0.0;" edge="1" parent="1" source="act4" target="act2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="m8" value="09. H(n+1) active" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;curved=0;rounded=0;strokeColor=#999999;fontColor=#999999;exitX=0;exitY=1.0;entryX=1;entryY=0.5;" edge="1" parent="1" source="act2" target="act4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="m9" value="10. Continue to UC-09 with active hypothesis" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;exitX=1;exitY=0.75;entryX=0;entryY=0.8936;" edge="1" parent="1" source="act4" target="act3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="uc-15" name="UC-15 Review Dependency &amp; Conflicting Evidence - Main Flow">
+    <mxGraphModel dx="800" dy="600" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="890" pageHeight="1000" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="page_title" value="UC-15 Review Dependency &amp; Conflicting Evidence - Main Flow" style="text;html=1;align=left;verticalAlign=middle;fontFamily=Helvetica;fontSize=18;fontStyle=1;fontColor=#1e3a5f;" vertex="1" parent="1">
+          <mxGeometry x="40" y="0" width="810" height="24" as="geometry" />
+        </mxCell>
+        <mxCell id="page_notation" value="Solid = call / request  ·  grey dashed = return  ·  vertical order = time" style="text;html=1;align=left;verticalAlign=middle;fontFamily=Helvetica;fontSize=10;fontColor=#6b7280;" vertex="1" parent="1">
+          <mxGeometry x="40" y="25" width="810" height="15" as="geometry" />
+        </mxCell>
+        <mxCell id="user" value="User" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;size=40;participant=umlActor;verticalAlign=bottom;spacingBottom=-10;labelBackgroundColor=#ffffff;" vertex="1" parent="1">
+          <mxGeometry x="70" y="40" width="20" height="700" as="geometry" />
+        </mxCell>
+        <mxCell id="web_app" value="Web App" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;size=40;" vertex="1" parent="1">
+          <mxGeometry x="250" y="40" width="80" height="700" as="geometry" />
+        </mxCell>
+        <mxCell id="dependency" value="Dependency Service" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;size=40;" vertex="1" parent="1">
+          <mxGeometry x="460" y="40" width="80" height="700" as="geometry" />
+        </mxCell>
+        <mxCell id="agent" value="AI Research Agent" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;size=40;" vertex="1" parent="1">
+          <mxGeometry x="670" y="40" width="80" height="700" as="geometry" />
+        </mxCell>
+        <mxCell id="act0" value="" style="html=1;points=[];perimeter=orthogonalPerimeter;outlineConnect=0;fillColor=#ffffff;" vertex="1" parent="dependency">
+          <mxGeometry x="36" y="140" width="8" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="act1" value="" style="html=1;points=[];perimeter=orthogonalPerimeter;outlineConnect=0;fillColor=#ffffff;" vertex="1" parent="web_app">
+          <mxGeometry x="36" y="90" width="8" height="150" as="geometry" />
+        </mxCell>
+        <mxCell id="act2" value="" style="html=1;points=[];perimeter=orthogonalPerimeter;outlineConnect=0;fillColor=#ffffff;" vertex="1" parent="dependency">
+          <mxGeometry x="36" y="340" width="8" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="act3" value="" style="html=1;points=[];perimeter=orthogonalPerimeter;outlineConnect=0;fillColor=#ffffff;" vertex="1" parent="agent">
+          <mxGeometry x="36" y="510" width="8" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="act4" value="" style="html=1;points=[];perimeter=orthogonalPerimeter;outlineConnect=0;fillColor=#ffffff;" vertex="1" parent="web_app">
+          <mxGeometry x="36" y="290" width="8" height="320" as="geometry" />
+        </mxCell>
+        <mxCell id="m0" value="01. Open Dependency Graph" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;exitX=0.5;exitY=0.1286;entryX=0;entryY=0.0;" edge="1" parent="1" source="user" target="act1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="m1" value="02. Load dependency graph" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;exitX=1;exitY=0.3333;entryX=0;entryY=0.0;" edge="1" parent="1" source="act1" target="act0">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="m2" value="03. RQ -&gt; H1 -&gt; E1 -&gt; F1 -&gt; H2 -&gt; E2 -&gt; F2" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;curved=0;rounded=0;strokeColor=#999999;fontColor=#999999;exitX=0;exitY=1.0;entryX=1;entryY=0.6667;" edge="1" parent="1" source="act0" target="act1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="m3" value="04. Display graph" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;curved=0;rounded=0;strokeColor=#999999;fontColor=#999999;exitX=0;exitY=1.0;entryX=0.5;entryY=0.3429;" edge="1" parent="1" source="act1" target="user">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="m4" value="05. Open dependency edge" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;exitX=0.5;exitY=0.4143;entryX=0;entryY=0.0;" edge="1" parent="1" source="user" target="act4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="m5" value="06. Resolve descendants after upstream invalidation" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;exitX=1;exitY=0.1562;entryX=0;entryY=0.0;" edge="1" parent="1" source="act4" target="act2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="m6" value="07. Mark descendants = Needs Re-validation" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;exitX=1;exitY=0.4167;entryX=1;entryY=0.6667;" edge="1" parent="1" source="act2" target="act2">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="560" y="430" />
+              <mxPoint x="560" y="460" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m7" value="08. Re-validation impact" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;curved=0;rounded=0;strokeColor=#999999;fontColor=#999999;exitX=0;exitY=1.0;entryX=1;entryY=0.5312;" edge="1" parent="1" source="act2" target="act4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="m8" value="09. Ask for next action on conflict" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;exitX=1;exitY=0.6875;entryX=0;entryY=0.0;" edge="1" parent="1" source="act4" target="act3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="m9" value="10. Preserve all results + propose next action" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;curved=0;rounded=0;strokeColor=#999999;fontColor=#999999;exitX=0;exitY=1.0;entryX=1;entryY=0.8438;" edge="1" parent="1" source="act3" target="act4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="m10" value="11. Show conflict / impact" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;curved=0;rounded=0;strokeColor=#999999;fontColor=#999999;exitX=0;exitY=1.0;entryX=0.5;entryY=0.8714;" edge="1" parent="1" source="act4" target="user">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="uc-16" name="UC-16 Continue or Stop Research Loop - Main Flow">
+    <mxGraphModel dx="800" dy="600" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1070" pageHeight="1000" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="page_title" value="UC-16 Continue or Stop Research Loop - Main Flow" style="text;html=1;align=left;verticalAlign=middle;fontFamily=Helvetica;fontSize=18;fontStyle=1;fontColor=#1e3a5f;" vertex="1" parent="1">
+          <mxGeometry x="40" y="0" width="990" height="24" as="geometry" />
+        </mxCell>
+        <mxCell id="page_notation" value="Solid = call / request  ·  grey dashed = return  ·  vertical order = time" style="text;html=1;align=left;verticalAlign=middle;fontFamily=Helvetica;fontSize=10;fontColor=#6b7280;" vertex="1" parent="1">
+          <mxGeometry x="40" y="25" width="990" height="15" as="geometry" />
+        </mxCell>
+        <mxCell id="fragment_continue-or-stop" value="alt" style="shape=umlFrame;whiteSpace=wrap;html=1;pointerEvents=0;fillColor=none;strokeColor=#6c8ebf;dashed=1;strokeWidth=1;fontFamily=Helvetica;fontSize=12;fontStyle=1;fontColor=#3f5f95;align=left;verticalAlign=top;spacingLeft=130;spacingTop=4;" vertex="1" parent="1">
+          <mxGeometry x="20" y="455" width="910" height="210" as="geometry" />
+        </mxCell>
+        <mxCell id="fragment_continue-or-stop_divider" value="" style="rounded=0;html=1;fillColor=#6c8ebf;strokeColor=none;" vertex="1" parent="1">
+          <mxGeometry x="20" y="505" width="910" height="1" as="geometry" />
+        </mxCell>
+        <mxCell id="fragment_continue-or-stop_label_0" value="[Continue]" style="text;html=1;align=left;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontStyle=1;fontColor=#3f5f95;" vertex="1" parent="1">
+          <mxGeometry x="150" y="480" width="220" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="fragment_continue-or-stop_label_1" value="else [Stop]" style="text;html=1;align=left;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontStyle=1;fontColor=#3f5f95;" vertex="1" parent="1">
+          <mxGeometry x="150" y="510" width="220" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="researcher" value="Researcher" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;size=40;participant=umlActor;verticalAlign=bottom;spacingBottom=-10;labelBackgroundColor=#ffffff;" vertex="1" parent="1">
+          <mxGeometry x="70" y="40" width="20" height="680" as="geometry" />
+        </mxCell>
+        <mxCell id="web_app" value="Web App" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;size=40;" vertex="1" parent="1">
+          <mxGeometry x="270" y="40" width="80" height="680" as="geometry" />
+        </mxCell>
+        <mxCell id="agent" value="AI Research Agent" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;size=40;" vertex="1" parent="1">
+          <mxGeometry x="500" y="40" width="80" height="680" as="geometry" />
+        </mxCell>
+        <mxCell id="loop" value="Research Loop Service" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;size=40;" vertex="1" parent="1">
+          <mxGeometry x="730" y="40" width="80" height="680" as="geometry" />
+        </mxCell>
+        <mxCell id="act0" value="" style="html=1;points=[];perimeter=orthogonalPerimeter;outlineConnect=0;fillColor=#ffffff;" vertex="1" parent="agent">
+          <mxGeometry x="36" y="140" width="8" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="act1" value="" style="html=1;points=[];perimeter=orthogonalPerimeter;outlineConnect=0;fillColor=#ffffff;" vertex="1" parent="web_app">
+          <mxGeometry x="36" y="90" width="8" height="150" as="geometry" />
+        </mxCell>
+        <mxCell id="act2" value="" style="html=1;points=[];perimeter=orthogonalPerimeter;outlineConnect=0;fillColor=#ffffff;" vertex="1" parent="loop">
+          <mxGeometry x="36" y="340" width="8" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="act3" value="" style="html=1;points=[];perimeter=orthogonalPerimeter;outlineConnect=0;fillColor=#ffffff;" vertex="1" parent="loop">
+          <mxGeometry x="36" y="490" width="8" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="act4" value="" style="html=1;points=[];perimeter=orthogonalPerimeter;outlineConnect=0;fillColor=#ffffff;" vertex="1" parent="web_app">
+          <mxGeometry x="36" y="290" width="8" height="300" as="geometry" />
+        </mxCell>
+        <mxCell id="act5" value="" style="html=1;points=[];perimeter=orthogonalPerimeter;outlineConnect=0;fillColor=#ffffff;" vertex="1" parent="agent">
+          <mxGeometry x="36" y="440" width="8" height="200" as="geometry" />
+        </mxCell>
+        <mxCell id="m0" value="01. Open research loop decision" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;exitX=0.5;exitY=0.1324;entryX=0;entryY=0.0;" edge="1" parent="1" source="researcher" target="act1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="m1" value="02. Evaluate stopping criteria&#10;Question, evidence, budget, convergence" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;exitX=1;exitY=0.3333;entryX=0;entryY=0.0;" edge="1" parent="1" source="act1" target="act0">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="m2" value="03. Continue / Stop recommendation + reason" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;curved=0;rounded=0;strokeColor=#999999;fontColor=#999999;exitX=0;exitY=1.0;entryX=1;entryY=0.6667;" edge="1" parent="1" source="act0" target="act1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="m3" value="04. Display reason and recommendation" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;curved=0;rounded=0;strokeColor=#999999;fontColor=#999999;exitX=0;exitY=1.0;entryX=0.5;entryY=0.3529;" edge="1" parent="1" source="act1" target="researcher">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="m4" value="05. Confirm decision" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;exitX=0.5;exitY=0.4265;entryX=0;entryY=0.0;" edge="1" parent="1" source="researcher" target="act4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="m5" value="06. Persist loop decision" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;exitX=1;exitY=0.1667;entryX=0;entryY=0.0;" edge="1" parent="1" source="act4" target="act2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="m6" value="07. Decision saved" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;curved=0;rounded=0;strokeColor=#999999;fontColor=#999999;exitX=0;exitY=1.0;entryX=1;entryY=0.3333;" edge="1" parent="1" source="act2" target="act4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="m7" value="08. [Continue] Start UC-14 next hypothesis" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;exitX=1;exitY=0.5;entryX=0;entryY=0.0;" edge="1" parent="1" source="act4" target="act5">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="m8" value="09. [Stop] Set research loop = Completed" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;exitX=1;exitY=0.6667;entryX=0;entryY=0.0;" edge="1" parent="1" source="act4" target="act3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="m9" value="10. Completed status" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;curved=0;rounded=0;strokeColor=#999999;fontColor=#999999;exitX=0;exitY=1.0;entryX=1;entryY=0.8333;" edge="1" parent="1" source="act3" target="act4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="m10" value="11. Open UC-17 research outputs" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;curved=0;rounded=0;strokeColor=#999999;fontColor=#999999;exitX=0;exitY=1.0;entryX=0.5;entryY=0.8676;" edge="1" parent="1" source="act4" target="researcher">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="uc-17" name="UC-17 Generate Figures, Tables &amp; Research Report - Main Flow">
+    <mxGraphModel dx="800" dy="600" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1060" pageHeight="1000" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="page_title" value="UC-17 Generate Figures, Tables &amp; Research Report - Main Flow" style="text;html=1;align=left;verticalAlign=middle;fontFamily=Helvetica;fontSize=18;fontStyle=1;fontColor=#1e3a5f;" vertex="1" parent="1">
+          <mxGeometry x="40" y="0" width="980" height="24" as="geometry" />
+        </mxCell>
+        <mxCell id="page_notation" value="Solid = call / request  ·  grey dashed = return  ·  vertical order = time" style="text;html=1;align=left;verticalAlign=middle;fontFamily=Helvetica;fontSize=10;fontColor=#6b7280;" vertex="1" parent="1">
+          <mxGeometry x="40" y="25" width="980" height="15" as="geometry" />
+        </mxCell>
+        <mxCell id="user" value="User" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;size=40;participant=umlActor;verticalAlign=bottom;spacingBottom=-10;labelBackgroundColor=#ffffff;" vertex="1" parent="1">
+          <mxGeometry x="70" y="40" width="20" height="680" as="geometry" />
+        </mxCell>
+        <mxCell id="web_app" value="Web App" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;size=40;" vertex="1" parent="1">
+          <mxGeometry x="240" y="40" width="80" height="680" as="geometry" />
+        </mxCell>
+        <mxCell id="agent" value="AI Research Agent" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;size=40;" vertex="1" parent="1">
+          <mxGeometry x="440" y="40" width="80" height="680" as="geometry" />
+        </mxCell>
+        <mxCell id="findings" value="Findings Store" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;size=40;" vertex="1" parent="1">
+          <mxGeometry x="640" y="40" width="80" height="680" as="geometry" />
+        </mxCell>
+        <mxCell id="output" value="Output Tool" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;size=40;" vertex="1" parent="1">
+          <mxGeometry x="840" y="40" width="80" height="680" as="geometry" />
+        </mxCell>
+        <mxCell id="act0" value="" style="html=1;points=[];perimeter=orthogonalPerimeter;outlineConnect=0;fillColor=#ffffff;" vertex="1" parent="findings">
+          <mxGeometry x="36" y="190" width="8" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="act1" value="" style="html=1;points=[];perimeter=orthogonalPerimeter;outlineConnect=0;fillColor=#ffffff;" vertex="1" parent="output">
+          <mxGeometry x="36" y="290" width="8" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="act2" value="" style="html=1;points=[];perimeter=orthogonalPerimeter;outlineConnect=0;fillColor=#ffffff;" vertex="1" parent="agent">
+          <mxGeometry x="36" y="140" width="8" height="250" as="geometry" />
+        </mxCell>
+        <mxCell id="act3" value="" style="html=1;points=[];perimeter=orthogonalPerimeter;outlineConnect=0;fillColor=#ffffff;" vertex="1" parent="web_app">
+          <mxGeometry x="36" y="90" width="8" height="350" as="geometry" />
+        </mxCell>
+        <mxCell id="act4" value="" style="html=1;points=[];perimeter=orthogonalPerimeter;outlineConnect=0;fillColor=#ffffff;" vertex="1" parent="output">
+          <mxGeometry x="36" y="540" width="8" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="act5" value="" style="html=1;points=[];perimeter=orthogonalPerimeter;outlineConnect=0;fillColor=#ffffff;" vertex="1" parent="web_app">
+          <mxGeometry x="36" y="490" width="8" height="150" as="geometry" />
+        </mxCell>
+        <mxCell id="m0" value="01. Choose Figure / Table / Summary / Report" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;exitX=0.5;exitY=0.1324;entryX=0;entryY=0.0;" edge="1" parent="1" source="user" target="act3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="m1" value="02. Request output generation" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;exitX=1;exitY=0.1429;entryX=0;entryY=0.0;" edge="1" parent="1" source="act3" target="act2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="m2" value="03. Load validated findings + experiment metadata" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;exitX=1;exitY=0.2;entryX=0;entryY=0.0;" edge="1" parent="1" source="act2" target="act0">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="m3" value="04. Evidence-backed report context" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;curved=0;rounded=0;strokeColor=#999999;fontColor=#999999;exitX=0;exitY=1.0;entryX=1;entryY=0.4;" edge="1" parent="1" source="act0" target="act2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="m4" value="05. Generate selected output" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;exitX=1;exitY=0.6;entryX=0;entryY=0.0;" edge="1" parent="1" source="act2" target="act1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="m5" value="06. Output artifact" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;curved=0;rounded=0;strokeColor=#999999;fontColor=#999999;exitX=0;exitY=1.0;entryX=1;entryY=0.8;" edge="1" parent="1" source="act1" target="act2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="m6" value="07. Save source linkage" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;curved=0;rounded=0;strokeColor=#999999;fontColor=#999999;exitX=0;exitY=1.0;entryX=1;entryY=0.8571;" edge="1" parent="1" source="act2" target="act3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="m7" value="08. Display output for review" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;curved=0;rounded=0;strokeColor=#999999;fontColor=#999999;exitX=0;exitY=1.0;entryX=0.5;entryY=0.6471;" edge="1" parent="1" source="act3" target="user">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="m8" value="09. Review and export / save" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;exitX=0.5;exitY=0.7206;entryX=0;entryY=0.0;" edge="1" parent="1" source="user" target="act5">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="m9" value="10. Persist / export final artifact" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;exitX=1;exitY=0.3333;entryX=0;entryY=0.0;" edge="1" parent="1" source="act5" target="act4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="m10" value="11. Export confirmation" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;curved=0;rounded=0;strokeColor=#999999;fontColor=#999999;exitX=0;exitY=1.0;entryX=1;entryY=0.6667;" edge="1" parent="1" source="act4" target="act5">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="uc-18" name="UC-18 View Provenance, Evidence &amp; Execution Trace - Main Flow">
+    <mxGraphModel dx="800" dy="600" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="950" pageHeight="1000" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="page_title" value="UC-18 View Provenance, Evidence &amp; Execution Trace - Main Flow" style="text;html=1;align=left;verticalAlign=middle;fontFamily=Helvetica;fontSize=18;fontStyle=1;fontColor=#1e3a5f;" vertex="1" parent="1">
+          <mxGeometry x="40" y="0" width="870" height="24" as="geometry" />
+        </mxCell>
+        <mxCell id="page_notation" value="Solid = call / request  ·  grey dashed = return  ·  vertical order = time" style="text;html=1;align=left;verticalAlign=middle;fontFamily=Helvetica;fontSize=10;fontColor=#6b7280;" vertex="1" parent="1">
+          <mxGeometry x="40" y="25" width="870" height="15" as="geometry" />
+        </mxCell>
+        <mxCell id="user" value="User" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;size=40;participant=umlActor;verticalAlign=bottom;spacingBottom=-10;labelBackgroundColor=#ffffff;" vertex="1" parent="1">
+          <mxGeometry x="70" y="40" width="20" height="630" as="geometry" />
+        </mxCell>
+        <mxCell id="web_app" value="Web App" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;size=40;" vertex="1" parent="1">
+          <mxGeometry x="270" y="40" width="80" height="630" as="geometry" />
+        </mxCell>
+        <mxCell id="provenance" value="Provenance Service" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;size=40;" vertex="1" parent="1">
+          <mxGeometry x="500" y="40" width="80" height="630" as="geometry" />
+        </mxCell>
+        <mxCell id="trace" value="Execution Trace Store" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;size=40;" vertex="1" parent="1">
+          <mxGeometry x="730" y="40" width="80" height="630" as="geometry" />
+        </mxCell>
+        <mxCell id="act0" value="" style="html=1;points=[];perimeter=orthogonalPerimeter;outlineConnect=0;fillColor=#ffffff;" vertex="1" parent="trace">
+          <mxGeometry x="36" y="190" width="8" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="act1" value="" style="html=1;points=[];perimeter=orthogonalPerimeter;outlineConnect=0;fillColor=#ffffff;" vertex="1" parent="provenance">
+          <mxGeometry x="36" y="140" width="8" height="150" as="geometry" />
+        </mxCell>
+        <mxCell id="act2" value="" style="html=1;points=[];perimeter=orthogonalPerimeter;outlineConnect=0;fillColor=#ffffff;" vertex="1" parent="web_app">
+          <mxGeometry x="36" y="90" width="8" height="250" as="geometry" />
+        </mxCell>
+        <mxCell id="act3" value="" style="html=1;points=[];perimeter=orthogonalPerimeter;outlineConnect=0;fillColor=#ffffff;" vertex="1" parent="provenance">
+          <mxGeometry x="36" y="440" width="8" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="act4" value="" style="html=1;points=[];perimeter=orthogonalPerimeter;outlineConnect=0;fillColor=#ffffff;" vertex="1" parent="web_app">
+          <mxGeometry x="36" y="390" width="8" height="150" as="geometry" />
+        </mxCell>
+        <mxCell id="m0" value="01. Select View Evidence" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;exitX=0.5;exitY=0.1429;entryX=0;entryY=0.0;" edge="1" parent="1" source="user" target="act2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="m1" value="02. Load provenance chain" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;exitX=1;exitY=0.2;entryX=0;entryY=0.0;" edge="1" parent="1" source="act2" target="act1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="m2" value="03. Fetch execution trace" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;exitX=1;exitY=0.3333;entryX=0;entryY=0.0;" edge="1" parent="1" source="act1" target="act0">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="m3" value="04. Steps, code, output, retry, cost" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;curved=0;rounded=0;strokeColor=#999999;fontColor=#999999;exitX=0;exitY=1.0;entryX=1;entryY=0.6667;" edge="1" parent="1" source="act0" target="act1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="m4" value="05. Finding -&gt; Result -&gt; Experiment -&gt; Dataset lineage" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;curved=0;rounded=0;strokeColor=#999999;fontColor=#999999;exitX=0;exitY=1.0;entryX=1;entryY=0.8;" edge="1" parent="1" source="act1" target="act2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="m5" value="06. Display provenance chain" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;curved=0;rounded=0;strokeColor=#999999;fontColor=#999999;exitX=0;exitY=1.0;entryX=0.5;entryY=0.5397;" edge="1" parent="1" source="act2" target="user">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="m6" value="07. Open Execution Trace" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;exitX=0.5;exitY=0.619;entryX=0;entryY=0.0;" edge="1" parent="1" source="user" target="act4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="m7" value="08. Load trace details" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;exitX=1;exitY=0.3333;entryX=0;entryY=0.0;" edge="1" parent="1" source="act4" target="act3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="m8" value="09. Planner, tools, inputs, raw output, errors, latency, cost" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;curved=0;rounded=0;strokeColor=#999999;fontColor=#999999;exitX=0;exitY=1.0;entryX=1;entryY=0.6667;" edge="1" parent="1" source="act3" target="act4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="m9" value="10. Show trace; return to finding / report" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;curved=0;rounded=0;strokeColor=#999999;fontColor=#999999;exitX=0;exitY=1.0;entryX=0.5;entryY=0.8571;" edge="1" parent="1" source="act4" target="user">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="uc-19" name="UC-19 Run Benchmark &amp; Evaluation - Main Flow">
+    <mxGraphModel dx="800" dy="600" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1480" pageHeight="1000" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="page_title" value="UC-19 Run Benchmark &amp; Evaluation - Main Flow" style="text;html=1;align=left;verticalAlign=middle;fontFamily=Helvetica;fontSize=18;fontStyle=1;fontColor=#1e3a5f;" vertex="1" parent="1">
+          <mxGeometry x="40" y="0" width="1400" height="24" as="geometry" />
+        </mxCell>
+        <mxCell id="page_notation" value="Solid = call / request  ·  grey dashed = return  ·  vertical order = time" style="text;html=1;align=left;verticalAlign=middle;fontFamily=Helvetica;fontSize=10;fontColor=#6b7280;" vertex="1" parent="1">
+          <mxGeometry x="40" y="25" width="1400" height="15" as="geometry" />
+        </mxCell>
+        <mxCell id="fragment_benchmark-runs" value="loop" style="shape=umlFrame;whiteSpace=wrap;html=1;pointerEvents=0;fillColor=none;strokeColor=#6c8ebf;dashed=1;strokeWidth=1;fontFamily=Helvetica;fontSize=12;fontStyle=1;fontColor=#3f5f95;align=left;verticalAlign=top;spacingLeft=130;spacingTop=4;" vertex="1" parent="1">
+          <mxGeometry x="20" y="305" width="1320" height="160" as="geometry" />
+        </mxCell>
+        <mxCell id="fragment_benchmark-runs_label" value="[i = 1..N]" style="text;html=1;align=left;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontStyle=1;fontColor=#3f5f95;" vertex="1" parent="1">
+          <mxGeometry x="150" y="330" width="220" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="user" value="User" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;size=40;participant=umlActor;verticalAlign=bottom;spacingBottom=-10;labelBackgroundColor=#ffffff;" vertex="1" parent="1">
+          <mxGeometry x="70" y="40" width="20" height="780" as="geometry" />
+        </mxCell>
+        <mxCell id="web_app" value="Web App" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;size=40;" vertex="1" parent="1">
+          <mxGeometry x="260" y="40" width="80" height="780" as="geometry" />
+        </mxCell>
+        <mxCell id="runner" value="Benchmark Runner" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;size=40;" vertex="1" parent="1">
+          <mxGeometry x="480" y="40" width="80" height="780" as="geometry" />
+        </mxCell>
+        <mxCell id="config" value="Agent Configuration" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;size=40;" vertex="1" parent="1">
+          <mxGeometry x="700" y="40" width="80" height="780" as="geometry" />
+        </mxCell>
+        <mxCell id="sandbox" value="Secure Sandbox" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;size=40;" vertex="1" parent="1">
+          <mxGeometry x="920" y="40" width="80" height="780" as="geometry" />
+        </mxCell>
+        <mxCell id="evaluation" value="Evaluation Store" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;size=40;" vertex="1" parent="1">
+          <mxGeometry x="1140" y="40" width="80" height="780" as="geometry" />
+        </mxCell>
+        <mxCell id="act0" value="" style="html=1;points=[];perimeter=orthogonalPerimeter;outlineConnect=0;fillColor=#ffffff;" vertex="1" parent="config">
+          <mxGeometry x="36" y="190" width="8" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="act1" value="" style="html=1;points=[];perimeter=orthogonalPerimeter;outlineConnect=0;fillColor=#ffffff;" vertex="1" parent="sandbox">
+          <mxGeometry x="36" y="290" width="8" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="act2" value="" style="html=1;points=[];perimeter=orthogonalPerimeter;outlineConnect=0;fillColor=#ffffff;" vertex="1" parent="evaluation">
+          <mxGeometry x="36" y="390" width="8" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="act3" value="" style="html=1;points=[];perimeter=orthogonalPerimeter;outlineConnect=0;fillColor=#ffffff;" vertex="1" parent="web_app">
+          <mxGeometry x="36" y="90" width="8" height="450" as="geometry" />
+        </mxCell>
+        <mxCell id="act4" value="" style="html=1;points=[];perimeter=orthogonalPerimeter;outlineConnect=0;fillColor=#ffffff;" vertex="1" parent="evaluation">
+          <mxGeometry x="36" y="640" width="8" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="act5" value="" style="html=1;points=[];perimeter=orthogonalPerimeter;outlineConnect=0;fillColor=#ffffff;" vertex="1" parent="runner">
+          <mxGeometry x="36" y="140" width="8" height="600" as="geometry" />
+        </mxCell>
+        <mxCell id="act6" value="" style="html=1;points=[];perimeter=orthogonalPerimeter;outlineConnect=0;fillColor=#ffffff;" vertex="1" parent="web_app">
+          <mxGeometry x="36" y="590" width="8" height="150" as="geometry" />
+        </mxCell>
+        <mxCell id="m0" value="01. Choose benchmark, agent config, N runs" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;exitX=0.5;exitY=0.1154;entryX=0;entryY=0.0;" edge="1" parent="1" source="user" target="act3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="m1" value="02. Start benchmark" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;exitX=1;exitY=0.1111;entryX=0;entryY=0.0;" edge="1" parent="1" source="act3" target="act5">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="m2" value="03. Load agent configuration" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;exitX=1;exitY=0.0833;entryX=0;entryY=0.0;" edge="1" parent="1" source="act5" target="act0">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="m3" value="04. Configuration" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;curved=0;rounded=0;strokeColor=#999999;fontColor=#999999;exitX=0;exitY=1.0;entryX=1;entryY=0.1667;" edge="1" parent="1" source="act0" target="act5">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="m4" value="05. Execute one benchmark run" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;exitX=1;exitY=0.25;entryX=0;entryY=0.0;" edge="1" parent="1" source="act5" target="act1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="m5" value="06. Output, trace, metrics, cost, latency" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;curved=0;rounded=0;strokeColor=#999999;fontColor=#999999;exitX=0;exitY=1.0;entryX=1;entryY=0.3333;" edge="1" parent="1" source="act1" target="act5">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="m6" value="07. Store run" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;exitX=1;exitY=0.4167;entryX=0;entryY=0.0;" edge="1" parent="1" source="act5" target="act2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="m7" value="08. Aggregate evaluation metrics" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="act5" target="act2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="m8" value="09. Success, correctness, accuracy, cost, reproducibility" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;curved=0;rounded=0;strokeColor=#999999;fontColor=#999999;exitX=0;exitY=1.0;entryX=1;entryY=0.8889;" edge="1" parent="1" source="act2" target="act3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="m9" value="10. Display evaluation dashboard" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;curved=0;rounded=0;strokeColor=#999999;fontColor=#999999;exitX=0;exitY=1.0;entryX=0.5;entryY=0.6923;" edge="1" parent="1" source="act3" target="user">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="m10" value="11. Compare configurations" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;exitX=0.5;exitY=0.7564;entryX=0;entryY=0.0;" edge="1" parent="1" source="user" target="act6">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="m11" value="12. Load comparison" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;exitX=1;exitY=0.3333;entryX=0;entryY=0.0;" edge="1" parent="1" source="act6" target="act4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="m12" value="13. Comparison result" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;curved=0;rounded=0;strokeColor=#999999;fontColor=#999999;exitX=0;exitY=1.0;entryX=1;entryY=0.6667;" edge="1" parent="1" source="act4" target="act6">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="uc-20" name="UC-20 Manage Models, Logs, Cost &amp; System Configuration - Main Flow">
+    <mxGraphModel dx="800" dy="600" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="950" pageHeight="1000" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="page_title" value="UC-20 Manage Models, Logs, Cost &amp; System Configuration - Main Flow" style="text;html=1;align=left;verticalAlign=middle;fontFamily=Helvetica;fontSize=18;fontStyle=1;fontColor=#1e3a5f;" vertex="1" parent="1">
+          <mxGeometry x="40" y="0" width="870" height="24" as="geometry" />
+        </mxCell>
+        <mxCell id="page_notation" value="Solid = call / request  ·  grey dashed = return  ·  vertical order = time" style="text;html=1;align=left;verticalAlign=middle;fontFamily=Helvetica;fontSize=10;fontColor=#6b7280;" vertex="1" parent="1">
+          <mxGeometry x="40" y="25" width="870" height="15" as="geometry" />
+        </mxCell>
+        <mxCell id="admin" value="Admin" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;size=40;participant=umlActor;verticalAlign=bottom;spacingBottom=-10;labelBackgroundColor=#ffffff;" vertex="1" parent="1">
+          <mxGeometry x="70" y="40" width="20" height="700" as="geometry" />
+        </mxCell>
+        <mxCell id="console" value="Admin Console" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;size=40;" vertex="1" parent="1">
+          <mxGeometry x="270" y="40" width="80" height="700" as="geometry" />
+        </mxCell>
+        <mxCell id="config" value="Configuration Service" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;size=40;" vertex="1" parent="1">
+          <mxGeometry x="500" y="40" width="80" height="700" as="geometry" />
+        </mxCell>
+        <mxCell id="audit" value="Audit / Monitoring" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;size=40;" vertex="1" parent="1">
+          <mxGeometry x="730" y="40" width="80" height="700" as="geometry" />
+        </mxCell>
+        <mxCell id="act0" value="" style="html=1;points=[];perimeter=orthogonalPerimeter;outlineConnect=0;fillColor=#ffffff;" vertex="1" parent="config">
+          <mxGeometry x="36" y="140" width="8" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="act1" value="" style="html=1;points=[];perimeter=orthogonalPerimeter;outlineConnect=0;fillColor=#ffffff;" vertex="1" parent="console">
+          <mxGeometry x="36" y="90" width="8" height="150" as="geometry" />
+        </mxCell>
+        <mxCell id="act2" value="" style="html=1;points=[];perimeter=orthogonalPerimeter;outlineConnect=0;fillColor=#ffffff;" vertex="1" parent="audit">
+          <mxGeometry x="36" y="460" width="8" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="act3" value="" style="html=1;points=[];perimeter=orthogonalPerimeter;outlineConnect=0;fillColor=#ffffff;" vertex="1" parent="config">
+          <mxGeometry x="36" y="340" width="8" height="220" as="geometry" />
+        </mxCell>
+        <mxCell id="act4" value="" style="html=1;points=[];perimeter=orthogonalPerimeter;outlineConnect=0;fillColor=#ffffff;" vertex="1" parent="console">
+          <mxGeometry x="36" y="290" width="8" height="320" as="geometry" />
+        </mxCell>
+        <mxCell id="m0" value="01. Open Admin Console" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;exitX=0.5;exitY=0.1286;entryX=0;entryY=0.0;" edge="1" parent="1" source="admin" target="act1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="m1" value="02. Load users, roles, models, logs, usage, benchmark config" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;exitX=1;exitY=0.3333;entryX=0;entryY=0.0;" edge="1" parent="1" source="act1" target="act0">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="m2" value="03. Current configuration + operational data" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;curved=0;rounded=0;strokeColor=#999999;fontColor=#999999;exitX=0;exitY=1.0;entryX=1;entryY=0.6667;" edge="1" parent="1" source="act0" target="act1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="m3" value="04. Display management controls" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;curved=0;rounded=0;strokeColor=#999999;fontColor=#999999;exitX=0;exitY=1.0;entryX=0.5;entryY=0.3429;" edge="1" parent="1" source="act1" target="admin">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="m4" value="05. Submit configuration changes" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;exitX=0.5;exitY=0.4143;entryX=0;entryY=0.0;" edge="1" parent="1" source="admin" target="act4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="m5" value="06. Validate changes" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;exitX=1;exitY=0.1562;entryX=0;entryY=0.0;" edge="1" parent="1" source="act4" target="act3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="m6" value="07. Apply valid changes" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;exitX=1;exitY=0.2273;entryX=1;entryY=0.3636;" edge="1" parent="1" source="act3" target="act3">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="600" y="430" />
+              <mxPoint x="600" y="460" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m7" value="08. Record audit event" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;exitX=1;exitY=0.5455;entryX=0;entryY=0.0;" edge="1" parent="1" source="act3" target="act2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="m8" value="09. Audit confirmation" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;curved=0;rounded=0;strokeColor=#999999;fontColor=#999999;exitX=0;exitY=1.0;entryX=1;entryY=0.7727;" edge="1" parent="1" source="act2" target="act3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="m9" value="10. Configuration saved" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;curved=0;rounded=0;strokeColor=#999999;fontColor=#999999;exitX=0;exitY=1.0;entryX=1;entryY=0.8438;" edge="1" parent="1" source="act3" target="act4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="m10" value="11. Show updated system state" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;curved=0;rounded=0;strokeColor=#999999;fontColor=#999999;exitX=0;exitY=1.0;entryX=0.5;entryY=0.8714;" edge="1" parent="1" source="act4" target="admin">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
