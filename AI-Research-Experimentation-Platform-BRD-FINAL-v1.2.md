@@ -3,7 +3,7 @@
 
 **Document Type:** Business Requirements Document  
 **Project:** AI Research Experimentation Platform  
-**Version:** 1.0 Final  
+**Version:** 1.2 Final  
 **Status:** Final  
 
 ---
@@ -17,30 +17,47 @@ Người dùng có thể đưa dataset, research question, hypothesis và domain
 Nền tảng không chỉ dừng ở việc "chat với dataset" hoặc chạy một phép kiểm thử thống kê đơn lẻ. Mục tiêu chính là hỗ trợ một vòng lặp nghiên cứu có cấu trúc:
 
 ```text
-Research Question
+Research Question + Dataset
     ↓
-Initial Hypothesis
+Dataset Understanding / Data Card
     ↓
-Experiment
+Initial H0 / H1
     ↓
-Evidence
+Build Research State
     ↓
-Finding
+Generate Candidate Hypotheses / Research Directions
     ↓
-Hypothesis Refinement
+Structured Hypothesis Selection Gate
     ↓
-New Hypothesis (Post-hoc / Unverified)
+Selected Hypothesis
     ↓
-Next Experiment
+Deep Reasoning & Experiment Planning
     ↓
-Scientific Validity Guard
+Deterministic Scientific Checks
     ↓
-Stopping Criteria
+Experiment Execution
+    ↓
+Deterministic Scientific Validation
+    ↓
+Evidence Sufficiency Gate
+    ↓
+Enough Evidence?
+   /              \
+ No                Yes
+ ↓                  ↓
+Scientific          Research Finding
+Refinement          ↓
+Loop                Update Research State
+ ↓                  ↓
+Next Experiment     Stopping Criteria
+ └───────────────↺
 ```
 
 Mọi finding quan trọng phải có evidence, provenance và execution trace. Các giả thuyết mới do AI sinh ra phải được đánh dấu là chưa được xác minh cho đến khi được kiểm thử bởi experiment tiếp theo.
 
-Platform đồng thời cung cấp cơ chế benchmark và evaluation nhằm đo lường độ chính xác, reliability, traceability và hiệu quả của AI Research Agent.
+Kiến trúc nghiệp vụ tách ba loại trách nhiệm: **generative reasoning** để tạo và phân tích sâu candidate hypothesis/experiment, **deterministic analytical tools** để tính toán các facts khoa học, và **structured decision gates** để lựa chọn hướng nghiên cứu hoặc quyết định evidence đã đủ hay cần tiếp tục. Decision gate phải trả về quyết định có cấu trúc cùng confidence/uncertainty để hệ thống có thể tự động tiếp tục, yêu cầu phân tích sâu hơn hoặc chuyển sang human review.
+
+Platform đồng thời cung cấp cơ chế benchmark và evaluation nhằm đo lường độ chính xác, reliability, traceability và hiệu quả của AI Research Agent cũng như chất lượng của các decision gates.
 
 Ngoài execution correctness, platform phải kiểm soát scientific validity của vòng lặp nghiên cứu: data leakage, multiple testing, post-hoc hypothesis, effect size, confidence interval, experiment dependency, conflicting evidence và reproducibility drift.
 
@@ -279,6 +296,48 @@ Platform phải hỗ trợ data split policy, leakage guard và reproducibility 
 
 ---
 
+## BP-13 — LLM không nên tự quyết định mọi bước của research loop
+
+LLM phù hợp cho việc sinh hypothesis, reasoning và lập kế hoạch nhưng các quyết định như:
+
+- hypothesis nào đáng theo đuổi;
+- evidence đã đủ hay chưa;
+- có cần replicate;
+- có cần alternative method;
+- có cần human review;
+
+nếu chỉ dựa vào free-form reasoning có thể khó kiểm soát, khó đo lường và thiếu confidence rõ ràng.
+
+Platform cần một cơ chế **structured decision gate** tách biệt với generative reasoning để lựa chọn, verify và route bước tiếp theo của research loop.
+
+---
+
+## BP-14 — Experiment chạy thành công về kỹ thuật nhưng evidence vẫn có thể chưa đủ
+
+Một experiment không lỗi code và trả ra statistic hợp lệ không đồng nghĩa research question đã có đủ evidence.
+
+Platform phải phân biệt:
+
+```text
+Technical Failure
+≠
+Scientific Insufficiency
+```
+
+Scientific insufficiency phải có thể dẫn tới:
+
+```text
+Need More Evidence
+Try Alternative Method
+Replicate
+Human Review
+Inconclusive
+```
+
+thay vì chỉ trả về finding hoặc cố retry cùng một execution.
+
+---
+
 # 4. Business Objectives
 
 ## BO-01 — Hỗ trợ researcher từ research question đến research finding
@@ -384,6 +443,38 @@ Experiment phải có data split policy khi cần và lưu execution snapshot đ
 
 ---
 
+## BO-13 — Tách generative reasoning khỏi structured decision making
+
+Platform phải cho phép generative model tập trung vào:
+
+- tạo candidate hypothesis;
+- reasoning chuyên sâu;
+- thiết kế experiment;
+- giải thích và refinement;
+
+trong khi các decision gate chịu trách nhiệm chọn/routing các quyết định có tập output xác định.
+
+---
+
+## BO-14 — Tự động kiểm tra evidence sufficiency trước khi chấp nhận finding
+
+Sau deterministic scientific validation, platform phải đánh giá xem evidence đã đủ để:
+
+- tạo finding;
+- chạy thêm experiment;
+- thử alternative method;
+- replicate;
+- yêu cầu human review;
+- hoặc kết luận inconclusive.
+
+---
+
+## BO-15 — Hỗ trợ confidence-based human escalation
+
+Khi decision confidence thấp hoặc uncertainty/risk cao, platform phải ưu tiên chuyển decision cho researcher thay vì tự động tiếp tục.
+
+---
+
 # 5. Success Metrics
 
 Các target dưới đây là đề xuất ban đầu và cần được supervisor xác nhận.
@@ -404,6 +495,10 @@ Các target dưới đây là đề xuất ban đầu và cần được supervi
 | KPI-12 | Multiple testing | Eligible multi-test workflows with correction/justification | 100% |
 | KPI-13 | Dependency | Downstream artifacts linked to parent evidence | 100% |
 | KPI-14 | Reproducibility | Official experiments with execution snapshot | 100% |
+| KPI-15 | Hypothesis gate | Selected hypothesis/direction has structured decision record | 100% |
+| KPI-16 | Evidence gate | Validated experiment result receives explicit sufficiency decision | 100% |
+| KPI-17 | Decision safety | Low-confidence/high-risk gate decisions escalated according to policy | 100% |
+| KPI-18 | Decision evaluation | Decision-gate quality measured on benchmark tasks | 100% |
 
 ---
 
@@ -561,13 +656,21 @@ Create/Open Research Project
     ↓
 Upload Dataset
     ↓
-Automatic Profiling
+Automatic Profiling + Data Card
     ↓
 Enter Research Question
     ↓
-Define H0 / H1
+Define Initial H0 / H1
     ↓
-Experiment Planner
+Build Research State
+    ↓
+Generate Candidate Hypotheses / Directions
+    ↓
+Hypothesis Selection Gate
+    ↓
+Selected Hypothesis
+    ↓
+Deep Reasoning + Experiment Planner
     ↓
 Generate Candidate Methods
     ↓
@@ -577,22 +680,50 @@ Select / Branch Method
     ↓
 Execute Experiment
     ↓
-Validate Result
+Deterministic Scientific Validation
     ↓
-Research Finding
+Evidence Sufficiency Gate
     ↓
-Generate / Refine Next Hypothesis
+Decision
+├── ENOUGH_EVIDENCE → Research Finding
+├── NEED_MORE_EVIDENCE → Re-plan
+├── TRY_ALTERNATIVE_METHOD → Re-plan
+├── REPLICATE → New Experiment
+├── NEED_HUMAN_REVIEW → Researcher
+└── INCONCLUSIVE → Record Outcome
     ↓
-Next Experiment
+Update Research State
     ↓
 Stopping Criteria
-    ↓
-Final Research Findings
-    ↓
-Figures / Tables
-    ↓
-Research Report
+├── Continue → Generate Next Candidate Hypotheses
+└── Stop → Final Research Findings
+                  ↓
+            Figures / Tables
+                  ↓
+            Research Report
 ```
+
+---
+
+
+# 8.1. Gap Analysis
+
+Gap Analysis liên kết trực tiếp giữa pain point hiện tại, khoảng trống cần giải quyết, target state và Business Requirement tương ứng.
+
+| ID | Pain Point / Current State | Gap | Target State | Related BR |
+|---|---|---|---|---|
+| GA-01 | Research workflow gồm nhiều bước rời rạc và lặp lại | Không có một workflow thống nhất từ question đến finding | Một research lifecycle thống nhất có planning, execution, validation và iteration | BR-13 → BR-30 |
+| GA-02 | Method selection phụ thuộc nhiều vào kinh nghiệm cá nhân | Khó đảm bảo phương pháp phù hợp và assumptions được kiểm tra | Agent sinh candidate methods, kiểm tra assumptions và ghi rationale | BR-18, BR-19, BR-20, BR-24 |
+| GA-03 | Dataset mới thường có ambiguity, missing values hoặc quality issues | Dễ xử lý sai dữ liệu trước khi analysis | Dataset được validate, profile, review và version trước khi experiment | BR-04 → BR-12 |
+| GA-04 | Hypothesis, assumption và finding có thể bị trộn lẫn | Dễ biến hypothesis hoặc association thành fact/causal claim | Hypothesis có status/origin rõ; finding chỉ được chấp nhận sau validation | BR-14, BR-15, BR-27, BR-42, BR-48 |
+| GA-05 | Finding khó kiểm chứng hoặc tái lập | Thiếu provenance, execution trace và reproducibility metadata | Official finding truy vết được về experiment, dataset, code và snapshot | BR-34 → BR-37, BR-55 |
+| GA-06 | Một experiment chạy thành công có thể vẫn chưa đủ evidence | Không có cơ chế quyết định tiếp tục nghiên cứu hay dừng | Evidence Sufficiency Gate quyết định finding, re-plan, replicate, review hoặc inconclusive | BR-59, BR-60, BR-61 |
+| GA-07 | Nhiều hypothesis/tests có thể làm tăng false-positive risk | Thiếu phân biệt initial/post-hoc và multiple-testing control | Hypothesis origin, correction, effect size và CI được quản lý rõ | BR-48, BR-49, BR-50 |
+| GA-08 | Experiment phụ thuộc nhau và có thể tạo evidence xung đột | Không theo dõi downstream impact khi evidence thay đổi | Dependency graph, invalidation và conflict preservation | BR-51, BR-52, BR-53 |
+| GA-09 | LLM free-form reasoning có thể tự quyết định quá nhiều | Bounded decisions khó audit và thiếu confidence rõ ràng | Tách generative reasoning khỏi structured decision gates | BR-56 → BR-63 |
+| GA-10 | Khó chứng minh kiến trúc agentic tốt hơn baseline | Demo thành công đơn lẻ không đủ bằng chứng | Benchmark, quantitative metrics, ablation và gate evaluation | BR-43 → BR-46, BR-63 |
+
+**Kết luận Gap Analysis:** mọi capability chính trong scope đều phải giải quyết một gap cụ thể; capability không truy vết được về pain point/objective không nên được đưa vào core scope.
 
 ---
 
@@ -625,6 +756,17 @@ Research Report
 - Domain context
 - Analysis goal
 - Optional literature/context notes
+- Research State built from previous hypotheses, experiments, findings, conflicts and uncertainty
+
+### Decision & Verification Gates
+
+- Candidate hypothesis/direction generation
+- Structured hypothesis ranking / selection / rejection
+- Decision confidence / uncertainty
+- Evidence sufficiency verification
+- Decision outcomes for continue / re-plan / replicate / human review / inconclusive
+- Human escalation policy for low-confidence or high-risk decisions
+- Decision audit trail
 
 ### Experimentation
 
@@ -671,8 +813,13 @@ Research Report
 - Telemetry
 - Benchmark execution
 - Method-selection evaluation
+- Hypothesis-gate evaluation
+- Evidence-gate evaluation
+- Confidence/calibration evaluation
 - Quantitative metrics
 - Ablation study
+
+> **Implementation note:** TypeSafe/Jev là một candidate cho structured decision model. BRD chỉ yêu cầu capability `Structured Decision Gate`; vendor/model cụ thể được quyết định ở PRD/SDD để tránh khóa kiến trúc vào một provider.
 
 ---
 
@@ -1221,6 +1368,9 @@ No Retry
 No Profiling
 No Validator
 No Hypothesis Refinement
+No Hypothesis Selection Gate
+No Evidence Sufficiency Gate
+LLM-only Decision Baseline
 Single Agent
 Text-to-Code Baseline
 ```
@@ -1379,6 +1529,280 @@ Mỗi official experiment phải lưu snapshot tối thiểu:
 
 ---
 
+## BR-56 — Research State Construction
+
+Trước mỗi research iteration, hệ thống phải xây dựng một Research State có cấu trúc từ:
+
+- research question;
+- current hypothesis;
+- previous hypotheses;
+- experiment history;
+- validated findings;
+- conflicting evidence;
+- uncertainty/warnings;
+- dataset version;
+- remaining constraints/budget.
+
+Research State là input dùng để sinh và đánh giá hướng nghiên cứu tiếp theo.
+
+---
+
+## BR-57 — Candidate Hypothesis / Direction Generation
+
+Hệ thống phải có khả năng tạo một hoặc nhiều candidate hypotheses/research directions từ Research State.
+
+Mỗi candidate phải có:
+
+- statement;
+- rationale;
+- parent evidence;
+- testability;
+- relevant variables;
+- risk/uncertainty notes.
+
+---
+
+## BR-58 — Structured Hypothesis Selection Gate
+
+Trước khi đầu tư vào deep reasoning/experiment planning cho research iteration tiếp theo, hệ thống phải có khả năng:
+
+```text
+Rank
+Select
+Reject
+Escalate
+```
+
+candidate hypotheses/directions bằng một structured decision.
+
+Decision record tối thiểu phải có:
+
+- selected candidate hoặc outcome;
+- confidence/uncertainty;
+- reason codes hoặc decision metadata;
+- Research State version được sử dụng.
+
+---
+
+## BR-59 — Evidence Sufficiency Gate
+
+Sau deterministic scientific validation, mỗi experiment result phải được đánh giá bằng một structured evidence decision.
+
+Các outcome tối thiểu:
+
+```text
+ENOUGH_EVIDENCE
+NEED_MORE_EVIDENCE
+TRY_ALTERNATIVE_METHOD
+REPLICATE
+NEED_HUMAN_REVIEW
+INCONCLUSIVE
+```
+
+Outcome phải điều khiển bước tiếp theo của research loop thay vì mặc định tạo finding.
+
+---
+
+## BR-60 — Scientific Refinement Loop
+
+Khi Evidence Sufficiency Gate trả về:
+
+```text
+NEED_MORE_EVIDENCE
+TRY_ALTERNATIVE_METHOD
+REPLICATE
+```
+
+hệ thống phải chuyển state về reasoning/planning để tạo experiment tiếp theo.
+
+Đây là scientific refinement, khác với technical retry do execution error.
+
+---
+
+## BR-61 — Confidence-Based Human Escalation
+
+Decision gate phải có thể chuyển quyết định cho researcher khi:
+
+- confidence dưới policy threshold;
+- evidence conflict nghiêm trọng;
+- ambiguity ảnh hưởng interpretation;
+- methodological choice có high impact;
+- decision outcome là `NEED_HUMAN_REVIEW`.
+
+---
+
+## BR-62 — Decision Auditability
+
+Mọi decision gate phải lưu:
+
+- input Research State/reference;
+- candidate choices;
+- selected outcome;
+- confidence/uncertainty;
+- timestamp;
+- model/provider/configuration identifier;
+- downstream action.
+
+---
+
+## BR-63 — Decision Gate Evaluation
+
+Evaluation framework phải đo được quality của structured decision gates, bao gồm tối thiểu:
+
+- decision accuracy/correctness;
+- selection quality;
+- false acceptance of insufficient evidence;
+- unnecessary continuation rate;
+- human escalation rate;
+- confidence/calibration quality;
+- latency;
+- cost.
+
+System phải hỗ trợ so sánh:
+
+```text
+Structured Decision Gate
+vs
+LLM-only Decision
+```
+
+trên cùng benchmark tasks khi khả thi.
+
+---
+
+
+# 10.1. Business Requirement Prioritization — MoSCoW
+
+Priority được hiểu theo **cam kết cho bản capstone cuối**, không phải thứ tự sprint.
+
+- **Must:** bắt buộc để platform đáp ứng research scope và acceptance criteria.
+- **Should:** giá trị cao và nên hoàn thành, nhưng có thể defer nếu ảnh hưởng tiến độ core.
+- **Could:** chỉ thực hiện khi còn capacity; hiện được quản lý ở Scope 9.3 và chưa cấp BR ID.
+- **Won't:** chủ động loại khỏi phiên bản capstone hiện tại; được liệt kê tại Scope 9.4.
+- **Must\*:** Must có điều kiện khi loại workflow tương ứng được sử dụng.
+
+| BR | Requirement | Priority | Rationale |
+|---|---|---|---|
+| BR-01 | Authentication | Must | Thuộc core/final submission scope. |
+| BR-02 | Role-Based Access Control | Must | Thuộc core/final submission scope. |
+| BR-03 | Research Project Workspace | Must | Thuộc core/final submission scope. |
+| BR-04 | Dataset Upload | Must | Thuộc core/final submission scope. |
+| BR-05 | Dataset Validation | Must | Thuộc core/final submission scope. |
+| BR-06 | Automatic Dataset Understanding | Must | Thuộc core/final submission scope. |
+| BR-07 | Data Profiling | Must | Thuộc core/final submission scope. |
+| BR-08 | Data Quality Review | Must | Thuộc core/final submission scope. |
+| BR-09 | Cleaning Recommendation | Must | Thuộc core/final submission scope. |
+| BR-10 | Human Approval | Must | Thuộc core/final submission scope. |
+| BR-11 | Original Dataset Preservation | Must | Thuộc core/final submission scope. |
+| BR-12 | Dataset Versioning | Must | Thuộc core/final submission scope. |
+| BR-13 | Research Question Definition | Must | Thuộc core/final submission scope. |
+| BR-14 | Hypothesis Definition | Must | Thuộc core/final submission scope. |
+| BR-15 | Hypothesis Status | Must | Thuộc core/final submission scope. |
+| BR-16 | Research Context | Must | Thuộc core/final submission scope. |
+| BR-17 | Experiment Planning | Must | Thuộc core/final submission scope. |
+| BR-18 | Candidate Method Generation | Must | Thuộc core/final submission scope. |
+| BR-19 | Assumption Checking | Must | Thuộc core/final submission scope. |
+| BR-20 | Method Selection | Must | Thuộc core/final submission scope. |
+| BR-21 | Limited Experiment Branching | Must | Thuộc core/final submission scope. |
+| BR-22 | Experiment Execution | Must | Thuộc core/final submission scope. |
+| BR-23 | Self-Correction | Must | Thuộc core/final submission scope. |
+| BR-24 | Experiment Validation | Must | Thuộc core/final submission scope. |
+| BR-25 | Replication | Should | Tăng độ mạnh evidence; core loop vẫn hoạt động khi chưa cần replication. |
+| BR-26 | Research Finding Generation | Must | Thuộc core/final submission scope. |
+| BR-27 | Finding Status | Must | Thuộc core/final submission scope. |
+| BR-28 | Hypothesis Refinement | Must | Thuộc core/final submission scope. |
+| BR-29 | Experiment-Finding-Hypothesis Linkage | Must | Thuộc core/final submission scope. |
+| BR-30 | Stopping Criteria | Must | Thuộc core/final submission scope. |
+| BR-31 | Statistical Analysis | Must | Thuộc core/final submission scope. |
+| BR-32 | Visualization | Must | Thuộc core/final submission scope. |
+| BR-33 | Figure Review | Should | Nâng chất lượng figure; không chặn core research loop. |
+| BR-34 | Research Finding Provenance | Must | Thuộc core/final submission scope. |
+| BR-35 | Execution Trace | Must | Thuộc core/final submission scope. |
+| BR-36 | Experiment History | Must | Thuộc core/final submission scope. |
+| BR-37 | Reproducibility Metadata | Must | Thuộc core/final submission scope. |
+| BR-38 | Research Figure/Table Output | Must | Thuộc core/final submission scope. |
+| BR-39 | Methodology Summary | Must | Thuộc core/final submission scope. |
+| BR-40 | Limitations | Must | Thuộc core/final submission scope. |
+| BR-41 | Research Report Generation | Must | Thuộc core/final submission scope. |
+| BR-42 | Finding Validation | Must | Thuộc core/final submission scope. |
+| BR-43 | Evaluation Framework | Must | Thuộc core/final submission scope. |
+| BR-44 | Benchmark Task Structure | Must | Thuộc core/final submission scope. |
+| BR-45 | Evaluation Metrics | Must | Thuộc core/final submission scope. |
+| BR-46 | Agent Configuration Comparison | Must | Thuộc core/final submission scope. |
+| BR-47 | Data Split & Leakage Guard | Must* | Bắt buộc khi workflow predictive/ML có data split. |
+| BR-48 | Hypothesis Origin Classification | Must | Thuộc core/final submission scope. |
+| BR-49 | Multiple-Testing Control | Must | Thuộc core/final submission scope. |
+| BR-50 | Effect Size & Confidence Interval | Must | Thuộc core/final submission scope. |
+| BR-51 | Experiment Dependency Graph | Should | Quan trọng cho research nhiều vòng; có thể triển khai sau core lineage. |
+| BR-52 | Downstream Invalidation | Should | Phụ thuộc dependency graph; triển khai sau khi BR-51 ổn định. |
+| BR-53 | Conflicting Evidence Management | Should | Tăng scientific robustness; có thể triển khai sau core finding flow. |
+| BR-54 | Confidence & Uncertainty Recording | Must | Thuộc core/final submission scope. |
+| BR-55 | Reproducibility Snapshot | Must | Thuộc core/final submission scope. |
+| BR-56 | Research State Construction | Must | Thuộc core/final submission scope. |
+| BR-57 | Candidate Hypothesis / Direction Generation | Must | Thuộc core/final submission scope. |
+| BR-58 | Structured Hypothesis Selection Gate | Must | Thuộc core/final submission scope. |
+| BR-59 | Evidence Sufficiency Gate | Must | Thuộc core/final submission scope. |
+| BR-60 | Scientific Refinement Loop | Must | Thuộc core/final submission scope. |
+| BR-61 | Confidence-Based Human Escalation | Must | Thuộc core/final submission scope. |
+| BR-62 | Decision Auditability | Must | Thuộc core/final submission scope. |
+| BR-63 | Decision Gate Evaluation | Must | Thuộc core/final submission scope. |
+
+**Scope control rule:** một requirement mới chỉ được thêm vào nhóm Must khi chứng minh được liên kết tới Business Problem, Business Objective và Research/Evaluation need. Nếu không, requirement phải được xếp Should/Could hoặc Out of Scope.
+
+---
+
+
+# 10.2. High-Level Non-Functional Requirements
+
+Các NFR dưới đây mô tả **quality expectations ở mức BRD**. Threshold kỹ thuật chi tiết sẽ được chốt ở PRD/SDD và Test Plan.
+
+| ID | Quality Attribute | Business Requirement |
+|---|---|---|
+| NFR-01 | Security & Access Control | Dataset, experiment, findings và project artifacts chỉ được truy cập bởi user có quyền phù hợp; không được có cross-project data exposure. |
+| NFR-02 | Reliability & Recovery | Execution failure không được làm mất raw dataset, experiment history hoặc project state; user phải có khả năng tiếp tục/re-run từ trạng thái an toàn. |
+| NFR-03 | Auditability & Traceability | Mọi official experiment, finding, approval và structured decision quan trọng phải có audit trail/execution reference. |
+| NFR-04 | Explainability | Method selection, validation outcome và bounded decision quan trọng phải có rationale hoặc structured metadata đủ để researcher review. |
+| NFR-05 | Reproducibility | Official experiments/findings phải có reproducibility metadata/snapshot đủ để tái lập trong phạm vi environment được hỗ trợ. |
+| NFR-06 | Performance & Responsiveness | Tác vụ tương tác thông thường phải phản hồi trong thời gian chấp nhận được; long-running experiment phải có status/progress, timeout và failure state rõ ràng. |
+| NFR-07 | Privacy & Data Governance | Dữ liệu nghiên cứu chỉ được sử dụng trong scope được user/project cho phép; raw data và sensitive context không được expose ngoài luồng được kiểm soát. |
+| NFR-08 | Maintainability & Modularity | Planner, analytical tools, validators và structured decision providers phải có thể thay đổi độc lập ở mức thiết kế; platform không được phụ thuộc bắt buộc vào một AI/decision vendor duy nhất. |
+| NFR-09 | Usability | Core research workflow phải có thể được thực hiện mà researcher không cần trực tiếp viết code; system phải hiển thị state, warning và required human action rõ ràng. |
+| NFR-10 | Observability & Cost Awareness | System phải ghi nhận execution status, error, latency, usage và cost-related telemetry đủ để vận hành và đánh giá research agent. |
+| NFR-11 | Scientific Integrity | System không được tự động biến hypothesis thành fact, association thành causation hoặc statistically significant result thành practical significance nếu thiếu evidence phù hợp. |
+| NFR-12 | Decision Safety | Low-confidence/high-risk structured decisions phải tuân theo escalation policy; confidence không được dùng để thay thế deterministic scientific evidence. |
+
+### NFR Acceptance Direction
+
+Các tiêu chí sau phải được thể hiện trong PRD/Test Plan:
+
+```text
+Security
+→ authorization / project-isolation tests
+
+Reliability
+→ failure / retry / recovery tests
+
+Auditability
+→ trace completeness tests
+
+Explainability
+→ rationale / decision-record checks
+
+Reproducibility
+→ re-run / snapshot verification
+
+Performance
+→ response-time / long-running job tests
+
+Decision Safety
+→ low-confidence escalation tests
+
+Scientific Integrity
+→ unsupported-claim / evidence checks
+```
+
+---
+
 # 11. Business Rules
 
 ## BRule-01 — Project Isolation
@@ -1520,6 +1944,52 @@ Finding được đưa vào final research report phải tham chiếu experiment
 
 ---
 
+## BRule-24 — Generative Reasoning and Decision Gating Are Separate Responsibilities
+
+Free-form LLM reasoning không được là nguồn duy nhất cho các bounded decisions quan trọng nếu hệ thống đã định nghĩa structured gate cho decision đó.
+
+---
+
+## BRule-25 — Tools Establish Scientific Facts
+
+Statistical values, diagnostics và deterministic checks phải được tạo bởi analytical/statistical tools khi có thể; decision model không được tự phát minh scientific facts.
+
+---
+
+## BRule-26 — Evidence Gate Precedes Official Finding
+
+Experiment chạy thành công không tự động tạo validated finding. Evidence Sufficiency Gate phải xác định evidence đủ hoặc yêu cầu next action.
+
+---
+
+## BRule-27 — Technical Retry Is Not Scientific Refinement
+
+```text
+Execution Error → Technical Retry / Re-plan
+```
+
+khác với:
+
+```text
+Valid Execution + Insufficient Evidence → Scientific Refinement
+```
+
+Hai loại loop phải được ghi nhận và đánh giá riêng.
+
+---
+
+## BRule-28 — Low Confidence Requires Policy-Based Escalation
+
+Decision có confidence thấp hoặc risk cao phải tuân theo escalation policy thay vì tự động tiếp tục.
+
+---
+
+## BRule-29 — Structured Decision History Must Be Preserved
+
+Mọi selection/verification decision phải được giữ trong audit history và liên kết với Research State đã tạo ra decision đó.
+
+---
+
 # 12. Business Process — Research Setup
 
 ```text
@@ -1540,12 +2010,18 @@ Start Research Loop
 
 ---
 
-# 13. Business Process — Experiment Loop
+# 13. Business Process — Decision-Gated Research Loop
 
 ```text
-Hypothesis
+Research State
     ↓
-Experiment Planner
+Generate Candidate Hypotheses / Directions
+    ↓
+Structured Hypothesis Selection Gate
+    ↓
+Selected Hypothesis
+    ↓
+LLM Deep Reasoning / Experiment Planner
     ↓
 Generate Candidate Methods
     ↓
@@ -1555,45 +2031,73 @@ Select Method
     ↓
 Execute Experiment
     ↓
-Validate Result
+Deterministic Scientific Validation
     ↓
-Generate Finding
+Evidence Sufficiency Gate
     ↓
-Finding Conclusive?
-   / \
- No   Yes
- │     │
- ▼     ▼
-Refine  Generate Next Hypothesis
-Method      ↓
- │       New Experiment
- └───────────────┐
-                 ↓
-           Stopping Criteria
+Decision
+├── ENOUGH_EVIDENCE
+│       ↓
+│   Generate Finding
+│       ↓
+│   Update Research State
+│
+├── NEED_MORE_EVIDENCE
+│       ↓
+│   LLM Re-plan
+│
+├── TRY_ALTERNATIVE_METHOD
+│       ↓
+│   LLM Re-plan
+│
+├── REPLICATE
+│       ↓
+│   New Experiment
+│
+├── NEED_HUMAN_REVIEW
+│       ↓
+│   Researcher Decision
+│
+└── INCONCLUSIVE
+        ↓
+    Record Outcome
+        ↓
+Update Research State
+    ↓
+Stopping Criteria
+├── Continue → Next Candidate Hypotheses
+└── Stop → Final Research Findings
 ```
 
 ---
 
-# 14. Business Process — Hypothesis Refinement
+# 14. Business Process — Hypothesis Generation & Selection
 
 ```text
-Initial Hypothesis H1
+Initial H1 / Previous Finding Fn
         ↓
-Experiment E1
+Build / Update Research State
         ↓
-Finding F1
+Generate Candidates
+├── H(n+1)-A
+├── H(n+1)-B
+└── H(n+1)-C
         ↓
-Generate H2
+Structured Hypothesis Selection Gate
         ↓
+Rank / Select / Reject / Escalate
+        ↓
+Selected H(n+1)
+        ↓
+Type: Post-hoc / Exploratory
 Status: Unverified
         ↓
-Experiment E2
+Deep Reasoning + Experiment Planning
         ↓
-Finding F2
-        ↓
-H2:
-Supported / Rejected / Inconclusive
+Experiment E(n+1)
 ```
+
+Candidate hypothesis chỉ trở thành active research direction sau khi được selection gate và policy/human review xử lý.
 
 ---
 
@@ -1662,9 +2166,29 @@ Effect Size + Confidence Interval
       ↓
 Leakage Check (if applicable)
       ↓
-Evidence Quality Check
+Evidence Quality Facts
+```
+
+Deterministic scientific validation tạo facts/evidence; nó không tự động quyết định rằng research evidence đã đủ để dừng.
+
+---
+
+# 16.1.1. Business Process — Evidence Sufficiency Gate
+
+```text
+Validated Scientific Facts
+      +
+Current Research State
       ↓
-Finding Status
+Structured Evidence Gate
+      ↓
+Decision
+├── ENOUGH_EVIDENCE → Finding
+├── NEED_MORE_EVIDENCE → LLM Re-plan
+├── TRY_ALTERNATIVE_METHOD → LLM Re-plan
+├── REPLICATE → New Experiment
+├── NEED_HUMAN_REVIEW → Researcher
+└── INCONCLUSIVE → Record Outcome
 ```
 
 ---
@@ -1715,6 +2239,8 @@ Run Agent
       ↓
 Collect Experiments
       ↓
+Collect Decision-Gate Outputs
+      ↓
 Collect Findings
       ↓
 Collect Trace
@@ -1746,6 +2272,8 @@ Evaluation Report
 - Predictive workflows phải kiểm soát data leakage.
 - Downstream findings có thể phụ thuộc evidence upstream.
 - Ground truth hoặc expert rubric cần thiết cho benchmark.
+- Structured decision capability có thể được triển khai bằng TypeSafe/Jev hoặc provider/model tương đương; business requirements không phụ thuộc một vendor cụ thể.
+- Decision confidence chỉ hỗ trợ routing/escalation, không thay thế deterministic statistical evidence.
 
 ---
 
@@ -1785,6 +2313,11 @@ Evaluation Report
 | R-16 | Upstream experiment sai làm lệch downstream | High | Dependency graph + invalidation propagation |
 | R-17 | Cherry-picking evidence | High | Conflicting-evidence preservation |
 | R-18 | Re-run cho kết quả khác | Medium | Reproducibility snapshot |
+| R-19 | Decision gate chọn hypothesis kém | High | Benchmark selection quality + human review |
+| R-20 | Evidence gate chấp nhận evidence chưa đủ | High | Deterministic validation + gate evaluation + escalation |
+| R-21 | Confidence không được calibration tốt | Medium | Calibration evaluation + conservative threshold |
+| R-22 | Quá phụ thuộc một decision-model provider | Medium | Provider abstraction + fallback strategy |
+| R-23 | LLM và decision gate tạo feedback loop quá dài | Medium | Stopping criteria + experiment/time/cost budgets |
 
 ---
 
@@ -1818,6 +2351,10 @@ Evaluation Report
 - benchmark được agent;
 - so sánh architecture;
 - đo method selection;
+- đo hypothesis-selection quality;
+- đo evidence-sufficiency decision;
+- đo confidence/calibration;
+- so sánh structured decision gate với LLM-only decision baseline;
 - đo reproducibility;
 - đo provenance.
 
@@ -1857,15 +2394,87 @@ Platform được xem là đạt mục tiêu business khi:
 28. Upstream invalidation được propagate xuống downstream artifacts.
 29. Conflicting evidence được giữ lại và hiển thị.
 30. Official experiment có reproducibility snapshot.
+31. Hệ thống xây dựng Research State trước mỗi iteration.
+32. Agent có thể tạo nhiều candidate hypotheses/research directions.
+33. Candidate hypothesis được rank/select/reject bằng structured decision gate trước deep experiment planning.
+34. Hypothesis selection decision có confidence/uncertainty và audit record.
+35. Deterministic scientific validation hoàn tất trước Evidence Sufficiency Gate.
+36. Experiment chạy thành công không tự động trở thành validated finding.
+37. Evidence Sufficiency Gate trả một outcome có cấu trúc.
+38. `NEED_MORE_EVIDENCE`, `TRY_ALTERNATIVE_METHOD` và `REPLICATE` kích hoạt scientific refinement loop.
+39. `NEED_HUMAN_REVIEW` chuyển decision cho researcher.
+40. Low-confidence/high-risk decisions tuân thủ escalation policy.
+41. Technical retry và scientific refinement được trace riêng.
+42. Evaluation framework đo được quality của hypothesis gate và evidence gate.
+43. Có thể so sánh structured decision gate với LLM-only decision baseline.
 
 ---
 
-# 23. Traceability Structure
+# 23. Business & Research Traceability Matrix
+
+## 23.1. Research Questions Used for Traceability
+
+Để giữ liên kết với mục tiêu nghiên cứu ban đầu của capstone, BRD operationalize ba Research Questions như sau:
+
+- **RQ1 — End-to-End Effectiveness:** AI Research Agent thực hiện end-to-end research experimentation trên user-provided datasets hiệu quả đến mức nào?
+- **RQ2 — Architecture Effectiveness:** Kiến trúc `Generate → Select → Reason → Execute → Validate → Verify → Refine`, kết hợp generative reasoning, deterministic scientific tools và structured decision gates, cải thiện reliability/quality của research workflow đến mức nào?
+- **RQ3 — Task/Skill Performance:** AI Research Agent hoạt động như thế nào theo từng nhóm research task và skill khi được đánh giá bằng benchmark và quantitative metrics?
+
+Các RQ này giữ nguyên ý định cốt lõi của proposal: đánh giá end-to-end capability, giá trị của agentic architecture và performance theo task category.
+
+## 23.2. BO → BR → KPI → RQ Matrix
+
+| Business Objective | Key Business Requirements | KPI / Evidence | Research Question |
+|---|---|---|---|
+| BO-01 — Hỗ trợ researcher từ question đến finding | BR-13 → BR-30 | KPI-03 Agent reliability, task completion, experiment success | RQ1 |
+| BO-02 — Chọn phương pháp phù hợp | BR-18, BR-19, BR-20, BR-24 | Method-selection accuracy, assumption-check quality | RQ1, RQ3 |
+| BO-03 — Iterative hypothesis refinement | BR-28, BR-29, BR-30, BR-57, BR-60 | Experiment count, valid refinement rate, successful continuation | RQ1, RQ2 |
+| BO-04 — Tăng khả năng kiểm chứng finding | BR-34, BR-35, BR-42, BR-55 | KPI-04 evidence coverage, KPI-06 traceability | RQ1, RQ2 |
+| BO-05 — Bảo vệ dữ liệu gốc | BR-10, BR-11, BR-12 | KPI-05 destructive changes without approval = 0; KPI-07 raw preservation | RQ1 |
+| BO-06 — Human control | BR-10, BR-61 | Human intervention rate, escalation correctness | RQ2, RQ3 |
+| BO-07 / BO-12 — Reproducibility & leakage control | BR-37, BR-47, BR-55 | KPI-14 reproducibility coverage, leakage violations | RQ1, RQ3 |
+| BO-08 — Quantitative evaluation | BR-43 → BR-46, BR-63 | KPI-08 benchmark score coverage; task success; ablation deltas | RQ1, RQ2, RQ3 |
+| BO-09 — Multiple-testing & exploratory control | BR-48, BR-49 | Hypothesis-origin coverage, correction compliance | RQ1, RQ3 |
+| BO-10 — Dependency & conflicting evidence | BR-51, BR-52, BR-53 | Dependency coverage, invalidation propagation, conflict preservation | RQ1, RQ2 |
+| BO-11 — Practical significance | BR-50 | Effect-size/CI coverage | RQ1, RQ3 |
+| BO-13 — Tách reasoning khỏi bounded decision | BR-56, BR-57, BR-58, BR-62 | KPI-15 selection records; decision correctness | RQ2 |
+| BO-14 — Evidence sufficiency verification | BR-59, BR-60 | KPI-16 evidence-gate coverage; false acceptance rate | RQ2, RQ3 |
+| BO-15 — Confidence-based escalation | BR-54, BR-61, BR-63 | KPI-17 safe escalation; calibration quality | RQ2, RQ3 |
+
+## 23.3. Product Traceability Chain
+
+Ở cấp artifact, traceability phải duy trì theo chuỗi:
+
+```text
+Business Problem
+      ↓
+Business Objective
+      ↓
+Business Requirement
+      ↓
+Product Feature / User Story
+      ↓
+Acceptance Criteria
+      ↓
+Test Case
+      ↓
+Telemetry / Evaluation Metric
+      ↓
+Research Question
+```
+
+Ở cấp research execution:
 
 ```text
 Research Question
       ↓
-Hypothesis
+Research State
+      ↓
+Candidate Hypotheses
+      ↓
+Hypothesis Selection Decision
+      ↓
+Selected Hypothesis
       ↓
 Experiment
       ↓
@@ -1873,40 +2482,24 @@ Method
       ↓
 Execution
       ↓
-Finding
+Deterministic Scientific Evidence
       ↓
-Evidence Quality
+Evidence Sufficiency Decision
       ↓
-Next Hypothesis
+Finding / Refinement / Human Review / Inconclusive
       ↓
-Dependency / Conflict Check
+Updated Research State
       ↓
-Research Conclusion
+Next Hypothesis or Research Conclusion
 ```
 
-Và ở cấp requirement:
-
-```text
-Business Objective
-      ↓
-Business Requirement
-      ↓
-Product Feature
-      ↓
-User Story
-      ↓
-Acceptance Criteria
-      ↓
-Test Case
-      ↓
-Research Metric / RQ
-```
+**Traceability rule:** một official conclusion phải truy ngược được về evidence và experiment; một core feature phải truy ngược được về BR/BO/RQ hoặc một NFR đã được phê duyệt.
 
 ---
 
 # 24. High-Level Product Positioning
 
-> AI Research Experimentation Platform là nền tảng AI Agent hỗ trợ researcher thực hiện vòng lặp nghiên cứu dựa trên dữ liệu: từ research question, hypothesis, method selection và experiment execution đến finding validation, hypothesis refinement và research reporting. Platform tập trung vào evidence, provenance, reproducibility và human control thay vì chỉ trả về câu trả lời dạng black-box.
+> AI Research Experimentation Platform là nền tảng AI Agent hỗ trợ researcher thực hiện vòng lặp nghiên cứu dựa trên dữ liệu với kiến trúc `Generate → Select → Reason → Execute → Validate → Verify → Refine`. Platform tách generative reasoning, deterministic scientific computation và structured decision gating để lựa chọn hypothesis, đánh giá evidence sufficiency và quyết định bước tiếp theo có kiểm soát. Mục tiêu là tạo evidence-backed findings có provenance, reproducibility, confidence-aware escalation và human control thay vì chỉ trả về câu trả lời dạng black-box.
 
 ---
 
@@ -1914,6 +2507,12 @@ Research Metric / RQ
 
 ```text
 Research Question
+        +
+Research State
+        +
+Candidate Hypothesis Generation
+        +
+Structured Hypothesis Selection
         +
 Hypothesis Management
         +
@@ -1931,7 +2530,17 @@ Experiment Branching
         +
 Hypothesis Refinement
         +
+Deterministic Scientific Validation
+        +
+Evidence Sufficiency Verification
+        +
+Scientific Refinement Loop
+        +
 Finding Validation
+        +
+Confidence-Based Human Escalation
+        +
+Decision Auditability
         +
 Provenance
         +
@@ -1983,6 +2592,14 @@ Systematic Evaluation
 | Experiment Dependency Graph | Graph liên kết hypothesis, experiment, finding và downstream research steps |
 | Conflicting Evidence | Nhiều experiment tạo evidence trái chiều |
 | Reproducibility Snapshot | Snapshot dataset/code/config/model/tool/environment để tái lập experiment |
+| Research State | Structured state tổng hợp question, hypothesis, experiment history, findings, conflicts, uncertainty và constraints tại một iteration |
+| Candidate Hypothesis | Hypothesis/research direction được sinh ra để selection gate đánh giá trước khi active |
+| Structured Decision Gate | Thành phần trả bounded decision có cấu trúc thay vì free-form text |
+| Hypothesis Selection Gate | Decision gate dùng để rank/select/reject/escalate candidate hypotheses |
+| Evidence Sufficiency Gate | Decision gate xác định evidence đủ để tạo finding hay cần thêm analysis/replication/review |
+| Scientific Refinement | Vòng lặp bổ sung experiment vì evidence chưa đủ, khác technical retry do lỗi execution |
+| Decision Confidence | Confidence/uncertainty metadata dùng cho routing và human escalation |
+| TypeSafe / Jev | Candidate implementation cho structured decision capability; không phải dependency bắt buộc của BRD |
 
 ---
 
@@ -2004,3 +2621,5 @@ Systematic Evaluation
 | 0.2 |  |  | Reframed toward AI Research Experimentation with iterative hypothesis-experiment loops |
 | 0.3 | 2026-09-19 |  | Added scientific-validity controls: multiple testing, post-hoc hypothesis classification, effect size/CI, data leakage guard, dependency graph, conflicting evidence, uncertainty and reproducibility snapshot |
 | 1.0 | 2026-09-19 |  | Finalized BRD and aligned with final architecture diagram and iterative research loop |
+| 1.1 | 2026-09-20 |  | Added decision-gated research architecture: Research State, candidate-hypothesis selection, structured decision confidence, evidence sufficiency verification, scientific refinement loop, human escalation, and decision-gate evaluation; TypeSafe/Jev recorded as an implementation candidate rather than a required vendor |
+| 1.2 | 2026-09-20 |  | Submission-ready BRD: added Gap Analysis, explicit MoSCoW prioritization for BR-01→BR-63, high-level NFR summary, and BO→BR→KPI→RQ traceability matrix; scope remains unchanged from v1.1 |

@@ -3,10 +3,10 @@
 
 **Document Type:** Product Requirements Document  
 **Project:** AI Research Experimentation Platform  
-**Version:** 0.1 Draft  
-**Status:** Draft for Product / Technical Review  
-**Source:** Business Requirements Document Final v1.0  
-**Date:** 2026-09-19  
+**Version:** 1.0 Final  
+**Status:** Final / Aligned with BRD v1.2  
+**Source:** Business Requirements Document Final v1.2  
+**Date:** 2026-09-20  
 
 ---
 
@@ -17,34 +17,47 @@ AI Research Experimentation Platform là nền tảng web sử dụng AI Agent �
 Sản phẩm không chỉ thực hiện một lần phân tích dữ liệu, mà quản lý một research loop có cấu trúc:
 
 ```text
-Research Question
-    ↓
-Initial Hypothesis H0 / H1
-    ↓
-Dataset Understanding
-    ↓
+Research Question + Dataset
+        ↓
+Dataset Understanding / Data Card
+        ↓
+Initial H0 / H1
+        ↓
+Build Research State
+        ↓
+Generate Candidate Hypotheses / Research Directions
+        ↓
+Structured Hypothesis Selection Gate
+        ↓
+Selected Hypothesis / Direction
+        ↓
+LLM Deep Reasoning
+        ↓
 Experiment Planning
-    ↓
-Candidate Method Selection
-    ↓
-Assumption Checking
-    ↓
+        ↓
+Candidate Method Generation
+        ↓
+Deterministic Assumption Checks
+        ↓
 Experiment Execution
-    ↓
-Scientific Validation
-    ↓
-Research Finding
-    ↓
+        ↓
+Deterministic Scientific Validation
+        ↓
+Evidence Sufficiency Gate
+        ↓
+Decision
+├── ENOUGH_EVIDENCE → Research Finding
+├── NEED_MORE_EVIDENCE → Scientific Refinement
+├── TRY_ALTERNATIVE_METHOD → Scientific Refinement
+├── REPLICATE → New Experiment
+├── NEED_HUMAN_REVIEW → Researcher Review
+└── INCONCLUSIVE → Record Outcome
+        ↓
+Update Research State
+        ↓
 Stopping Criteria?
-   / \
- No   Yes
- │     │
- ▼     ▼
-Generate H(n+1)      Final Research Findings
-Post-hoc/Unverified          ↓
- │                    Figures / Tables
- ▼                           ↓
-Next Experiment       Research Report
+├── Continue → Next Candidate Hypotheses
+└── Stop → Final Findings → Figures/Tables → Research Report
 ```
 
 Mọi finding quan trọng phải có khả năng truy ngược về:
@@ -61,12 +74,14 @@ Finding
 → Statistical Result
 ```
 
-Platform tập trung vào bốn giá trị sản phẩm:
+Platform tập trung vào sáu giá trị sản phẩm:
 
 1. **Scientific Validity** — method phù hợp, assumptions rõ ràng, multiple-testing control, effect size và uncertainty.
-2. **Traceability** — mọi finding quan trọng có provenance và execution trace.
-3. **Reproducibility** — experiment có metadata/snapshot đủ để tái lập.
-4. **Human Control** — researcher giữ quyền quyết định tại các bước có uncertainty/risk cao.
+2. **Structured Decision Safety** — bounded decisions như hypothesis selection và evidence sufficiency có output cấu trúc, confidence và escalation policy.
+3. **Separation of Responsibilities** — LLM dùng cho generate/reason/refine; deterministic tools dùng để tính scientific facts; decision gates dùng để select/verify/route.
+4. **Traceability** — mọi finding và structured decision quan trọng có provenance, decision record và execution trace.
+5. **Reproducibility** — experiment có metadata/snapshot đủ để tái lập.
+6. **Human Control** — researcher giữ quyền quyết định tại các bước có uncertainty/risk cao.
 
 ---
 
@@ -92,6 +107,11 @@ Platform tập trung vào bốn giá trị sản phẩm:
 | PG-10 | Tạo figure/table/report có thể truy vết |
 | PG-11 | Lưu reproducibility snapshot cho official experiments |
 | PG-12 | Đánh giá agent bằng benchmark, metrics và ablation study |
+| PG-13 | Xây dựng Research State có cấu trúc cho từng research iteration |
+| PG-14 | Sinh và đánh giá candidate hypotheses/research directions trước deep experiment planning |
+| PG-15 | Sử dụng structured hypothesis-selection gate để rank/select/reject/escalate candidate directions |
+| PG-16 | Sử dụng evidence-sufficiency gate để quyết định finding, refinement, replication, review hoặc inconclusive |
+| PG-17 | Đánh giá chất lượng decision gates và so sánh structured decision với LLM-only baseline |
 
 ---
 
@@ -209,6 +229,22 @@ Risky cleaning, ambiguous variable meaning, conflicting evidence hoặc strong c
 
 Official experiment phải có reproducibility snapshot.
 
+## PP-09 — Tools Establish Scientific Facts
+
+Statistical values, diagnostics và deterministic checks phải đến từ analytical/statistical tools khi có thể. LLM hoặc decision model không được tự phát minh scientific facts.
+
+## PP-10 — Structured Decisions Before Automation
+
+Các bounded decision quan trọng phải dùng structured output có decision type, confidence/uncertainty và downstream action.
+
+## PP-11 — Technical Retry Is Not Scientific Refinement
+
+Execution failure được xử lý bằng technical retry/re-plan; valid execution nhưng evidence chưa đủ phải đi vào scientific refinement.
+
+## PP-12 — Confidence Does Not Replace Evidence
+
+Confidence của decision gate chỉ dùng cho routing/escalation, không thay thế p-value, effect size, confidence interval, diagnostics hoặc evidence thực tế.
+
 ---
 
 # 7. Product Scope & Priority
@@ -224,6 +260,9 @@ Official experiment phải có reproducibility snapshot.
 - Data Card;
 - research question;
 - H0/H1;
+- Research State;
+- candidate hypothesis / research-direction generation;
+- structured decision-provider interface;
 - experiment planner;
 - candidate method generation;
 - assumption checking;
@@ -240,6 +279,12 @@ Official experiment phải có reproducibility snapshot.
 
 - hypothesis refinement;
 - hypothesis origin/status;
+- structured Hypothesis Selection Gate;
+- Evidence Sufficiency Gate;
+- scientific refinement loop;
+- confidence-based human escalation;
+- decision audit trail;
+- decision-gate evaluation;
 - stopping criteria;
 - limited experiment branching;
 - multiple-testing control;
@@ -277,7 +322,10 @@ Primary project navigation:
 Project Overview
 ├── Research
 │   ├── Research Questions
-│   ├── Hypotheses
+│   ├── Research State
+│   ├── Candidate Hypotheses
+│   ├── Active Hypothesis
+│   ├── Decision History
 │   └── Research Loop
 ├── Datasets
 │   ├── Dataset List
@@ -292,6 +340,7 @@ Project Overview
 ├── Findings
 │   ├── Validated Findings
 │   ├── Conflicting Evidence
+│   ├── Evidence Sufficiency Decisions
 │   └── Evidence View
 ├── Outputs
 │   ├── Figures
@@ -330,9 +379,7 @@ Upload Dataset
 ↓
 Dataset Validation
 ↓
-Automatic Profiling
-↓
-Review Data Card
+Automatic Profiling + Data Card
 ↓
 Review Data Quality
 ↓
@@ -340,32 +387,65 @@ Apply Approved Cleaning if needed
 ↓
 Enter Research Question
 ↓
-Define Initial H0/H1
+Define / Confirm Initial H0/H1
 ↓
-Start Research Loop
+Build Research State
+↓
+Generate Candidate Hypotheses / Research Directions
+↓
+Structured Hypothesis Selection Gate
+├── Select → Continue
+├── Reject → Remove Candidate
+└── Low Confidence / High Risk → Researcher Review
+↓
+Selected Hypothesis / Direction
+↓
+LLM Deep Reasoning
 ↓
 Generate Experiment Plan
 ↓
 Generate Candidate Methods
 ↓
-Check Assumptions
+Deterministic Assumption Checks
 ↓
-Select Method / Branch
+Select Method / Limited Branch
 ↓
-Execute in Sandbox
+Execute in Secure Sandbox
 ↓
-Observe / Retry / Re-plan
+Execution Successful?
+├── No → Technical Retry / Re-plan
+└── Yes
+     ↓
+Deterministic Scientific Validation
 ↓
-Scientific Validation
+Evidence Sufficiency Gate
+├── ENOUGH_EVIDENCE → Generate Finding
+├── NEED_MORE_EVIDENCE → LLM Re-plan
+├── TRY_ALTERNATIVE_METHOD → LLM Re-plan
+├── REPLICATE → New Experiment
+├── NEED_HUMAN_REVIEW → Researcher Review
+└── INCONCLUSIVE → Record Outcome
 ↓
-Generate Finding
-↓
-Evaluate Hypothesis
+Update Research State
 ↓
 Stopping Criteria?
-├── No → Generate/Review H(n+1) → Next Experiment
-└── Yes → Final Findings → Figures/Tables → Report
+├── No → Generate Next Candidate Hypotheses → Selection Gate → Next Iteration
+└── Yes → Final Findings → Figures/Tables → Research Report → Reproducibility Package
 ```
+
+### Product Rule
+
+The product must visibly distinguish:
+
+```text
+Technical Retry
+= execution failed
+
+Scientific Refinement
+= execution succeeded, but evidence is insufficient
+```
+
+These paths must have different states, trace entries and evaluation metrics.
 
 ---
 
@@ -2063,6 +2143,385 @@ Logs must not expose sensitive dataset contents unnecessarily.
 
 ---
 
+
+# 37.1. Feature Module AC — Research State & Candidate Hypothesis Generation
+
+## Objective
+
+Tạo một structured Research State làm source-of-context chính thức cho mỗi research iteration và sinh candidate hypotheses/research directions có thể đánh giá được.
+
+## Research State Fields
+
+Tối thiểu:
+
+```text
+research_question
+current_hypothesis
+previous_hypotheses
+experiment_history
+validated_findings
+conflicting_evidence
+uncertainty_warnings
+dataset_version
+remaining_experiment_budget
+remaining_cost_budget
+iteration_number
+```
+
+## Candidate Hypothesis Fields
+
+```text
+candidate_id
+statement
+rationale
+parent_evidence
+testability
+relevant_variables
+risk_notes
+uncertainty_notes
+origin
+status
+```
+
+## Functional Requirements
+
+### FR-STATE-01 — Build Research State
+
+System shall build a versioned Research State before each research iteration.
+
+### FR-STATE-02 — State Versioning
+
+Any meaningful update to findings, hypothesis status, dataset version or evidence must create/update the active Research State version.
+
+### FR-STATE-03 — Candidate Generation
+
+Agent shall be able to generate one or more candidate hypotheses/research directions from the active Research State.
+
+### FR-STATE-04 — Candidate Testability
+
+Candidate that cannot be operationalized/tested using available data/tools must be marked unsupported, deferred or require clarification.
+
+### FR-STATE-05 — Initial vs Post-hoc Origin
+
+Candidate generated after observing experiment findings must be marked `Post-hoc / Exploratory` by default.
+
+## Acceptance Criteria
+
+- each iteration has an inspectable Research State reference;
+- candidates show parent evidence and rationale;
+- generated candidates cannot silently become active hypotheses;
+- candidate origin and testability are visible;
+- Research State references exact dataset version.
+
+**Priority:** P1 / Must for final capstone
+
+---
+
+# 37.2. Feature Module AD — Structured Hypothesis Selection Gate
+
+## Objective
+
+Rank/select/reject/escalate candidate hypotheses or research directions before deep reasoning and experiment planning.
+
+## Decision Outcomes
+
+```text
+SELECT
+REJECT
+ESCALATE_TO_RESEARCHER
+NO_SUITABLE_CANDIDATE
+```
+
+A selection decision shall include:
+
+```text
+decision_id
+research_state_version
+candidate_scores_or_probabilities
+selected_candidate
+decision_outcome
+confidence
+uncertainty
+reason_codes
+provider
+provider_model_version
+configuration_version
+timestamp
+downstream_action
+```
+
+## Functional Requirements
+
+### FR-HGATE-01 — Candidate Evaluation
+
+Gate shall receive the active Research State plus candidate hypotheses/directions.
+
+### FR-HGATE-02 — Rank / Select / Reject
+
+Gate shall return a bounded decision and preserve the evaluated candidate set.
+
+### FR-HGATE-03 — Confidence
+
+Decision shall include confidence/uncertainty metadata when supported.
+
+### FR-HGATE-04 — Human Escalation
+
+If confidence is below configured threshold, evidence conflict is severe or risk is high, system shall create a researcher review task.
+
+### FR-HGATE-05 — Provider Abstraction
+
+Product shall use a `DecisionProvider` abstraction rather than bind business behavior to one vendor.
+
+Conceptual interface:
+
+```text
+DecisionProvider
+├── TypeSafe / Jev Provider       # candidate implementation
+└── Structured LLM Provider       # fallback / baseline
+```
+
+### FR-HGATE-06 — No Silent Activation
+
+A candidate may only become the active hypothesis/research direction after a valid selection decision or explicit researcher choice.
+
+## Acceptance Criteria
+
+- candidate set and selected outcome are inspectable;
+- low-confidence decision can be escalated;
+- provider can be switched without changing research-domain behavior;
+- decision record links to the exact Research State version;
+- LLM free-form text alone is not treated as the structured selection record.
+
+**Priority:** P1 / Must for final capstone
+
+---
+
+# 37.3. Feature Module AE — Evidence Sufficiency Gate
+
+## Objective
+
+Quyết định một validated experiment result đã có đủ evidence để tạo official finding hay cần thêm scientific work.
+
+## Inputs
+
+```text
+active_research_state
+hypothesis
+experiment_result
+assumption_results
+effect_size
+confidence_interval
+multiple_testing_status
+leakage_status
+diagnostics
+conflicting_evidence
+replication_history
+```
+
+## Required Outcomes
+
+```text
+ENOUGH_EVIDENCE
+NEED_MORE_EVIDENCE
+TRY_ALTERNATIVE_METHOD
+REPLICATE
+NEED_HUMAN_REVIEW
+INCONCLUSIVE
+```
+
+## Functional Requirements
+
+### FR-EGATE-01 — Gate After Deterministic Validation
+
+Evidence gate shall run only after deterministic scientific validation has produced the required facts/checks.
+
+### FR-EGATE-02 — Structured Decision
+
+Gate shall produce one required outcome plus confidence/uncertainty and reason codes.
+
+### FR-EGATE-03 — Finding Protection
+
+`ENOUGH_EVIDENCE` is the only automatic gate outcome that may proceed directly to validated finding generation.
+
+### FR-EGATE-04 — Inconclusive Is Valid
+
+`INCONCLUSIVE` must be treated as a legitimate research outcome and must not trigger forced significance-seeking.
+
+### FR-EGATE-05 — No Fact Generation
+
+Gate may evaluate the structured scientific evidence but must not fabricate statistical values or replace deterministic validation.
+
+## Acceptance Criteria
+
+- every completed validated experiment has an explicit evidence-sufficiency decision before official finding;
+- non-ENOUGH outcomes do not silently become findings;
+- `INCONCLUSIVE` can terminate or continue according to stopping policy;
+- decision links to validation outputs and Research State.
+
+**Priority:** P1 / Must for final capstone
+
+---
+
+# 37.4. Feature Module AF — Scientific Refinement & Confidence-Based Escalation
+
+## Objective
+
+Xử lý các trường hợp experiment chạy đúng nhưng evidence chưa đủ, và phân biệt rõ chúng với technical retry.
+
+## Refinement Routing
+
+```text
+NEED_MORE_EVIDENCE
+        ↓
+LLM Re-plan
+        ↓
+Design Additional Experiment
+
+TRY_ALTERNATIVE_METHOD
+        ↓
+LLM Re-plan
+        ↓
+Select Alternative Valid Method
+
+REPLICATE
+        ↓
+Create Replication Experiment
+
+NEED_HUMAN_REVIEW
+        ↓
+Researcher Review Task
+```
+
+## Functional Requirements
+
+### FR-REFLOOP-01 — Scientific Refinement
+
+System shall create a new/revised experiment plan when evidence decision requests more scientific work.
+
+### FR-REFLOOP-02 — Technical vs Scientific Classification
+
+Every retry/re-plan event shall be classified at minimum as:
+
+```text
+TECHNICAL_RETRY
+SCIENTIFIC_REFINEMENT
+```
+
+### FR-REFLOOP-03 — Budget Guard
+
+Scientific refinement must respect configured experiment, time and cost budgets.
+
+### FR-REFLOOP-04 — Escalation Policy
+
+Escalation rules may use:
+
+- confidence threshold;
+- methodological risk;
+- conflicting evidence;
+- ambiguity severity;
+- experiment budget;
+- explicit gate outcome.
+
+### FR-REFLOOP-05 — Researcher Actions
+
+Researcher can:
+
+```text
+Approve
+Modify
+Reject
+Stop Research
+Request Alternative
+```
+
+## Acceptance Criteria
+
+- scientific refinement is visible separately from technical retry;
+- refinement preserves parent hypothesis/experiment/evidence links;
+- low-confidence or high-risk decisions can be routed to researcher;
+- loop stops when budget or stopping criteria require it.
+
+**Priority:** P1 / Must for final capstone
+
+---
+
+# 37.5. Feature Module AG — Decision Audit, Configuration & Gate Evaluation
+
+## Objective
+
+Lưu lịch sử structured decisions, cho phép review/debug và đánh giá decision gates như một thành phần riêng của architecture.
+
+## Decision Record
+
+```text
+decision_id
+decision_type
+research_state_version
+input_references
+candidate_choices
+outcome
+confidence
+uncertainty
+reason_codes
+provider
+model_version
+configuration_version
+latency
+estimated_cost
+timestamp
+downstream_action
+human_override
+override_reason
+```
+
+## Functional Requirements
+
+### FR-DEC-01 — Audit History
+
+All hypothesis-selection and evidence-sufficiency decisions must be persisted and inspectable.
+
+### FR-DEC-02 — Configuration Version
+
+Decision record shall identify provider/model/configuration used for reproducibility and evaluation.
+
+### FR-DEC-03 — Human Override
+
+When researcher overrides a decision, system shall retain both original decision and override.
+
+### FR-DEC-04 — Gate Metrics
+
+Evaluation center shall support:
+
+- decision accuracy/correctness;
+- hypothesis-selection quality;
+- false acceptance of insufficient evidence;
+- unnecessary continuation rate;
+- human escalation rate;
+- confidence/calibration quality;
+- latency;
+- cost.
+
+### FR-DEC-05 — Baseline Comparison
+
+When benchmark labels/rubrics support it, evaluation shall compare:
+
+```text
+Structured Decision Gate
+vs
+LLM-only Decision Baseline
+```
+
+## Acceptance Criteria
+
+- decision history is filterable by type/provider/outcome;
+- benchmark run can collect gate-specific metrics;
+- decision-provider changes remain reproducible through configuration versioning;
+- human override is auditable.
+
+**Priority:** P1 / Must for final capstone
+
+---
+
 # 38. Agent Runtime Product Behavior
 
 High-level agent state machine:
@@ -2070,7 +2529,16 @@ High-level agent state machine:
 ```text
 IDLE
 ↓
-BUILD_CONTEXT
+BUILD_RESEARCH_STATE
+↓
+GENERATE_CANDIDATES
+↓
+HYPOTHESIS_GATE
+├── Escalate → WAIT_HUMAN
+├── No Suitable Candidate → ASK_USER / STOP
+└── Selected
+      ↓
+DEEP_REASON
 ↓
 PLAN
 ↓
@@ -2081,18 +2549,40 @@ SELECT_METHOD
 EXECUTE
 ↓
 OBSERVE
-├── Error → RETRY / REPLAN
+├── Error → TECHNICAL_RETRY / REPLAN
 └── Success
       ↓
-VALIDATE
-├── Invalid → REPLAN / ASK_USER / STOP
+DETERMINISTIC_VALIDATE
+├── Invalid / Recoverable → REPLAN
+├── Invalid / Not Recoverable → INCONCLUSIVE
 └── Valid
       ↓
-GENERATE_FINDING
+EVIDENCE_GATE
+├── ENOUGH_EVIDENCE → GENERATE_FINDING
+├── NEED_MORE_EVIDENCE → SCIENTIFIC_REFINEMENT
+├── TRY_ALTERNATIVE_METHOD → SCIENTIFIC_REFINEMENT
+├── REPLICATE → SCIENTIFIC_REFINEMENT
+├── NEED_HUMAN_REVIEW → WAIT_HUMAN
+└── INCONCLUSIVE → RECORD_OUTCOME
+      ↓
+UPDATE_RESEARCH_STATE
       ↓
 EVALUATE_STOPPING
-├── Continue → REFINE_HYPOTHESIS → PLAN
+├── Continue → GENERATE_CANDIDATES
 └── Stop → FINALIZE
+```
+
+## Agent Responsibility Model
+
+```text
+LLM / Generative Reasoner
+= generate + reason + plan + interpret + refine
+
+Analytical / Statistical Tools
+= calculate + execute + deterministic scientific checks
+
+Structured Decision Gate
+= select + verify + route + confidence-based escalation
 ```
 
 ## Agent Rules
@@ -2107,6 +2597,12 @@ EVALUATE_STOPPING
 8. Preserve conflicting evidence.
 9. Respect step/time/cost limits.
 10. Store reason summary for method selection/re-plan.
+11. Never treat decision-model confidence as scientific evidence.
+12. Never allow a candidate hypothesis to become active without a selection record or explicit researcher choice.
+13. Never create an official finding before evidence-sufficiency decision.
+14. Keep technical retry and scientific refinement as separate trace categories.
+15. Preserve all structured decision records and human overrides.
+16. If a structured decision provider is unavailable, apply configured fallback or require human review; do not silently skip the gate.
 
 ---
 
@@ -2122,7 +2618,11 @@ EVALUATE_STOPPING
 - potential causal interpretation;
 - conflicting evidence before final conclusion;
 - downstream invalidation affecting report;
-- explicit publication/final report approval.
+- explicit publication/final report approval;
+- hypothesis-selection gate below configured confidence threshold;
+- evidence gate below configured confidence threshold;
+- `NEED_HUMAN_REVIEW` outcome;
+- provider disagreement when configured as a high-risk policy.
 
 ## Optional Auto-Continue
 
@@ -2132,7 +2632,8 @@ Low-risk cases may continue automatically:
 - descriptive stats;
 - safe schema inspection;
 - read-only diagnostics;
-- retry of syntax/runtime error within limit.
+- retry of syntax/runtime error within limit;
+- high-confidence structured decision when policy allows auto-continue and no high-risk flag exists.
 
 ---
 
@@ -2208,6 +2709,44 @@ Rejected
 Invalidated
 ```
 
+## 40.5. Research State
+
+```text
+Building
+→ Active
+→ Updated
+→ Superseded
+```
+
+Each experiment/finding/decision must reference the Research State version used at the time.
+
+## 40.6. Structured Decision
+
+```text
+Pending
+→ Evaluating
+→ Decided
+```
+
+Alternative:
+
+```text
+Needs Human Review
+Overridden
+Failed
+Fallback Used
+```
+
+## 40.7. Scientific Refinement
+
+```text
+Requested
+→ Planning
+→ Ready
+→ Executing
+→ Re-verified
+```
+
 ---
 
 # 41. Core UI Screens
@@ -2244,10 +2783,14 @@ Primary workspace should show:
 
 ```text
 Research Question
+Research State Summary
+Candidate Hypotheses / Directions
+Hypothesis Selection Decision
 Active Hypothesis
-Agent Plan
+Agent Deep-Reasoning / Plan Summary
 Experiment Timeline
 Current Finding
+Evidence Sufficiency Decision
 Next Action
 ```
 
@@ -2260,7 +2803,9 @@ Plan
 Method & Assumptions
 Execution
 Result
-Validation
+Deterministic Validation
+Evidence Decision
+Refinement History
 Trace
 Reproducibility
 ```
@@ -2276,6 +2821,8 @@ Show:
 - evidence;
 - warnings;
 - provenance;
+- evidence-sufficiency decision;
+- decision confidence/uncertainty;
 - next hypothesis.
 
 ## 41.6. Dependency Graph
@@ -2294,8 +2841,32 @@ Show:
 - success rate;
 - method accuracy;
 - skill scores;
+- hypothesis-selection quality;
+- evidence-gate correctness;
+- false evidence acceptance rate;
+- escalation rate;
+- confidence/calibration quality;
 - cost;
 - ablation comparison.
+
+## 41.8. Decision History
+
+Show:
+
+```text
+Decision Type
+Research State Version
+Candidates / Evidence Input
+Outcome
+Confidence
+Reason Codes
+Provider / Model
+Downstream Action
+Human Override
+Timestamp
+```
+
+User must be able to open a decision and navigate to the related hypothesis, experiment, validation result and Research State.
 
 ---
 
@@ -2334,7 +2905,19 @@ Show:
 - conflicting evidence;
 - multiple-testing warning;
 - possible leakage;
-- unsupported causal claim.
+- unsupported causal claim;
+- evidence gate returned inconclusive;
+- evidence insufficient for official finding;
+- low-confidence structured decision.
+
+## Decision Gate
+
+- no suitable candidate hypothesis;
+- decision provider unavailable;
+- decision timeout;
+- malformed structured decision;
+- low confidence requiring review;
+- provider fallback activated.
 
 Every error state must include:
 
@@ -2357,7 +2940,11 @@ P1 notification types:
 - conflicting evidence detected;
 - downstream findings invalidated;
 - report ready;
-- benchmark complete.
+- benchmark complete;
+- hypothesis selection needs review;
+- evidence sufficiency needs review;
+- decision provider fallback used;
+- scientific refinement requested.
 
 Notifications should deep-link to the relevant object.
 
@@ -2379,7 +2966,10 @@ DataProfile
 DataCard
 ResearchQuestion
 ResearchContext
+ResearchState
+CandidateHypothesis
 Hypothesis
+HypothesisSelectionDecision
 ExperimentPlan
 Experiment
 ExperimentBranch
@@ -2388,6 +2978,9 @@ MethodSelection
 ExecutionRun
 ExecutionStep
 StatisticalResult
+ScientificValidation
+EvidenceSufficiencyDecision
+DecisionRecord
 Finding
 Evidence
 DependencyEdge
@@ -2400,6 +2993,7 @@ BenchmarkTask
 BenchmarkRun
 EvaluationMetric
 AgentConfiguration
+DecisionGateConfiguration
 AuditLog
 ```
 
@@ -2415,14 +3009,20 @@ Project
 │       └── Transformation
 │
 ├── ResearchQuestion
-│   └── Hypothesis
-│       └── Experiment
-│           ├── AssumptionCheck
-│           ├── MethodSelection
-│           ├── ExecutionRun
-│           ├── StatisticalResult
-│           └── Finding
-│               └── Next Hypothesis
+│   └── ResearchState
+│       ├── CandidateHypothesis
+│       │   └── HypothesisSelectionDecision
+│       │       └── Active Hypothesis
+│       └── Hypothesis
+│           └── Experiment
+│               ├── AssumptionCheck
+│               ├── MethodSelection
+│               ├── ExecutionRun
+│               ├── StatisticalResult
+│               ├── ScientificValidation
+│               ├── EvidenceSufficiencyDecision
+│               └── Finding
+│                   └── Updated ResearchState
 │
 ├── Figure / Table
 ├── Report
@@ -2494,6 +3094,40 @@ Agent tools, validators and scorers should be modular and independently testable
 
 Primary web flows should support keyboard navigation, readable status labels and non-color-only error indication.
 
+## NFR-11 — Scientific Integrity
+
+Product must enforce:
+
+- hypothesis ≠ fact;
+- anomaly ≠ error;
+- association ≠ causation;
+- statistically significant ≠ practically important;
+- decision confidence ≠ scientific evidence.
+
+## NFR-12 — Decision Safety
+
+- low-confidence/high-risk gate decisions must follow escalation policy;
+- decision outcome must be typed/structured;
+- malformed or missing decision must fail safely;
+- official finding cannot bypass evidence gate.
+
+## NFR-13 — Provider Portability
+
+Hypothesis/evidence decision capability must be isolated behind a provider interface so that TypeSafe/Jev, structured LLM baseline or another compatible provider can be evaluated without rewriting research-domain workflows.
+
+## NFR-14 — Observability
+
+Telemetry must distinguish:
+
+```text
+technical retry
+scientific refinement
+gate decision
+human escalation
+provider fallback
+human override
+```
+
 ---
 
 # 47. Product Metrics
@@ -2511,15 +3145,23 @@ Primary web flows should support keyboard navigation, readable status labels and
 - experiment success rate;
 - method-selection acceptance rate;
 - assumption warning rate;
-- retry rate;
+- technical retry rate;
+- scientific refinement rate;
 - unsupported claim rate;
-- human intervention rate.
+- human intervention rate;
+- hypothesis-selection quality;
+- evidence-gate correctness;
+- false acceptance of insufficient evidence;
+- unnecessary continuation rate.
 
 ## Trust
 
 - provenance coverage;
 - validated findings with evidence;
 - reproducibility snapshot coverage;
+- structured decision record coverage;
+- low-confidence escalation compliance;
+- decision calibration quality;
 - number of downstream invalidations;
 - number of conflicting evidence cases surfaced.
 
@@ -2535,7 +3177,7 @@ Primary web flows should support keyboard navigation, readable status labels and
 
 # 48. Product Acceptance Criteria
 
-Product MVP is accepted when:
+Product is accepted when:
 
 1. User can authenticate and create a project.
 2. User can upload supported dataset.
@@ -2544,53 +3186,85 @@ Product MVP is accepted when:
 5. Data Card is generated for exact dataset version.
 6. User can enter research question.
 7. User can define/confirm H0/H1.
-8. Agent can generate structured experiment plan.
-9. Agent can generate candidate methods.
-10. Agent can execute assumption checks.
-11. Agent records selected method and reason.
-12. Agent can execute experiment in isolated sandbox.
-13. Execution error can trigger bounded retry/re-plan.
-14. Experiment creates inspectable raw/statistical result.
-15. Validation can block unsupported finding.
-16. Validated finding links to hypothesis and experiment.
-17. Validated finding links to dataset version and execution trace.
-18. Dataset transformations create new versions.
-19. User can inspect experiment trace.
-20. User can inspect provenance/evidence.
-21. P1: Agent can propose post-hoc H2 from F1.
-22. P1: H2 is marked `Post-hoc / Unverified`.
-23. P1: System can run E2 and preserve H1→E1→F1→H2→E2 linkage.
-24. P1: Stopping criteria can end loop.
-25. P1: Multiple-testing warning/correction works when applicable.
-26. P1: Effect size/CI is shown when supported.
-27. P1: Conflicting evidence is preserved.
-28. P1: Upstream invalidation flags affected downstream artifacts.
-29. P1: Validated official experiment has reproducibility snapshot.
-30. P1: Benchmark/evaluation can compare at least two agent configurations.
+8. System builds a versioned Research State before research iteration.
+9. Agent can generate candidate hypotheses/research directions from Research State.
+10. Candidate hypotheses contain rationale, parent evidence and testability metadata.
+11. Candidate cannot silently become active hypothesis.
+12. Structured Hypothesis Selection Gate can rank/select/reject/escalate candidates.
+13. Hypothesis-selection decision links to exact Research State version.
+14. Selection decision stores confidence/uncertainty and provider/configuration reference.
+15. Low-confidence/high-risk selection can create researcher review task.
+16. Agent can generate structured experiment plan for selected hypothesis/direction.
+17. Agent can generate candidate methods.
+18. Agent can execute deterministic assumption checks.
+19. Agent records selected method and rationale.
+20. Agent can execute experiment in isolated sandbox.
+21. Execution error can trigger bounded technical retry/re-plan.
+22. Technical retry is recorded separately from scientific refinement.
+23. Experiment creates inspectable raw/statistical result.
+24. Deterministic validation can block unsupported result/interpretation.
+25. Multiple-testing control is applied/justified when applicable.
+26. Effect size/CI is shown when supported.
+27. Leakage guard is applied for predictive/ML workflow when applicable.
+28. Every completed validated experiment receives an Evidence Sufficiency decision before official finding.
+29. Evidence gate supports `ENOUGH_EVIDENCE`.
+30. Evidence gate supports `NEED_MORE_EVIDENCE`.
+31. Evidence gate supports `TRY_ALTERNATIVE_METHOD`.
+32. Evidence gate supports `REPLICATE`.
+33. Evidence gate supports `NEED_HUMAN_REVIEW`.
+34. Evidence gate supports `INCONCLUSIVE`.
+35. Only `ENOUGH_EVIDENCE` may automatically proceed to validated finding.
+36. `NEED_MORE_EVIDENCE`, `TRY_ALTERNATIVE_METHOD`, and `REPLICATE` can create a scientific refinement path.
+37. `NEED_HUMAN_REVIEW` creates a researcher review task.
+38. Validated finding links to hypothesis, experiment, dataset version, validation, evidence decision and execution trace.
+39. Dataset transformations create new versions.
+40. User can inspect experiment trace and provenance/evidence.
+41. System preserves H1→E1→F1→H2→E2 lineage for iterative research.
+42. Post-hoc hypotheses are marked `Post-hoc / Exploratory / Unverified` until tested.
+43. Conflicting evidence is preserved.
+44. Upstream invalidation flags affected downstream artifacts.
+45. Stopping criteria can terminate research loop.
+46. Official experiment has reproducibility snapshot.
+47. Decision records preserve provider/model/configuration and downstream action.
+48. Human override preserves original decision and override reason.
+49. Evaluation center can measure hypothesis-gate quality.
+50. Evaluation center can measure evidence-gate quality.
+51. Evaluation center can compare Structured Decision Gate vs LLM-only decision baseline when benchmark labels/rubrics allow.
+52. Benchmark/evaluation can compare at least two agent configurations.
+53. System supports safe fallback/human review if structured decision provider is unavailable.
+54. Final report uses validated findings only.
 
 ---
 
 # 49. Release Plan
 
-## Release 0 — Technical Spike
+## Release 0 — Technical & Decision Spike
 
-Goal: prove tool execution.
+Goal: prove the riskiest execution and structured-decision interfaces.
 
 Deliver:
 
 ```text
 CSV
 → Data Profile
+→ Research State
+→ Mock / Structured DecisionProvider
 → Planner
-→ run_python/statistical_test
-→ Result
+→ run_python / statistical_test
+→ Deterministic Validation
+→ Evidence Decision
 ```
 
-No full UI required.
+Must prove:
+
+- sandbox execution;
+- structured decision schema;
+- provider abstraction;
+- trace persistence.
 
 ---
 
-## Release 1 — Core Data Agent MVP
+## Release 1 — Core Research MVP
 
 Deliver:
 
@@ -2598,10 +3272,13 @@ Deliver:
 - upload;
 - profiling/Data Card;
 - research question/H0/H1;
+- Research State;
 - experiment planner;
 - method selection;
 - assumption check;
 - secure execution;
+- deterministic validation;
+- basic evidence gate;
 - finding;
 - trace/provenance.
 
@@ -2609,27 +3286,42 @@ Success demo:
 
 ```text
 Dataset + H1
+→ Research State
 → E1
-→ Validated F1
+→ Validation
+→ Evidence Decision
+→ Validated F1 or Inconclusive
 ```
 
 ---
 
-## Release 2 — Iterative Research Agent
+## Release 2 — Decision-Gated Iterative Research Agent
 
 Deliver:
 
+- candidate hypothesis generation;
+- Hypothesis Selection Gate;
+- confidence-based escalation;
 - hypothesis refinement;
+- scientific refinement loop;
 - H2 generation;
-- dependency graph;
 - stopping criteria;
+- decision history;
 - limited branching;
 - conflict handling.
 
 Success demo:
 
 ```text
-H1 → E1 → F1 → H2 → E2 → F2 → Stop
+F1
+→ Candidate H2-A / H2-B / H2-C
+→ Selection Gate
+→ Selected H2
+→ E2
+→ Validation
+→ Evidence Gate
+→ F2 / Refine / Replicate
+→ Stop
 ```
 
 ---
@@ -2641,13 +3333,14 @@ Deliver:
 - multiple testing;
 - effect size/CI;
 - leakage guard;
+- dependency graph;
 - downstream invalidation;
 - reproducibility snapshot;
 - figure/table/report.
 
 ---
 
-## Release 4 — Evaluation
+## Release 4 — Evaluation & Ablation
 
 Deliver:
 
@@ -2655,6 +3348,10 @@ Deliver:
 - repeated runs;
 - quantitative metrics;
 - skill evaluation;
+- hypothesis-gate metrics;
+- evidence-gate metrics;
+- calibration metrics;
+- `Structured Decision Gate vs LLM-only Decision`;
 - ablation comparison.
 
 ---
@@ -2690,47 +3387,105 @@ Deliver:
 | BR-53 Conflicting Evidence | Module T |
 | BR-54 Confidence/Uncertainty | Module O |
 | BR-55 Reproducibility Snapshot | Module Z |
+| BR-56 Research State Construction | Module AC |
+| BR-57 Candidate Hypothesis / Direction Generation | Module AC |
+| BR-58 Structured Hypothesis Selection Gate | Module AD |
+| BR-59 Evidence Sufficiency Gate | Module AE |
+| BR-60 Scientific Refinement Loop | Module AF |
+| BR-61 Confidence-Based Human Escalation | Modules AD, AF |
+| BR-62 Decision Auditability | Module AG |
+| BR-63 Decision Gate Evaluation | Modules AG, AA |
 
 ---
 
 # 51. Research Evaluation Alignment
 
-The product must expose enough telemetry to evaluate three broad research areas:
+The product must expose telemetry required to answer the three research questions carried forward from BRD v1.2.
 
-## RQ-A — End-to-End Effectiveness
+## RQ1 — End-to-End Effectiveness
 
-Can the agent successfully move from user-provided dataset + research question to a scientifically defensible result?
+How effectively can the AI Research Agent perform end-to-end research experimentation on user-provided datasets?
 
 Relevant metrics:
 
 - task success;
-- correctness;
+- result correctness;
 - experiment completion;
-- evidence coverage.
+- method-selection accuracy;
+- evidence coverage;
+- provenance coverage;
+- reproducibility coverage;
+- unsupported claim rate.
 
-## RQ-B — Architecture Effectiveness
+## RQ2 — Architecture Effectiveness
 
-Do planning, profiling, validation, retry and hypothesis refinement improve performance compared with simpler baselines?
+How effective is the architecture:
 
-Relevant method:
+```text
+GENERATE
+→ SELECT
+→ REASON
+→ EXECUTE
+→ VALIDATE
+→ VERIFY
+→ REFINE
+```
 
-- ablation study.
+compared with simpler architectures?
 
-## RQ-C — Task/Skill Performance
+Required comparisons/ablations should include when feasible:
+
+```text
+Full Agent
+No Planner
+No Profiling
+No Assumption Checking
+No Retry
+No Validator
+No Hypothesis Refinement
+No Hypothesis Selection Gate
+No Evidence Sufficiency Gate
+LLM-only Decision Baseline
+Single-Pass / Text-to-Code Baseline
+```
+
+Relevant metrics:
+
+- task success delta;
+- false evidence acceptance;
+- unnecessary continuation;
+- human escalation;
+- latency;
+- cost;
+- retry/refinement counts.
+
+## RQ3 — Task / Skill Performance
 
 How does the agent perform across:
 
 - dataset understanding;
+- candidate-hypothesis generation;
+- hypothesis selection;
+- deep experiment planning;
 - method selection;
 - assumption checking;
 - execution;
-- validation;
-- hypothesis refinement;
-- evidence grounding?
+- deterministic validation;
+- evidence sufficiency verification;
+- scientific refinement;
+- evidence grounding;
+- reproducibility.
 
-Relevant output:
+Decision-gate evaluation should include:
 
-- per-skill scores.
+- decision correctness;
+- selection quality;
+- confidence/calibration quality;
+- false acceptance of insufficient evidence;
+- unnecessary continuation rate;
+- human escalation rate;
+- latency;
+- cost.
 
 ---
 
@@ -2749,6 +3504,12 @@ Relevant output:
 | Result cannot be reproduced | Reproducibility snapshot |
 | Loop runs forever | Stopping criteria + budgets |
 | Too much scope for capstone | P0/P1/P2 prioritization |
+| Hypothesis gate selects weak/irrelevant direction | Candidate set preserved + benchmark + human escalation |
+| Evidence gate accepts insufficient evidence | Deterministic validation + conservative policy + gate evaluation |
+| Decision confidence is poorly calibrated | Calibration metrics + conservative threshold + human review |
+| TypeSafe/decision provider unavailable | Provider abstraction + structured-LLM fallback + human review |
+| LLM and gate create long feedback loop | Stopping criteria + experiment/time/cost budgets |
+| Gate provider fabricates scientific facts | Gate receives validated structured facts only; no fact-generation authority |
 
 ---
 
@@ -2768,6 +3529,14 @@ These decisions should be finalized before implementation freeze:
 10. Whether evaluation datasets are internal, public benchmark, or both.
 11. Exact benchmark scoring rubric.
 12. Retention policy for uploaded datasets and raw execution output.
+13. Which structured decision provider is primary for evaluation: TypeSafe/Jev, structured LLM, or both.
+14. Default confidence threshold for automatic hypothesis selection.
+15. Default confidence threshold for automatic evidence decision.
+16. Whether first iteration uses gate-selected sub-hypothesis/direction or researcher-confirmed H1 directly.
+17. Fallback policy when decision provider fails: structured LLM, human review, or fail-closed.
+18. Which benchmark tasks have gold/rubric labels suitable for decision-gate calibration.
+19. Whether candidate hypothesis count is fixed or budget-driven.
+20. Whether human override should feed future evaluation only or also adaptive policy tuning.
 
 ---
 
@@ -2798,16 +3567,67 @@ Initial H1:
 An association exists.
 
 ↓
+Build Research State
+- dataset/Data Card
+- H0/H1
+- current evidence = none
+- available variables
+- warnings / budget
+
+↓
+Generate Candidate Research Directions
+A. Test overall association between AI usage and score
+B. Test whether association differs by major
+C. Test adjusted association controlling study_hours
+
+↓
+Hypothesis Selection Gate
+SELECT A
+confidence = ...
+reason_codes = ...
+
+↓
+LLM Deep Reasoning
+- choose variables
+- design E1
+- propose candidate methods
+
+↓
+Deterministic Assumption Checks
+
+↓
 E1:
-Agent selects appropriate association test after checking assumptions.
+Run appropriate association test.
 
 ↓
-F1:
-Association result + effect size + CI + limitations.
+Deterministic Validation
+- statistic / p-value
+- effect size
+- confidence interval
+- assumptions
+- multiple-testing state
+- evidence quality
 
 ↓
-H2:
-Does the association remain after controlling for study_hours?
+Evidence Sufficiency Gate
+Example outcome:
+NEED_MORE_EVIDENCE
+
+↓
+Scientific Refinement
+LLM proposes adjusted analysis because study_hours may confound interpretation.
+
+↓
+Generate Candidate H2 Directions
+H2-A:
+Association remains after controlling for study_hours.
+
+H2-B:
+Association differs by major.
+
+↓
+Hypothesis Selection Gate
+SELECT H2-A
 Type: Post-hoc / Exploratory / Unverified
 
 ↓
@@ -2815,9 +3635,19 @@ E2:
 Regression / appropriate multivariable method.
 
 ↓
-F2:
-Adjusted result.
+Deterministic Validation
 
+↓
+Evidence Sufficiency Gate
+Example outcome:
+ENOUGH_EVIDENCE
+
+↓
+F2:
+Adjusted evidence-backed finding.
+
+↓
+Update Research State
 ↓
 Stopping Criteria
 ↓
@@ -2826,14 +3656,50 @@ Final Research Findings
 
 The demo should visibly show:
 
-- why the method was chosen;
+- exact Research State used;
+- candidate hypotheses/directions;
+- structured selection decision;
+- confidence/uncertainty and reason codes;
+- why statistical method was chosen;
 - assumption results;
+- technical retry vs scientific refinement if triggered;
+- deterministic validation facts;
+- evidence-sufficiency decision;
 - experiment trace;
-- evidence;
+- evidence/provenance;
 - hypothesis origin;
-- H1→E1→F1→H2→E2 dependency;
+- H1→E1→F1→H2→E2 lineage;
 - no unsupported causal conclusion;
-- reproducibility metadata.
+- reproducibility metadata;
+- decision-provider/configuration metadata.
+
+### Demo Comparison for RQ2
+
+If time permits, run the same benchmark/demo under:
+
+```text
+Configuration A
+LLM handles reasoning + bounded decisions
+
+vs
+
+Configuration B
+LLM handles deep reasoning
++
+Structured Decision Gate handles selection / evidence routing
+```
+
+Compare:
+
+```text
+correctness
+selection quality
+false evidence acceptance
+latency
+cost
+human intervention
+confidence calibration
+```
 
 ---
 
@@ -2850,7 +3716,10 @@ A feature is considered complete only when:
 7. acceptance criteria pass;
 8. agent-related output is evaluated against at least one known test case;
 9. UI communicates uncertainty/warnings clearly;
-10. documentation is updated.
+10. documentation is updated;
+11. if the feature participates in structured decision flow, decision schema and audit record are tested;
+12. technical retry and scientific refinement are classified correctly where applicable;
+13. low-confidence/high-risk cases have a defined safe escalation path.
 
 ---
 
@@ -2866,6 +3735,10 @@ Use Case Specification
 System Architecture
 ↓
 Agent Workflow / State Machine
+↓
+Decision Gate Contract / Provider Interface
+↓
+Activity Diagrams (Overall / Execution & Validation / Hypothesis & Evidence Loop)
 ↓
 Database ERD
 ↓
@@ -2885,3 +3758,4 @@ Benchmark & Evaluation Protocol
 | Version | Date | Change |
 |---|---|---|
 | 0.1 | 2026-09-19 | Initial full PRD derived from BRD Final v1.0 |
+| 1.0 | 2026-09-20 | Finalized PRD aligned with BRD v1.2; added Research State, candidate-hypothesis generation, Structured Hypothesis Selection Gate, Evidence Sufficiency Gate, scientific refinement, confidence-based escalation, decision audit/provider abstraction, TypeSafe/Jev as candidate provider, decision-gate evaluation, updated state machine, UI, entities, NFRs, release plan, acceptance criteria, risks and RQ alignment |
