@@ -3,10 +3,10 @@
 
 **Document Type:** Product Requirements Document  
 **Project:** AI Research Experimentation Platform  
-**Version:** 1.0 Final  
-**Status:** Final / Aligned with BRD v1.2  
-**Source:** Business Requirements Document Final v1.2  
-**Date:** 2026-09-20  
+**Version:** 1.7 Draft  
+**Status:** Draft / Aligned with BRD v1.8 (Draft)  
+**Source:** Business Requirements Document v1.8 (Draft)  
+**Date:** 2026-09-22  
 
 ---
 
@@ -112,6 +112,7 @@ Platform tập trung vào sáu giá trị sản phẩm:
 | PG-15 | Sử dụng structured hypothesis-selection gate để rank/select/reject/escalate candidate directions |
 | PG-16 | Sử dụng evidence-sufficiency gate để quyết định finding, refinement, replication, review hoặc inconclusive |
 | PG-17 | Đánh giá chất lượng decision gates và so sánh structured decision với LLM-only baseline |
+| PG-18 | Khi candidate hypothesis ngang điểm trong ngưỡng cấu hình, chọn đồng thời một số lượng giới hạn thay vì ép chọn 1, có kiểm soát chi phí và multiple-testing |
 
 ---
 
@@ -128,9 +129,9 @@ Phiên bản capstone không nhằm xây dựng:
 - real-time streaming analytics;
 - scientific image/audio/video analysis;
 - full causal-inference engine;
-- full Agentic Tree Search như một research-search system tổng quát.
+- Agentic Tree Search (kiểu Sakana AI Scientist-v2, kể cả một bản bounded/scoped cho một hypothesis) — platform không tổ chức experiment thành cây node cha-con với expand/select/prune; mỗi hypothesis được chọn thực thi theo một luồng tuyến tính duy nhất (Decision-Gated Research Loop, BR-21), có thể thử nhiều candidate method trong giới hạn branching hiện có nhưng không có staged multi-phase exploration hay Experiment Manager riêng.
 
-Platform có thể tham khảo iterative experimentation từ các agentic research systems, nhưng scope chính vẫn là **scientific analysis trên user-provided structured datasets**.
+Platform có thể tham khảo một số ý tưởng rời rạc từ các agentic research systems (ví dụ: idea reflection trước khi chọn hypothesis, novelty assessment tham khảo, automated manuscript review) mà không áp dụng kiến trúc tree-search của các hệ thống đó. Scope chính vẫn là **scientific analysis trên user-provided structured datasets** theo một luồng quyết định tuyến tính, có audit, dễ kiểm soát chi phí.
 
 ---
 
@@ -262,6 +263,7 @@ Confidence của decision gate chỉ dùng cho routing/escalation, không thay t
 - H0/H1;
 - Research State;
 - candidate hypothesis / research-direction generation;
+- idea record & reflection (Module AH, BR-64, Must);
 - structured decision-provider interface;
 - experiment planner;
 - candidate method generation;
@@ -286,7 +288,7 @@ Confidence của decision gate chỉ dùng cho routing/escalation, không thay t
 - decision audit trail;
 - decision-gate evaluation;
 - stopping criteria;
-- limited experiment branching;
+- limited experiment branching (Must for final capstone per BRD BR-21; grouped here because it depends on P1 method-selection scope);
 - multiple-testing control;
 - effect size;
 - confidence interval;
@@ -300,7 +302,11 @@ Confidence của decision gate chỉ dùng cho routing/escalation, không thay t
 - reproducibility snapshot;
 - evaluation center;
 - benchmark;
-- ablation.
+- ablation;
+- novelty assessment (tham khảo, Module AH, BR-65);
+- figure aggregation & visual feedback (Module AH, BR-73);
+- manuscript draft generation (Module AH, BR-74);
+- automated manuscript review (Module AH, BR-75).
 
 ## 7.3. P2 — Extension
 
@@ -993,12 +999,18 @@ Planner must flag:
 - unsupported causal question;
 - destructive preprocessing.
 
+### FR-PLAN-04 — Parallel Plans Under Bounded Tied-Candidate Selection
+
+When the Hypothesis Selection Gate (Module AD) activates bounded tied-candidate selection, Planner shall generate one independent Experiment Plan per selected candidate, each referencing its own hypothesis and its own immutable Research State snapshot. Two project-level configuration parameters govern this behavior: `tie_threshold` (score-closeness margin) and `max_parallel_candidates` (upper bound on simultaneously selected hypotheses); a further `max_total_concurrent_branches` bounds the combined total when hypothesis-level and method-level (Module K) branching are both active in the same iteration.
+
 ## Acceptance Criteria
 
 - plan references exact hypothesis and dataset version;
 - plan lists candidate methods;
 - user can inspect plan before execution;
-- reason for re-plan is logged.
+- reason for re-plan is logged;
+- when multiple candidates are tied-selected, each resulting plan is independently inspectable and references its own hypothesis and Research State snapshot;
+- combined hypothesis-level x method-level branching never exceeds `max_total_concurrent_branches`.
 
 **Priority:** P0
 
@@ -1012,7 +1024,7 @@ Cho agent lựa chọn statistical/analytical method phù hợp thay vì hard-co
 
 ## Initial Supported Methods
 
-P0:
+P0 / Must for final capstone (BR-31 Statistical Analysis is Must in BRD MoSCoW and explicitly lists every method below):
 
 - descriptive statistics;
 - Pearson correlation;
@@ -1024,13 +1036,13 @@ P0:
 - one-way ANOVA;
 - Kruskal–Wallis;
 - linear regression;
-- logistic regression.
-
-P1:
-
+- logistic regression;
 - interaction analysis;
+- basic time-series analysis.
+
+P1 (extension beyond BR-31 — not required for Must compliance):
+
 - simple repeated-measure support;
-- basic time-series analysis;
 - selected ML prediction workflows.
 
 ## User Stories
@@ -1172,7 +1184,7 @@ Branch comparison must not automatically choose the most statistically significa
 - evidence from all executed branches is retained;
 - agent explains why one result is more appropriate/reliable.
 
-**Priority:** P1
+**Priority:** P1 / Must for final capstone (BR-21 is Must in BRD MoSCoW; kept as P1 here because it depends on Module I/J being in place first, not because it is optional for final submission)
 
 ---
 
@@ -1225,7 +1237,8 @@ ask_user
 - execution timeout;
 - library whitelist;
 - temporary working directory;
-- output size limit.
+- output size limit;
+- concurrent-execution quota per project, sized to accommodate parallel branches from bounded tied-candidate selection (Module AD) and limited experiment branching (Module K) without exceeding `max_total_concurrent_branches`.
 
 ## User Stories
 
@@ -1352,7 +1365,7 @@ Giảm false-positive risk trong iterative/multi-test workflow.
 
 ### FR-MTEST-01 — Testing Family Tracking
 
-Experiments may be grouped into a testing family.
+Experiments may be grouped into a testing family. Experiments produced by bounded tied-candidate selection (Module AD) within the same iteration shall be assigned the same testing-family ID, so correction (Holm/FDR) is applied across the tied set rather than per branch independently.
 
 ### FR-MTEST-02 — Correction
 
@@ -1378,7 +1391,7 @@ Store:
 - system does not claim correction is necessary when not applicable;
 - report distinguishes raw/adjusted result.
 
-**Priority:** P1
+**Priority:** P1 / Must for final capstone (BR-49 Multiple-Testing Control is Must in BRD MoSCoW)
 
 ---
 
@@ -1421,7 +1434,7 @@ This confidence label is explanatory metadata and does not replace formal statis
 - p-value alone cannot be used as sole explanation for strong finding;
 - uncertainty reasons are inspectable.
 
-**Priority:** P1
+**Priority:** P1 / Must for final capstone (BR-50 Effect Size & Confidence Interval and BR-54 Confidence & Uncertainty Recording are Must in BRD MoSCoW)
 
 ---
 
@@ -1593,7 +1606,7 @@ For capstone MVP, default should favor explicit researcher review.
 - H2 remains unverified until E2 validates it;
 - user can reject hypothesis and stop branch.
 
-**Priority:** P1
+**Priority:** P1 / Must for final capstone (BR-28 Hypothesis Refinement is Must in BRD MoSCoW)
 
 ---
 
@@ -1645,7 +1658,10 @@ depends_on
 uses_dataset
 supersedes
 contradicts
+co_selected_with
 ```
+
+`co_selected_with` links sibling hypothesis branches chosen together by a single bounded tied-candidate selection decision (Module AD); it is distinct from the other edge types, which represent sequential/causal research relationships.
 
 ### FR-DEP-03 — Downstream Invalidation
 
@@ -1679,7 +1695,7 @@ Ngăn cherry-picking.
 
 ### FR-CONFLICT-01
 
-When experiments produce incompatible evidence, system shall preserve all results.
+When experiments produce incompatible evidence, system shall preserve all results. This also covers the case where sibling branches from bounded tied-candidate selection (Module AD) each produce a validated finding: all such findings must be retained and shown, and this multi-finding case must be distinguished from `Conflicting Evidence` (which applies to incompatible evidence about the same hypothesis).
 
 ### FR-CONFLICT-02
 
@@ -1729,7 +1745,7 @@ Any configured combination of:
 
 ### FR-STOP-01
 
-After each validated finding, agent evaluates stopping criteria.
+After each validated finding, agent evaluates stopping criteria. When bounded tied-candidate selection (Module AD) runs K branches in parallel, experiment/time/cost budget consumption is evaluated cumulatively across all K branches in that iteration, not per branch.
 
 ### FR-STOP-02
 
@@ -1752,7 +1768,7 @@ Human can override agent stop/continue decision within permission policy.
 - stop reason is stored;
 - manual stop preserves current artifacts.
 
-**Priority:** P1
+**Priority:** P1 / Must for final capstone (BR-30 Stopping Criteria is Must in BRD MoSCoW)
 
 ---
 
@@ -1798,7 +1814,7 @@ P1/P2 check:
 - figure has source linkage;
 - misleading or invalid figure receives warning.
 
-**Priority:** P1; advanced visual/VLM reviewer P2
+**Priority:** P1 / Must for final capstone (BR-32 Visualization and BR-38 Research Figure/Table Output are Must in BRD MoSCoW); advanced visual/VLM reviewer remains P2
 
 ---
 
@@ -1851,7 +1867,7 @@ Report content must link back to provenance where UI supports it.
 - known limitations/warnings are preserved;
 - report can identify dataset version/method behind finding.
 
-**Priority:** P1
+**Priority:** P1 / Must for final capstone (BR-41 Research Report Generation and BR-42 Finding Validation are Must in BRD MoSCoW)
 
 ---
 
@@ -1997,7 +2013,7 @@ Reproduction attempt can reference prior snapshot.
 - changing code/config creates new run;
 - environment metadata is visible to authorized users.
 
-**Priority:** P1
+**Priority:** P1 / Must for final capstone (BR-55 Reproducibility Snapshot is Must in BRD MoSCoW)
 
 ---
 
@@ -2080,6 +2096,7 @@ No Assumption Checking
 No Retry
 No Validator
 No Hypothesis Refinement
+No Tied-Candidate Selection (single-select baseline)
 Single-Pass Agent
 Text-to-Code Baseline
 ```
@@ -2101,7 +2118,7 @@ Show:
 - metrics retain raw run references;
 - comparison does not mix configurations silently.
 
-**Priority:** P1
+**Priority:** P1 / Must for final capstone (BR-43 Evaluation Framework and BR-63 Decision Gate Evaluation are Must in BRD MoSCoW)
 
 ---
 
@@ -2284,13 +2301,19 @@ DecisionProvider
 
 A candidate may only become the active hypothesis/research direction after a valid selection decision or explicit researcher choice.
 
+### FR-HGATE-07 — Bounded Tied-Candidate Selection
+
+If the score gap between top-ranked candidates falls below a configured `tie_threshold`, Gate shall select up to `max_parallel_candidates` candidates instead of exactly one. Gate output shall separate two values: a numeric, comparable decision score (used for tie detection) and the categorical confidence label (Low/Medium/High, per the Effect Size & Uncertainty module) used for human-facing explanation and escalation — the two are not interchangeable. Calibration quality of the numeric decision score shall be covered by Module AG's gate-evaluation metrics. When triggered, the decision record shall additionally store the `tie_threshold` used and the full list of tied candidates.
+
 ## Acceptance Criteria
 
 - candidate set and selected outcome are inspectable;
 - low-confidence decision can be escalated;
 - provider can be switched without changing research-domain behavior;
 - decision record links to the exact Research State version;
-- LLM free-form text alone is not treated as the structured selection record.
+- LLM free-form text alone is not treated as the structured selection record;
+- bounded tied-candidate selection never exceeds `max_parallel_candidates`;
+- when tied-candidate selection is used, the decision record includes the tie threshold and the tied-candidate list.
 
 **Priority:** P1 / Must for final capstone
 
@@ -2472,6 +2495,8 @@ timestamp
 downstream_action
 human_override
 override_reason
+tie_threshold_used
+tied_candidates
 ```
 
 ## Functional Requirements
@@ -2519,6 +2544,53 @@ LLM-only Decision Baseline
 - human override is auditable.
 
 **Priority:** P1 / Must for final capstone
+
+---
+
+# 37.6. Feature Module AH — Ideation Quality & Manuscript Reporting
+
+## Objective
+
+Nâng chất lượng ideation trước Hypothesis Selection Gate (Module AD) và cung cấp bản thảo nghiên cứu có thể review từ validated findings, mà không đưa vào bất kỳ cơ chế tree-search/branching nào (xem Non-Goals, mục 4).
+
+## Functional Requirements
+
+### FR-IDEA-01 — Idea Record
+
+Mỗi candidate hypothesis phải có idea record gồm tối thiểu: statement, experiment đề xuất, context liên quan, risk notes, trước khi được đưa vào Module AD.
+
+### FR-IDEA-02 — Reflection Round
+
+Candidate hypothesis phải qua ít nhất một reflection round (agent tự rà lại statement/risk/testability) trước khi vào Hypothesis Selection Gate.
+
+### FR-IDEA-03 — Novelty Assessment (tham khảo)
+
+Hệ thống nên đánh giá mức độ mới của idea dựa trên nguồn literature/context do researcher cung cấp, ở mức tham khảo — không bảo đảm novelty. Khi không có nguồn, idea được ghi nhận trạng thái "chưa đánh giá" thay vì bị chặn hoặc suy diễn.
+
+### FR-MANU-01 — Figure Aggregation & Visual Feedback
+
+Hệ thống nên gom các figure sinh ra từ các candidate method/thử nghiệm đã chạy cho một hypothesis (Module K) và kiểm tra bằng visual reviewer về độ rõ, khớp caption và trùng lặp; đây là phần mở rộng của figure review ở Module V, không tạo cấu trúc node/cây riêng.
+
+### FR-MANU-02 — Manuscript Draft Generation
+
+Hệ thống nên tạo bản thảo nghiên cứu (manuscript draft) từ validated findings, với số liệu lấy trực tiếp từ experiment log và trích dẫn được xác minh tồn tại. Nội dung do AI tạo phải được ghi rõ là AI-generated. Đây chỉ là bản nháp — hệ thống không tự nộp hoặc xuất bản (Non-Goals, mục 4).
+
+### FR-MANU-03 — Automated Manuscript Review
+
+Hệ thống nên review bản thảo theo rubric (soundness, novelty, clarity) và kiểm tra chất lượng: placeholder còn sót, hình thiếu, trích dẫn chưa xác minh, số liệu không khớp experiment log.
+
+### FR-MANU-04 — Human Approval Gate
+
+Bản thảo phải được researcher phê duyệt trước khi dùng bên ngoài hệ thống; hệ thống không được tự động coi bản thảo là final hoặc gửi đi thay researcher.
+
+## Acceptance Criteria
+
+- candidate hypothesis có idea record và ít nhất một reflection round trước Module AD;
+- khi bật, novelty assessment hiển thị nguồn tham khảo hoặc trạng thái "chưa đánh giá";
+- figure trong bản thảo (nếu có) truy được về experiment log tương ứng;
+- bản thảo (nếu tạo) có số liệu truy được về log, trích dẫn xác minh, kết quả automated review, và trạng thái phê duyệt của researcher trước khi export/chia sẻ.
+
+**Priority:** P1 / Must for final capstone (FR-IDEA-01, FR-IDEA-02 — tương ứng BR-64, Must trong BRD); Should cho phần còn lại (FR-IDEA-03, FR-MANU-01→04 — tương ứng BR-65/73/74/75, Should trong BRD) — có thể defer nếu ảnh hưởng core loop.
 
 ---
 
@@ -2622,7 +2694,8 @@ Structured Decision Gate
 - hypothesis-selection gate below configured confidence threshold;
 - evidence gate below configured confidence threshold;
 - `NEED_HUMAN_REVIEW` outcome;
-- provider disagreement when configured as a high-risk policy.
+- provider disagreement when configured as a high-risk policy;
+- sibling branches from bounded tied-candidate selection produce conflicting Evidence Sufficiency outcomes (e.g. one branch `ENOUGH_EVIDENCE` while a sibling is `INCONCLUSIVE` or `NEED_HUMAN_REVIEW`).
 
 ## Optional Auto-Continue
 
@@ -3395,6 +3468,12 @@ Deliver:
 | BR-61 Confidence-Based Human Escalation | Modules AD, AF |
 | BR-62 Decision Auditability | Module AG |
 | BR-63 Decision Gate Evaluation | Modules AG, AA |
+| BR-64 Structured Idea Record & Reflection | Module AH |
+| BR-65 Novelty Assessment | Module AH |
+| BR-73 Figure Aggregation & Visual Feedback | Module AH |
+| BR-74 Manuscript Draft Generation | Module AH |
+| BR-75 Automated Manuscript Review | Module AH |
+| BR-78 Bounded Tied-Candidate Selection | Modules AD, H |
 
 ---
 
@@ -3759,3 +3838,10 @@ Benchmark & Evaluation Protocol
 |---|---|---|
 | 0.1 | 2026-09-19 | Initial full PRD derived from BRD Final v1.0 |
 | 1.0 | 2026-09-20 | Finalized PRD aligned with BRD v1.2; added Research State, candidate-hypothesis generation, Structured Hypothesis Selection Gate, Evidence Sufficiency Gate, scientific refinement, confidence-based escalation, decision audit/provider abstraction, TypeSafe/Jev as candidate provider, decision-gate evaluation, updated state machine, UI, entities, NFRs, release plan, acceptance criteria, risks and RQ alignment |
+| 1.1 | 2026-09-22 | Added support for bounded tied-candidate selection at the Hypothesis Selection Gate (BR-58/BR-78): new FR-PLAN-04, concurrency-quota bullet in the concurrent-execution module, extended multiple-testing FR, new `co_selected_with` dependency-graph edge, extended conflicting-evidence and stopping-criteria FRs, new ablation arm, new FR-HGATE-07, and new Decision Record fields `tie_threshold_used`/`tied_candidates`, plus a new human-escalation trigger |
+| 1.2 | 2026-09-22 | Added PG-18 (Product Goal for bounded tied-candidate selection) |
+| 1.3 | 2026-09-22 | Fixed a direct contradiction in Non-Goals: the original wording excluded "full Agentic Tree Search" while BRD v1.7 mandated a bounded Experiment Tree (BR-66→BR-71) as Must — reworded Non-Goals to distinguish unbounded/general-purpose tree search (excluded) from the bounded, single-hypothesis Experiment Tree (then in scope) |
+| 1.4 | 2026-09-22 | BRD v1.8 removed the entire bounded tree-search layer (BR-66→BR-72, BR-76, BR-77 and dependents) to restore the platform's original linear Decision-Gated Research Loop; reworded Non-Goals again to plainly exclude Agentic Tree Search (bounded or unbounded) and note that idea reflection, novelty assessment and automated manuscript review are still referenced from agentic-research systems without adopting their tree-search architecture; updated header Status/Source to BRD v1.8 |
+| 1.5 | 2026-09-22 | Closed three remaining coverage/consistency gaps found by cross-audit: (1) added new Feature Module AH — Ideation Quality & Manuscript Reporting, covering BR-64 (Idea Record & Reflection, Must), BR-65 (Novelty Assessment), BR-73 (Figure Aggregation & Visual Feedback), BR-74 (Manuscript Draft Generation) and BR-75 (Automated Manuscript Review), none of which had any PRD module/FR before this version despite being defined in BRD since v1.3; (2) added BR-64/65/73/74/75/78 rows to the BRD → PRD Traceability table (mục 50), which previously stopped at BR-63 and also omitted BR-78 even though BR-78 was already functionally implemented in Modules AD/H; (3) annotated Module K (Limited Experiment Branching, BR-21) as "Must for final capstone" to match the BRD MoSCoW (Must) and the annotation convention used by Modules AC-AH, resolving a priority-signal mismatch flagged earlier but not previously fixed |
+| 1.6 | 2026-09-22 | A follow-up cross-audit (comparing every BRD Must-priority BR against its PRD module's Priority line) found the same priority-signal mismatch fixed for Module K in v1.5 was still present in 8 more modules; annotated all of them with "Must for final capstone" plus the specific Must BR(s) driving it: Module N (BR-49), Module O (BR-50, BR-54), Module R (BR-28), Module U (BR-30), Module V (BR-32, BR-38; advanced visual/VLM reviewer sub-item stays P2), Module W (BR-41, BR-42), Module Z (BR-55), Module AA (BR-43, BR-63) — every PRD module that contains at least one BRD Must requirement is now annotated consistently; no functional/FR changes |
+| 1.7 | 2026-09-22 | Fixed a different kind of priority mismatch in Module I: BR-31 (Statistical Analysis, Must in BRD, flat list with no internal split) had been silently split by the PRD into P0 and P1 sub-lists, demoting "interaction analysis" and "basic time-series analysis" to P1 despite both being explicitly named in the Must-priority BR-31; moved both into the P0/Must list so it now matches BR-31 exactly, and kept "simple repeated-measure support" and "selected ML prediction workflows" (which are PRD-only additions not present in BR-31 at all) at P1 with a note that they are extensions beyond BR-31 and not required for Must compliance |

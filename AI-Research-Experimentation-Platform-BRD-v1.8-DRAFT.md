@@ -3,8 +3,8 @@
 
 **Document Type:** Business Requirements Document  
 **Project:** AI Research Experimentation Platform  
-**Version:** 1.2 Final  
-**Status:** Final  
+**Version:** 1.8 Draft  
+**Status:** Draft for supervisor review  
 
 ---
 
@@ -60,6 +60,8 @@ Kiến trúc nghiệp vụ tách ba loại trách nhiệm: **generative reasonin
 Platform đồng thời cung cấp cơ chế benchmark và evaluation nhằm đo lường độ chính xác, reliability, traceability và hiệu quả của AI Research Agent cũng như chất lượng của các decision gates.
 
 Ngoài execution correctness, platform phải kiểm soát scientific validity của vòng lặp nghiên cứu: data leakage, multiple testing, post-hoc hypothesis, effect size, confidence interval, experiment dependency, conflicting evidence và reproducibility drift.
+
+Từ v1.3, platform bổ sung một số capability theo tinh thần AI Scientist mà không mở rộng sang tree-search: ideation có reflection và novelty assessment tham khảo, cùng bản thảo nghiên cứu có automated review và phê duyệt của researcher. Các capability này nằm dưới decision gate và deterministic tools của BRD, và không thay đổi triết lý linear, single-path execution của Decision-Gated Research Loop (BR-21).
 
 ---
 
@@ -338,6 +340,18 @@ thay vì chỉ trả về finding hoặc cố retry cùng một execution.
 
 ---
 
+## BP-16 — Ý tưởng do AI sinh có thể không mới hoặc đã được nghiên cứu
+
+Agent có thể đề xuất hypothesis đã có trong tài liệu và xem đó là mới. Platform cần hỗ trợ đánh giá novelty ở mức tham khảo, không bảo đảm novelty.
+
+---
+
+## BP-17 — Bản thảo do AI viết dễ có số liệu, hình và trích dẫn sai
+
+Các đánh giá độc lập của hệ thống AI Scientist đời đầu ghi nhận lỗi thí nghiệm, hình thiếu, placeholder và trích dẫn ít hoặc cũ. Bản thảo phải truy được về experiment log và được review trước khi sử dụng.
+
+---
+
 # 4. Business Objectives
 
 ## BO-01 — Hỗ trợ researcher từ research question đến research finding
@@ -475,6 +489,24 @@ Khi decision confidence thấp hoặc uncertainty/risk cao, platform phải ưu 
 
 ---
 
+## BO-17 — Ideation có cấu trúc và nhận thức về novelty
+
+Candidate hypothesis phải có idea record, được reflection trước khi vào selection gate, và có novelty assessment tham khảo khi có nguồn tài liệu.
+
+---
+
+## BO-19 — Bản thảo nghiên cứu có thể review
+
+Platform hỗ trợ tạo bản thảo từ validated findings với số liệu và trích dẫn kiểm chứng được, có review tự động và phê duyệt của researcher.
+
+---
+
+## BO-20 — Xử lý candidate hypothesis ngang điểm một cách có kiểm soát
+
+Khi Structured Hypothesis Selection Gate không thể phân biệt rõ candidate tốt nhất do điểm/confidence quá sát nhau, platform phải cho phép chọn đồng thời một số lượng candidate giới hạn (bounded tied-candidate selection) thay vì ép chọn một candidate duy nhất dựa trên khác biệt điểm số không đáng tin cậy, đồng thời giữ nguyên kiểm soát về chi phí, multiple-testing và audit.
+
+---
+
 # 5. Success Metrics
 
 Các target dưới đây là đề xuất ban đầu và cần được supervisor xác nhận.
@@ -499,6 +531,10 @@ Các target dưới đây là đề xuất ban đầu và cần được supervi
 | KPI-16 | Evidence gate | Validated experiment result receives explicit sufficiency decision | 100% |
 | KPI-17 | Decision safety | Low-confidence/high-risk gate decisions escalated according to policy | 100% |
 | KPI-18 | Decision evaluation | Decision-gate quality measured on benchmark tasks | 100% |
+| KPI-21 | Ideation quality | Candidate hypotheses có idea record và reflection trước selection gate | 100% |
+| KPI-22 | Manuscript integrity | Số liệu trong bản thảo truy được về experiment log | 100% |
+| KPI-23 | Manuscript integrity | Trích dẫn trong bản thảo được xác minh là tồn tại | 100% |
+| KPI-26 | Gate accuracy | Decision accuracy của structured gate so với baseline rule-based | Không thấp hơn baseline; ngưỡng do supervisor xác nhận |
 
 ---
 
@@ -722,6 +758,9 @@ Gap Analysis liên kết trực tiếp giữa pain point hiện tại, khoảng 
 | GA-08 | Experiment phụ thuộc nhau và có thể tạo evidence xung đột | Không theo dõi downstream impact khi evidence thay đổi | Dependency graph, invalidation và conflict preservation | BR-51, BR-52, BR-53 |
 | GA-09 | LLM free-form reasoning có thể tự quyết định quá nhiều | Bounded decisions khó audit và thiếu confidence rõ ràng | Tách generative reasoning khỏi structured decision gates | BR-56 → BR-63 |
 | GA-10 | Khó chứng minh kiến trúc agentic tốt hơn baseline | Demo thành công đơn lẻ không đủ bằng chứng | Benchmark, quantitative metrics, ablation và gate evaluation | BR-43 → BR-46, BR-63 |
+| GA-12 | Ý tưởng do AI sinh có thể đã được nghiên cứu | Không có novelty assessment | Idea record có reflection và novelty assessment tham khảo | BR-64, BR-65 |
+| GA-13 | Bản thảo do AI viết khó kiểm chứng | Số liệu, hình và trích dẫn không truy vết được; thiếu review | Manuscript draft liên kết log, automated review và human approval | BR-73, BR-74, BR-75 |
+| GA-14 | Selection Gate phải ép chọn 1 candidate dù điểm/confidence giữa các candidate top gần như ngang nhau | Ép chọn cứng khi chênh lệch điểm nằm trong sai số đo lường của chính decision model có thể loại bỏ oan một hướng nghiên cứu tốt | Bounded tied-candidate selection với ngưỡng/số lượng cấu hình được, gộp đúng testing family và giới hạn tổng branching | BR-78, BRule-35, BRule-36 |
 
 **Kết luận Gap Analysis:** mọi capability chính trong scope đều phải giải quyết một gap cụ thể; capability không truy vết được về pain point/objective không nên được đưa vào core scope.
 
@@ -819,6 +858,10 @@ Gap Analysis liên kết trực tiếp giữa pain point hiện tại, khoảng 
 - Quantitative metrics
 - Ablation study
 
+### Ideation Quality
+
+- Structured idea record & reflection
+
 > **Implementation note:** TypeSafe/Jev là một candidate cho structured decision model. BRD chỉ yêu cầu capability `Structured Decision Gate`; vendor/model cụ thể được quyết định ở PRD/SDD để tránh khóa kiến trúc vào một provider.
 
 ---
@@ -833,6 +876,10 @@ Gap Analysis liên kết trực tiếp giữa pain point hiện tại, khoảng 
 - Finding validator
 - Model configuration
 - Research report customization
+- Novelty assessment (tham khảo)
+- Figure aggregation & visual feedback
+- Manuscript draft generation
+- Automated manuscript review
 
 ---
 
@@ -1185,6 +1232,8 @@ Research loop phải dừng khi:
 - researcher dừng;
 - result vẫn inconclusive sau giới hạn cho phép.
 
+Khi bounded tied-candidate selection (BR-78) chạy K nhánh song song, experiment/time/cost budget phải được tính tổng hợp trên toàn bộ nhánh đang chạy trong vòng lặp đó, không tính riêng lẻ theo từng nhánh.
+
 ---
 
 ## BR-31 — Statistical Analysis
@@ -1370,6 +1419,7 @@ No Validator
 No Hypothesis Refinement
 No Hypothesis Selection Gate
 No Evidence Sufficiency Gate
+No Tied-Candidate Selection (single-select baseline)
 LLM-only Decision Baseline
 Single Agent
 Text-to-Code Baseline
@@ -1417,6 +1467,8 @@ Khi một workflow thực hiện nhiều hypothesis tests có liên quan, hệ t
 - lưu correction method;
 - lưu cả raw và adjusted significance values khi có.
 
+Các experiment phát sinh từ bounded tied-candidate selection (BR-78) phải được tính là cùng một testing family khi áp dụng correction, không được xử lý như các test độc lập riêng biệt.
+
 Ví dụ:
 
 ```text
@@ -1460,6 +1512,8 @@ F2
 
 Mỗi downstream hypothesis/finding phải biết evidence upstream mà nó phụ thuộc.
 
+Khi bounded tied-candidate selection (BR-78) chọn nhiều hypothesis cùng lúc, graph phải biểu diễn thêm một loại quan hệ `co_selected_with` giữa các nhánh anh em (sibling branches) được chọn trong cùng một lần tied-selection, tách biệt với các quan hệ tests/produces/motivates/depends_on/uses_dataset/supersedes/contradicts đã có.
+
 ---
 
 ## BR-52 — Downstream Invalidation
@@ -1485,6 +1539,8 @@ Nếu nhiều experiment cho evidence trái chiều, hệ thống phải:
 - không cherry-pick result thuận lợi;
 - đánh dấu trạng thái `Conflicting Evidence`;
 - yêu cầu thêm analysis hoặc human review khi cần.
+
+Phạm vi này cũng áp dụng khi các nhánh song song từ bounded tied-candidate selection (BR-78) cùng được validate thành finding: hệ thống phải giữ lại tất cả finding hợp lệ từ các nhánh anh em, không được tự ý gộp hoặc chỉ báo cáo một finding, và phải phân biệt trường hợp này (nhiều finding độc lập từ hypothesis khác nhau) với `Conflicting Evidence` (nhiều experiment mâu thuẫn trên cùng một hypothesis).
 
 ---
 
@@ -1545,6 +1601,8 @@ Trước mỗi research iteration, hệ thống phải xây dựng một Researc
 
 Research State là input dùng để sinh và đánh giá hướng nghiên cứu tiếp theo.
 
+Khi bounded tied-candidate selection (BR-78) tạo nhiều nhánh song song, mỗi nhánh phải giữ một snapshot Research State bất biến (immutable) tại thời điểm được chọn; Research State chung chỉ được cập nhật sau khi tất cả nhánh trong cùng vòng lặp hoàn tất, để tránh xung đột cập nhật giữa các nhánh chạy song song.
+
 ---
 
 ## BR-57 — Candidate Hypothesis / Direction Generation
@@ -1581,6 +1639,8 @@ Decision record tối thiểu phải có:
 - confidence/uncertainty;
 - reason codes hoặc decision metadata;
 - Research State version được sử dụng.
+
+Khi nhiều candidate ngang điểm trong ngưỡng cấu hình được, xem cơ chế bounded tied-candidate selection ở BR-78.
 
 ---
 
@@ -1627,7 +1687,8 @@ Decision gate phải có thể chuyển quyết định cho researcher khi:
 - evidence conflict nghiêm trọng;
 - ambiguity ảnh hưởng interpretation;
 - methodological choice có high impact;
-- decision outcome là `NEED_HUMAN_REVIEW`.
+- decision outcome là `NEED_HUMAN_REVIEW`;
+- các nhánh song song từ bounded tied-candidate selection (BR-78) cho Evidence Sufficiency outcome mâu thuẫn nhau (ví dụ một nhánh ENOUGH_EVIDENCE trong khi nhánh anh em INCONCLUSIVE hoặc NEED_HUMAN_REVIEW).
 
 ---
 
@@ -1642,6 +1703,8 @@ Mọi decision gate phải lưu:
 - timestamp;
 - model/provider/configuration identifier;
 - downstream action.
+
+Khi bounded tied-candidate selection (BR-78) được kích hoạt, decision record phải lưu thêm: ngưỡng tied-selection đã dùng (tie threshold) và danh sách candidate được coi là ngang điểm.
 
 ---
 
@@ -1670,6 +1733,36 @@ trên cùng benchmark tasks khi khả thi.
 
 ---
 
+
+## BR-64 — Structured Idea Record & Reflection
+
+Mỗi candidate hypothesis phải có idea record gồm statement, experiment đề xuất, context liên quan và risk, và phải qua ít nhất một reflection round trước khi vào Hypothesis Selection Gate.
+
+---
+
+## BR-65 — Novelty Assessment
+
+Hệ thống nên đánh giá mức độ mới của idea dựa trên nguồn literature/context được cung cấp, ở mức tham khảo và không bảo đảm novelty (theo Scope 9.4). Khi không có nguồn, idea được ghi nhận là chưa đánh giá.
+
+---
+
+## BR-73 — Figure Aggregation & Visual Feedback
+
+Hệ thống nên gom figure từ các phương pháp/thử nghiệm đã chạy cho một hypothesis (BR-21) và kiểm tra bằng visual reviewer về độ rõ, khớp caption và trùng lặp (mở rộng BR-33).
+
+---
+
+## BR-74 — Manuscript Draft Generation
+
+Hệ thống nên tạo bản thảo từ validated findings với số liệu lấy trực tiếp từ experiment log, trích dẫn được xác minh và nội dung do AI tạo được ghi rõ. Đây chỉ là draft, hệ thống không tự nộp hoặc xuất bản (Scope 9.4).
+
+---
+
+## BR-75 — Automated Manuscript Review
+
+Hệ thống nên review bản thảo theo rubric (soundness, novelty, clarity) và kiểm tra chất lượng: placeholder, hình thiếu, trích dẫn chưa xác minh, số không khớp log. Bản thảo cần researcher phê duyệt trước khi dùng bên ngoài.
+
+---
 
 # 10.1. Business Requirement Prioritization — MoSCoW
 
@@ -1746,6 +1839,12 @@ Priority được hiểu theo **cam kết cho bản capstone cuối**, không ph
 | BR-61 | Confidence-Based Human Escalation | Must | Thuộc core/final submission scope. |
 | BR-62 | Decision Auditability | Must | Thuộc core/final submission scope. |
 | BR-63 | Decision Gate Evaluation | Must | Thuộc core/final submission scope. |
+| BR-64 | Structured Idea Record & Reflection | Must | Thuộc core ideation scope (BO-17). |
+| BR-65 | Novelty Assessment | Should | Hỗ trợ ideation; không bảo đảm novelty nên không chặn core loop. |
+| BR-73 | Figure Aggregation & Visual Feedback | Should | Nâng chất lượng figure; không chặn core loop. |
+| BR-74 | Manuscript Draft Generation | Should | Mở rộng Research Report; có thể defer nếu ảnh hưởng core. |
+| BR-75 | Automated Manuscript Review | Should | Phụ thuộc BR-74; có thể defer. |
+| BR-78 | Bounded Tied-Candidate Selection | Must | Bảo vệ Hypothesis Selection Gate (BR-58, Must) khỏi ép chọn sai khi candidate ngang điểm; thuộc core decision-gate scope. |
 
 **Scope control rule:** một requirement mới chỉ được thêm vào nhóm Must khi chứng minh được liên kết tới Business Problem, Business Objective và Research/Evaluation need. Nếu không, requirement phải được xếp Should/Could hoặc Out of Scope.
 
@@ -1987,6 +2086,36 @@ Decision có confidence thấp hoặc risk cao phải tuân theo escalation poli
 ## BRule-29 — Structured Decision History Must Be Preserved
 
 Mọi selection/verification decision phải được giữ trong audit history và liên kết với Research State đã tạo ra decision đó.
+
+---
+
+## BR-78 — Bounded Tied-Candidate Selection
+
+Khi nhiều candidate hypothesis có điểm/confidence chênh nhau dưới một ngưỡng cấu hình được (tie threshold), Structured Hypothesis Selection Gate (BR-58) được phép chọn đồng thời tối đa một số lượng candidate giới hạn (bounded tied-selection) thay vì bắt buộc chọn duy nhất một candidate. Ngưỡng và số lượng tối đa phải cấu hình được ở cấp project, không hard-code. Decision gate phải xuất ra một điểm số dạng numeric có thể so sánh được (dùng để xác định tied-selection) tách biệt với nhãn confidence định tính ở BR-54 (dùng cho giải thích/escalation); chất lượng calibration của điểm số này phải nằm trong phạm vi đánh giá của BR-63.
+
+---
+
+## BRule-33 — Manuscript Claims Must Be Verifiable
+
+Số liệu và figure trong bản thảo phải truy được về experiment log; trích dẫn phải được xác minh là tồn tại.
+
+---
+
+## BRule-34 — AI-Generated Manuscripts Must Be Disclosed and Approved
+
+Bản thảo do AI tạo phải được ghi rõ, cần researcher phê duyệt trước khi dùng bên ngoài và không được tự động nộp.
+
+---
+
+## BRule-35 — Tied Candidates Require Bounded Exploration, Not Unlimited Branching
+
+Khi Structured Hypothesis Selection Gate (BR-58) xác định nhiều candidate có điểm gần bằng nhau, hệ thống chỉ được mở rộng song song trong giới hạn số lượng và ngưỡng đã cấu hình trước (BR-78); đây không phải cơ chế tìm kiếm mở rộng không giới hạn, và mọi candidate được chọn theo cơ chế này phải được tính vào cùng một testing family theo BR-49.
+
+---
+
+## BRule-36 — Combined Branching Must Stay Within a Configured Total Cap
+
+Khi bounded tied-candidate selection (BR-78, tầng hypothesis) và limited experiment branching (BR-21, tầng method) cùng được áp dụng trong một vòng lặp, tổng số nhánh thực thi đồng thời (số hypothesis song song nhân số method mỗi hypothesis) phải nằm trong một giới hạn tổng cấu hình được ở cấp project; hệ thống không được để hai lớp branching cộng dồn vượt ngân sách experiment/cost mà không cảnh báo hoặc chặn lại.
 
 ---
 
@@ -2258,6 +2387,29 @@ Evaluation Report
 
 ---
 
+# 17.1. Business Process — Manuscript Draft & Review
+
+```text
+Validated Findings + Experiment Logs
+      ↓
+Figure Aggregation + Visual Feedback
+      ↓
+Manuscript Draft (số liệu từ log, trích dẫn xác minh)
+      ↓
+Automated Review (rubric + quality checks)
+      ↓
+Cần sửa?
+ ┌───┴───┐
+Yes      No
+ │        │
+ ▼        ▼
+Revise   Researcher Approval
+            ↓
+      Final Manuscript Draft
+```
+
+---
+
 # 18. Assumptions
 
 - Dataset chủ yếu là structured/tabular data.
@@ -2288,6 +2440,8 @@ Evaluation Report
 - Tool/code execution phải được kiểm soát.
 - Research data phải được isolate.
 - Experiment history phải được lưu để audit.
+- Experiment exploration được giới hạn bởi budget và không thay thế human control.
+- Bản thảo do AI tạo chỉ là draft cần researcher phê duyệt.
 
 ---
 
@@ -2318,6 +2472,9 @@ Evaluation Report
 | R-21 | Confidence không được calibration tốt | Medium | Calibration evaluation + conservative threshold |
 | R-22 | Quá phụ thuộc một decision-model provider | Medium | Provider abstraction + fallback strategy |
 | R-23 | LLM và decision gate tạo feedback loop quá dài | Medium | Stopping criteria + experiment/time/cost budgets |
+| R-25 | Novelty assessment phân loại sai | Medium | Ghi rõ mức tham khảo + benchmark misclassification |
+| R-26 | Trích dẫn sai hoặc cũ, bản thảo chất lượng thấp | High | Xác minh trích dẫn + automated review + human approval |
+| R-29 | Bounded tied-candidate selection cộng dồn với method-level branching làm bùng nổ chi phí hoặc tăng false-positive nếu không gộp đúng testing family | High | Giới hạn tổng branching (BRule-36) + bắt buộc gộp testing family (BR-49) + audit ngưỡng tied-selection (BR-62) |
 
 ---
 
@@ -2364,6 +2521,8 @@ Evaluation Report
 
 Platform được xem là đạt mục tiêu business khi:
 
+*Lưu ý: các tiêu chí 27–29 tương ứng với BR-51, BR-52, BR-53 (priority Should theo mục 10.1). Nếu các BR này chưa được triển khai trong phạm vi capstone do giới hạn thời gian, ba tiêu chí này được coi là extended acceptance (mục tiêu mở rộng), không phải điều kiện bắt buộc để platform đạt business acceptance tối thiểu.*
+
 1. User có thể upload dataset mà không cần khai báo schema trước.
 2. Platform tự profiling dataset.
 3. Researcher nhập được research question và H0/H1.
@@ -2407,6 +2566,9 @@ Platform được xem là đạt mục tiêu business khi:
 41. Technical retry và scientific refinement được trace riêng.
 42. Evaluation framework đo được quality của hypothesis gate và evidence gate.
 43. Có thể so sánh structured decision gate với LLM-only decision baseline.
+50. Candidate hypothesis có idea record và reflection; novelty assessment (nếu bật) có nguồn.
+51. Bản thảo (nếu tạo) có số liệu truy được về log, trích dẫn xác minh, review và phê duyệt của researcher.
+53. Khi candidate hypothesis ngang điểm trong ngưỡng cấu hình, hệ thống chọn được nhiều candidate có giới hạn (bounded tied-selection) thay vì chỉ 1, và quyết định này được ghi audit.
 
 ---
 
@@ -2430,16 +2592,19 @@ Các RQ này giữ nguyên ý định cốt lõi của proposal: đánh giá end
 | BO-02 — Chọn phương pháp phù hợp | BR-18, BR-19, BR-20, BR-24 | Method-selection accuracy, assumption-check quality | RQ1, RQ3 |
 | BO-03 — Iterative hypothesis refinement | BR-28, BR-29, BR-30, BR-57, BR-60 | Experiment count, valid refinement rate, successful continuation | RQ1, RQ2 |
 | BO-04 — Tăng khả năng kiểm chứng finding | BR-34, BR-35, BR-42, BR-55 | KPI-04 evidence coverage, KPI-06 traceability | RQ1, RQ2 |
-| BO-05 — Bảo vệ dữ liệu gốc | BR-10, BR-11, BR-12 | KPI-05 destructive changes without approval = 0; KPI-07 raw preservation | RQ1 |
+| BO-05 — Bảo vệ dữ liệu gốc | BR-10, BR-11, BR-12 | KPI-05 destructive changes without approval = 0; KPI-08 raw preservation | RQ1 |
 | BO-06 — Human control | BR-10, BR-61 | Human intervention rate, escalation correctness | RQ2, RQ3 |
 | BO-07 / BO-12 — Reproducibility & leakage control | BR-37, BR-47, BR-55 | KPI-14 reproducibility coverage, leakage violations | RQ1, RQ3 |
-| BO-08 — Quantitative evaluation | BR-43 → BR-46, BR-63 | KPI-08 benchmark score coverage; task success; ablation deltas | RQ1, RQ2, RQ3 |
+| BO-08 — Quantitative evaluation | BR-43 → BR-46, BR-63 | KPI-10 benchmark score coverage; task success; ablation deltas | RQ1, RQ2, RQ3 |
 | BO-09 — Multiple-testing & exploratory control | BR-48, BR-49 | Hypothesis-origin coverage, correction compliance | RQ1, RQ3 |
 | BO-10 — Dependency & conflicting evidence | BR-51, BR-52, BR-53 | Dependency coverage, invalidation propagation, conflict preservation | RQ1, RQ2 |
 | BO-11 — Practical significance | BR-50 | Effect-size/CI coverage | RQ1, RQ3 |
 | BO-13 — Tách reasoning khỏi bounded decision | BR-56, BR-57, BR-58, BR-62 | KPI-15 selection records; decision correctness | RQ2 |
 | BO-14 — Evidence sufficiency verification | BR-59, BR-60 | KPI-16 evidence-gate coverage; false acceptance rate | RQ2, RQ3 |
 | BO-15 — Confidence-based escalation | BR-54, BR-61, BR-63 | KPI-17 safe escalation; calibration quality | RQ2, RQ3 |
+| BO-17 — Ideation & novelty | BR-64, BR-65 | KPI-21 | RQ2 |
+| BO-19 — Bản thảo review được | BR-73, BR-74, BR-75 | KPI-22, KPI-23 | RQ1, RQ3 |
+| BO-20 — Bounded tied-candidate selection | BR-78, BRule-35, BRule-36, BR-49, BR-56, BR-51, BR-53, BR-61, BR-62 | Acceptance Criteria 53; tied-selection audit coverage; R-29 mitigation coverage | RQ2, RQ3 |
 
 ## 23.3. Product Traceability Chain
 
@@ -2558,6 +2723,8 @@ Conflicting Evidence Handling
         +
 Reproducibility Snapshot
         +
+Bounded Tied-Candidate Selection
+        +
 Systematic Evaluation
 ```
 
@@ -2600,6 +2767,11 @@ Systematic Evaluation
 | Scientific Refinement | Vòng lặp bổ sung experiment vì evidence chưa đủ, khác technical retry do lỗi execution |
 | Decision Confidence | Confidence/uncertainty metadata dùng cho routing và human escalation |
 | TypeSafe / Jev | Candidate implementation cho structured decision capability; không phải dependency bắt buộc của BRD |
+| Novelty Assessment | Đánh giá tham khảo mức độ mới của idea dựa trên nguồn tài liệu, không bảo đảm novelty |
+| Manuscript Draft | Bản thảo do AI tạo từ validated findings, cần review và phê duyệt của researcher |
+| Bounded Tied-Candidate Selection | Cơ chế cho phép Hypothesis Selection Gate chọn đồng thời tối đa một số lượng candidate giới hạn khi điểm/confidence của chúng chênh nhau dưới một ngưỡng cấu hình được, thay vì ép chọn một candidate duy nhất |
+| Tie Threshold | Ngưỡng chênh lệch điểm/confidence cấu hình được, dùng để xác định các candidate được coi là "ngang điểm" trong bounded tied-candidate selection |
+| co_selected_with | Loại quan hệ trong Experiment Dependency Graph, liên kết các nhánh hypothesis anh em được chọn cùng lúc bởi một quyết định bounded tied-candidate selection |
 
 ---
 
@@ -2623,3 +2795,8 @@ Systematic Evaluation
 | 1.0 | 2026-09-19 |  | Finalized BRD and aligned with final architecture diagram and iterative research loop |
 | 1.1 | 2026-09-20 |  | Added decision-gated research architecture: Research State, candidate-hypothesis selection, structured decision confidence, evidence sufficiency verification, scientific refinement loop, human escalation, and decision-gate evaluation; TypeSafe/Jev recorded as an implementation candidate rather than a required vendor |
 | 1.2 | 2026-09-20 |  | Submission-ready BRD: added Gap Analysis, explicit MoSCoW prioritization for BR-01→BR-63, high-level NFR summary, and BO→BR→KPI→RQ traceability matrix; scope remains unchanged from v1.1 |
+| 1.3 | 2026-09-21 |  | Added AI-Scientist-style experiment exploration (BP-15→17, BO-16→19, BR-64→77, KPI-19→26, BRule-30→34, NFR-13, R-24→28, GA-11→13, acceptance criteria 44→52): structured idea record and reflection, novelty assessment, experiment tree with Experiment Manager and staged exploration, debug nodes, search budget and selection-bias control, manuscript draft and review, exploration ablation with rule-based gate baseline and benchmark seed set; existing requirements unchanged |
+| 1.4 | 2026-09-22 |  | Added bounded tied-candidate selection at Hypothesis Selection Gate (BR-58.1, BRule-35, BRule-36) and its cross-cutting impact on multiple-testing family (BR-49), Research State versioning under parallel branches (BR-56), dependency-graph sibling edges (BR-51), multi-finding handling (BR-53), cumulative stopping-criteria budget (BR-30), escalation on disagreeing parallel branches (BR-61), decision audit fields (BR-62) and a new ablation arm (BR-46); acceptance criterion 53 added; fixed KPI mislabeling in section 23.2 (BO-05: KPI-07→KPI-08; BO-08: KPI-08→KPI-10) and added a conditional-scope note for acceptance criteria 27–29 relative to the Should-priority of BR-51/52/53; existing requirements otherwise unchanged |
+| 1.7 | 2026-09-22 |  | Renumbered the bounded tied-candidate selection requirement from the sub-clause BR-58.1 to a standalone BR-78, for consistency with the document's convention that every BR is a top-level, independently prioritized requirement; added BR-78 to the MoSCoW table (Must); updated all cross-references (GA-14, traceability matrix, BRule-35/36, BR-30/49/51/53/56/61/62 cross-references) accordingly; BR-58 now carries a short pointer to BR-78; no semantic change to the requirement itself |
+| 1.8 | 2026-09-22 |  | Removed the Sakana-style bounded tree-search layer added in v1.3 (BR-66 Experiment Tree, BR-67 Staged Exploration, BR-68 Experiment Manager, BR-69 Debug Node & Bounded Retry, BR-70 Search Budget Control, BR-71 Search Selection-Bias Control, BR-72 Replication & Aggregation Nodes, BR-76 Search Trace View, BR-77 Exploration Evaluation & Ablation) and their dependent BRule-30/31/32, BP-15, BO-16, BO-18, GA-11, R-24/27/28, KPI-19/20/24/25, NFR-13, acceptance criteria 44–49 and 52, Business Process 13.1, and related MoSCoW/traceability/glossary entries — restoring the platform's original linear, single-path Decision-Gated Research Loop (BR-21) as the sole execution architecture, since the tree-search layer conflicted with that original design choice and its Sakana-comparable value was judged not to justify the added scope/engineering risk for a capstone deliverable; retained the tree-independent parts of the same v1.3 addition (BR-64 Structured Idea Record & Reflection, BR-65 Novelty Assessment, BR-73 Figure Aggregation & Visual Feedback — reworded to reference BR-21 method-level results instead of experiment-tree nodes, BR-74 Manuscript Draft Generation, BR-75 Automated Manuscript Review) and the bounded tied-candidate selection capability (BR-78, BRule-35/36, BO-20, GA-14, R-29) which operates at the Hypothesis Selection Gate and is independent of tree search; existing requirements otherwise unchanged |
+| 1.5 | 2026-09-22 |  | Closed internal-consistency gaps left by v1.4: added BO-20 as a proper Business Objective for bounded tied-candidate selection (replacing the ad-hoc "BO-13 (mở rộng)" traceability label), added GA-14 (Gap Analysis) and R-29 (Risks & Mitigation) so the new capability is traceable end-to-end per BRD's own rule that every core capability must resolve a gap; existing requirements otherwise unchanged |
