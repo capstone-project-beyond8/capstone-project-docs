@@ -1,0 +1,307 @@
+{
+  "title": "AI Research Experimentation Platform — Context Diagram",
+  "page_name": "Context Diagram",
+  "source_documents": [
+    "AI-Research-Experimentation-Platform-BRD-v1.8-DRAFT.md",
+    "AI-Research-Experimentation-Platform-PRD-v1.7-DRAFT.md"
+  ],
+  "scope_note": "DFD Level 0: one system process with six external entities and 25 high-level data flows; internal modules are intentionally omitted.",
+  "canvas": {
+    "width": 1900,
+    "height": 1300
+  },
+  "system": {
+    "id": "platform",
+    "label_lines": [
+      "AI Research Experimentation Platform",
+      "(System)"
+    ],
+    "x": 700,
+    "y": 350,
+    "width": 500,
+    "height": 450
+  },
+  "external_entities": [
+    {
+      "id": "researcher",
+      "type": "person",
+      "label_lines": ["Researcher / Data Analyst"],
+      "x": 750,
+      "y": 100,
+      "width": 400,
+      "height": 75
+    },
+    {
+      "id": "project_manager",
+      "type": "person",
+      "label_lines": ["Project Manager"],
+      "x": 40,
+      "y": 390,
+      "width": 270,
+      "height": 75
+    },
+    {
+      "id": "system_administrator",
+      "type": "person",
+      "label_lines": ["System Administrator"],
+      "x": 40,
+      "y": 800,
+      "width": 270,
+      "height": 75
+    },
+    {
+      "id": "reviewer",
+      "type": "person",
+      "label_lines": ["Reviewer / Stakeholder"],
+      "x": 750,
+      "y": 1050,
+      "width": 400,
+      "height": 75
+    },
+    {
+      "id": "llm_provider",
+      "type": "external",
+      "label_lines": ["AI / LLM Provider"],
+      "x": 1590,
+      "y": 390,
+      "width": 270,
+      "height": 75
+    },
+    {
+      "id": "decision_provider",
+      "type": "external",
+      "label_lines": ["Structured Decision Provider"],
+      "x": 1590,
+      "y": 800,
+      "width": 270,
+      "height": 75
+    }
+  ],
+  "relationships": [
+    {
+      "id": "researcher_dataset",
+      "from": "researcher",
+      "to": "platform",
+      "label": "Dataset Upload",
+      "ports": {"exitX": 0.10, "exitY": 1, "entryX": 0.10, "entryY": 0},
+      "points": [[790, 215], [750, 215]],
+      "label_box": {"x": 430, "y": 180, "width": 230, "height": 24}
+    },
+    {
+      "id": "researcher_question",
+      "from": "researcher",
+      "to": "platform",
+      "label": "Research Question + H0 / H1",
+      "ports": {"exitX": 0.20, "exitY": 1, "entryX": 0.18, "entryY": 0},
+      "points": [[830, 245], [790, 245]],
+      "label_box": {"x": 420, "y": 215, "width": 260, "height": 24}
+    },
+    {
+      "id": "researcher_context",
+      "from": "researcher",
+      "to": "platform",
+      "label": "Domain / Variable Context",
+      "ports": {"exitX": 0.30, "exitY": 1, "entryX": 0.26, "entryY": 0},
+      "points": [[870, 275], [830, 275]],
+      "label_box": {"x": 420, "y": 250, "width": 240, "height": 24}
+    },
+    {
+      "id": "researcher_decision",
+      "from": "researcher",
+      "to": "platform",
+      "label": "Cleaning Approval / Research Decision",
+      "ports": {"exitX": 0.40, "exitY": 1, "entryX": 0.34, "entryY": 0},
+      "points": [[910, 305], [870, 305]],
+      "label_box": {"x": 390, "y": 285, "width": 280, "height": 24}
+    },
+    {
+      "id": "platform_profile",
+      "from": "platform",
+      "to": "researcher",
+      "label": "Data Profile / Data Card",
+      "ports": {"exitX": 0.62, "exitY": 0, "entryX": 0.62, "entryY": 1},
+      "points": [[1010, 320], [998, 320]],
+      "label_box": {"x": 1230, "y": 180, "width": 220, "height": 24}
+    },
+    {
+      "id": "platform_quality",
+      "from": "platform",
+      "to": "researcher",
+      "label": "Cleaning Recommendation",
+      "ports": {"exitX": 0.70, "exitY": 0, "entryX": 0.70, "entryY": 1},
+      "points": [[1050, 290], [1030, 290]],
+      "label_box": {"x": 1230, "y": 215, "width": 270, "height": 24}
+    },
+    {
+      "id": "platform_plan",
+      "from": "platform",
+      "to": "researcher",
+      "label": "Hypotheses / Experiment Plan",
+      "ports": {"exitX": 0.78, "exitY": 0, "entryX": 0.78, "entryY": 1},
+      "points": [[1090, 260], [1062, 260]],
+      "label_box": {"x": 1230, "y": 250, "width": 250, "height": 24}
+    },
+    {
+      "id": "platform_validation",
+      "from": "platform",
+      "to": "researcher",
+      "label": "Statistical Validation / Evidence",
+      "ports": {"exitX": 0.86, "exitY": 0, "entryX": 0.86, "entryY": 1},
+      "points": [[1130, 230], [1094, 230]],
+      "label_box": {"x": 1230, "y": 285, "width": 270, "height": 24}
+    },
+    {
+      "id": "platform_outputs",
+      "from": "platform",
+      "to": "researcher",
+      "label": "Findings / Research Report",
+      "ports": {"exitX": 0.94, "exitY": 0, "entryX": 0.94, "entryY": 1},
+      "points": [[1170, 200], [1126, 200]],
+      "label_box": {"x": 1230, "y": 320, "width": 240, "height": 24}
+    },
+    {
+      "id": "project_manager_request",
+      "from": "project_manager",
+      "to": "platform",
+      "label": "Project / Member / Monitoring Request",
+      "ports": {"exitX": 1, "exitY": 0.35, "entryX": 0, "entryY": 0.20},
+      "points": [[650, 416], [650, 440]],
+      "label_box": {"x": 330, "y": 375, "width": 300, "height": 24}
+    },
+    {
+      "id": "platform_project_status",
+      "from": "platform",
+      "to": "project_manager",
+      "label": "Project Status / Progress",
+      "ports": {"exitX": 0, "exitY": 0.45, "entryX": 1, "entryY": 0.55},
+      "points": [[600, 552.5], [600, 431.25]],
+      "label_box": {"x": 330, "y": 510, "width": 160, "height": 24}
+    },
+    {
+      "id": "platform_project_summary",
+      "from": "platform",
+      "to": "project_manager",
+      "label": "Experiment / Finding Summary",
+      "ports": {"exitX": 0, "exitY": 0.58, "entryX": 1, "entryY": 0.75},
+      "points": [[500, 611], [500, 446.25]],
+      "label_box": {"x": 510, "y": 575, "width": 180, "height": 24}
+    },
+    {
+      "id": "administrator_configuration",
+      "from": "system_administrator",
+      "to": "platform",
+      "label": "User / Role / Model Config",
+      "ports": {"exitX": 1, "exitY": 0.35, "entryX": 0, "entryY": 0.78},
+      "points": [[410, 826.25], [410, 701]],
+      "label_box": {"x": 330, "y": 620, "width": 210, "height": 24}
+    },
+    {
+      "id": "platform_telemetry",
+      "from": "platform",
+      "to": "system_administrator",
+      "label": "Audit / Usage / Cost",
+      "ports": {"exitX": 0, "exitY": 0.83, "entryX": 1, "entryY": 0.65},
+      "points": [[520, 723.5], [520, 848.75]],
+      "label_box": {"x": 330, "y": 665, "width": 160, "height": 24}
+    },
+    {
+      "id": "platform_health",
+      "from": "platform",
+      "to": "system_administrator",
+      "label": "Failure / Health Status",
+      "ports": {"exitX": 0, "exitY": 0.93, "entryX": 1, "entryY": 0.90},
+      "points": [[610, 768.5], [610, 867.5]],
+      "label_box": {"x": 330, "y": 885, "width": 290, "height": 24}
+    },
+    {
+      "id": "platform_reviewer_findings",
+      "from": "platform",
+      "to": "reviewer",
+      "label": "Validated Findings / Provenance",
+      "ports": {"exitX": 0.28, "exitY": 1, "entryX": 0.28, "entryY": 0},
+      "points": [[840, 910], [862, 910]],
+      "label_box": {"x": 500, "y": 920, "width": 250, "height": 24}
+    },
+    {
+      "id": "platform_reviewer_outputs",
+      "from": "platform",
+      "to": "reviewer",
+      "label": "Methodology / Figures / Report",
+      "ports": {"exitX": 0.50, "exitY": 1, "entryX": 0.50, "entryY": 0},
+      "points": [[950, 910]],
+      "label_box": {"x": 1080, "y": 920, "width": 240, "height": 24}
+    },
+    {
+      "id": "reviewer_request",
+      "from": "reviewer",
+      "to": "platform",
+      "label": "Review Request / Feedback",
+      "ports": {"exitX": 0.72, "exitY": 0, "entryX": 0.72, "entryY": 1},
+      "points": [[1038, 980], [1060, 980]],
+      "label_box": {"x": 1080, "y": 960, "width": 220, "height": 24}
+    },
+    {
+      "id": "platform_llm_context",
+      "from": "platform",
+      "to": "llm_provider",
+      "label": "Research Context / Data Card",
+      "ports": {"exitX": 1, "exitY": 0.25, "entryX": 0, "entryY": 0.30},
+      "points": [[1320, 462.5], [1320, 412.5]],
+      "label_box": {"x": 1220, "y": 475, "width": 220, "height": 24}
+    },
+    {
+      "id": "platform_llm_request",
+      "from": "platform",
+      "to": "llm_provider",
+      "label": "Reasoning / Planning Request",
+      "ports": {"exitX": 1, "exitY": 0.38, "entryX": 0, "entryY": 0.70},
+      "points": [[1500, 521], [1500, 442.5]],
+      "label_box": {"x": 1220, "y": 530, "width": 220, "height": 24}
+    },
+    {
+      "id": "llm_output",
+      "from": "llm_provider",
+      "to": "platform",
+      "label": "Generated Hypotheses / Plan",
+      "ports": {"exitX": 0, "exitY": 0.88, "entryX": 1, "entryY": 0.50},
+      "points": [[1550, 456], [1550, 575]],
+      "label_box": {"x": 1220, "y": 585, "width": 220, "height": 24}
+    },
+    {
+      "id": "platform_decision_state",
+      "from": "platform",
+      "to": "decision_provider",
+      "label": "Research State / Hypotheses",
+      "ports": {"exitX": 1, "exitY": 0.62, "entryX": 0, "entryY": 0.22},
+      "points": [[1510, 629], [1510, 816.5]],
+      "label_box": {"x": 1220, "y": 630, "width": 240, "height": 24}
+    },
+    {
+      "id": "platform_decision_evidence",
+      "from": "platform",
+      "to": "decision_provider",
+      "label": "Validated Evidence",
+      "ports": {"exitX": 1, "exitY": 0.74, "entryX": 0, "entryY": 0.55},
+      "points": [[1470, 683], [1470, 841.25]],
+      "label_box": {"x": 1220, "y": 655, "width": 200, "height": 24}
+    },
+    {
+      "id": "platform_decision_request",
+      "from": "platform",
+      "to": "decision_provider",
+      "label": "Decision Request",
+      "ports": {"exitX": 1, "exitY": 0.84, "entryX": 0, "entryY": 0.75},
+      "points": [[1430, 728], [1430, 856.25]],
+      "label_box": {"x": 1220, "y": 695, "width": 190, "height": 24}
+    },
+    {
+      "id": "decision_output",
+      "from": "decision_provider",
+      "to": "platform",
+      "label": "Selection / Confidence / Reason Codes",
+      "ports": {"exitX": 0, "exitY": 0.92, "entryX": 1, "entryY": 0.90},
+      "points": [[1390, 869], [1390, 755]],
+      "label_box": {"x": 1220, "y": 885, "width": 300, "height": 24}
+    }
+  ]
+}
