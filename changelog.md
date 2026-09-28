@@ -4,6 +4,86 @@ Lịch sử thay đổi và registry của toàn bộ tài liệu canonical tron
 `capstone-project-docs`. Các đường dẫn bên dưới là đường dẫn tương đối từ
 repository root.
 
+## 2026-09-28 — Đồng bộ BRD v1.9 / PRD v1.8 với kiến trúc đích Popper
+
+### Changed
+
+- Cập nhật [BRD](AI-Research-Experimentation-Platform-BRD-v1.8-DRAFT.md) lên v1.9 và [PRD](AI-Research-Experimentation-Platform-PRD-v1.7-DRAFT.md) lên v1.8 theo mục "Proposed BRD/PRD changes" và bảng mapping §7.10 của [architecture.md](architecture.md). Tên file giữ nguyên để không làm hỏng link và builder hiện có.
+- Research loop: thay luồng tuyến tính single-path bằng agent loop trong giới hạn budget và invariant, giữ state machine cũ làm workflow floor (BR-80, PRD Module AJ, Section 38).
+- Thêm exploration/confirmation split, Analysis Ledger, look budget, Research Protocol và confirmation batch (BR-79, PRD Module AI).
+- Evidence Sufficiency Gate trở thành deterministic: Finding / Negative Result / Inconclusive tính trên adjusted interval so với δ_F / δ_N (BR-59, PRD Module AE). `NEED_MORE_EVIDENCE`, `TRY_ALTERNATIVE_METHOD` và `REPLICATE` chuyển thành next move (BR-60, Module AF); `NEED_HUMAN_REVIEW` chuyển thành escalation.
+- Escalation dùng deterministic trigger làm mức sàn; confidence của decision layer chỉ được thêm escalation (BR-61, BRule-28).
+- BR-78: các candidate ngang điểm cùng vào một confirmation batch trong look budget, không mở nhánh song song; bỏ `co_selected_with` và các cap cho nhánh song song, thêm quan hệ `registered_in`.
+- Bỏ `run_python`/`run_sql`: experiment chỉ chạy qua registered capabilities (BR-22/23, PRD Module L).
+- BR-21 được đổi thành triangulation / bounded robustness. BR-65 được đổi thành Prior-Work Assessment giới hạn theo coverage, không có nhãn `novel`. BR-48 dùng origin do hệ thống gán. Thêm BR-81 cho Research Program branches (Should).
+- [architecture.md](architecture.md): sửa link BRD/PRD đang trỏ tới file `-REQ-TOOL.md` không tồn tại thành link tương đối tới file DRAFT; đổi đoạn "Proposed BRD/PRD changes" thành đã áp dụng, vẫn chờ supervisor sign-off.
+- **Chưa đồng bộ diagram:** các builder Activity/Sequence/Use Case/Context vẫn mô tả outcome cũ (`ENOUGH_EVIDENCE`…) và luồng tuyến tính, nên cần cập nhật và regenerate trong một đợt riêng trước khi commit theo [AGENTS.md](AGENTS.md).
+- Use Case Specification không có file canonical trong inventory nên không có gì để sửa.
+- Lượt verify sau đó sửa thêm những chỗ còn mâu thuẫn với kiến trúc:
+  - BR-07 / FR-PROFILE-04: quan hệ giữa hai biến chỉ được tính trên exploration partition.
+  - BR-12 / FR-CLEAN-04: cleaning sau khi split là protocol deviation.
+  - BR-41 / Module W: report hiển thị Negative Result và Inconclusive ngang Finding.
+  - BR-42: checklist có thêm confirmation batch, severity checks và claim level.
+  - BR-59 / Module AE: ghi rõ trường hợp two-sided và directional.
+  - BRule-27 / PP-11: bỏ "re-plan" khỏi technical retry.
+  - FR-EVAL-04: danh sách ablation khớp với BR-46.
+  - FR-VIZ-02: figure chỉ được vẽ bằng registered chart capability.
+- Lượt kiểm tra thứ ba:
+  - Chuyển BR-78 từ section 11 (Business Rules) về section 10 (Business Requirements). Lỗi đặt sai vị trí này có từ v1.7.
+  - BR-25: tách stability check trên cùng dữ liệu khỏi replication trên dữ liệu mới.
+  - BR-16 / FR-RQ-01/02: thêm các trường của Research Brief, gap và intake (proceed / restate / clarify) trước khi đọc dữ liệu.
+  - BR-44/45 / FR-EVAL-02 và Benchmark Task Structure: thêm null / planted-signal ground truth, false-finding rate và power.
+  - FR-ADMIN-04: thêm run / policy / evaluation settings có policy version.
+- Audit coverage toàn bộ architecture.md, đối chiếu từng section §4–§25 với BRD/PRD:
+  - BRD thêm các BR mới:
+    - BR-82 Research Knowledge Layer
+    - BR-83 Research Artifacts & Visibility (Must)
+    - BR-84 Publication Views & Integrity Audit (Must)
+    - BR-85 Simulation Lab
+    - BR-86 Theory & Observable Implications
+    - BR-87 Research Campaign
+  - BRD thêm BRule-39 (policy settings có version, không được làm yếu bảo đảm), GA-17/18, R-33→36 và acceptance criteria 59–63.
+  - BRD mở rộng các BR đang có:
+    - BR-27: yêu cầu cho từng claim type / evidential status
+    - BR-34: reverse provenance
+    - BR-40: limitation theo validity type
+    - BR-49: dataset-scope looks
+    - BR-55: replay vs re-derivation, tombstone
+    - BR-56: tách các loại state
+    - BR-58: screens, admission gate, circuit breaker
+    - BR-63: champion/challenger
+    - BR-80: role profiles, context
+    - BRule-07: causal endorsement
+    - NFR-02/07
+  - PRD thêm Module AK (Artifacts & Publication Views), Module AL (Knowledge Layer), Module AM (Simulation Lab).
+  - PRD thêm các FR: FR-STATE-06, FR-REFLOOP-06, FR-LOOP-09, FR-VALID-05/06, FR-PROV-04, FR-REPRO-04/05, FR-EVAL-06, FR-RQ-04.
+  - PRD mở rộng NFR-02/03, acceptance criteria 61–66, entities, release plan và traceability.
+- Thêm [PRD §53.1 Proposed Defaults](AI-Research-Experimentation-Platform-PRD-v1.7-DRAFT.md): bảng giá trị đề xuất cho các open decision 5–7 và 14–24, gồm α = 0.05, deciding interval Bonferroni 1 − α/L (Holm chỉ để báo cáo, FDR chỉ cho exploration), margin theo từng summary measure, bảng cỡ mẫu, δ_F/δ_N cho pack `general` và software engineering, split 50/50, look budget 5, mode và threshold của từng decision point ở A1, margin evaluation và danh sách capability MVP. BRD KPI-28 giờ trỏ tới α đề xuất. Tất cả đều đang chờ nhóm và supervisor duyệt.
+- Kiểm tra lại phần định lượng của §53.1 (tính lại bằng power calculation):
+  - Sửa Holm thành simultaneous interval Bonferroni cho quyết định sufficiency, vì Holm không cho ra simultaneous CI. BRD BR-49 và PRD FR-MTEST-02 được làm rõ theo.
+  - Sửa số run evaluation từ 200 thành khoảng 655 mỗi arm cho margin 0.03; với margin 0.02 thì cần khoảng 1.470.
+  - Thêm margin theo từng summary measure (d, r, β, OR, Cramér's V, η²) và bảng hướng dẫn cỡ mẫu.
+- Kiểm tra tự động sau audit — pass:
+  - BR/BRule đúng thứ tự và đúng section;
+  - MoSCoW và traceability đầy đủ;
+  - không có tham chiếu BR/BRule/BO/BP/GA/KPI/R/NFR/FR/Module tới ID không tồn tại;
+  - không có FR trùng;
+  - acceptance criteria PRD liên tục 1–66;
+  - code fence cân bằng;
+  - `git diff --check` sạch.
+
+### Validation
+
+- `git diff --check` — pass.
+- Kiểm tra local link trong BRD, PRD, architecture.md và entry này — pass. Riêng [architecture.md](architecture.md) còn tham chiếu `research-methodology.md` và `roadmap.md`, hai file chưa có trong repository; lỗi này có sẵn từ trước và nằm ngoài phạm vi lần sửa này. Entry ngày 2026-09-24 bên dưới cũng đang link tới hai file `-REQ-TOOL.md`, vốn đã bị xoá khỏi working tree trước khi task này bắt đầu.
+- Chưa chạy diagram generator/validator vì chưa sửa diagram.
+
+### References
+
+- [Target architecture](architecture.md)
+- [BRD v1.9 Draft](AI-Research-Experimentation-Platform-BRD-v1.8-DRAFT.md)
+- [PRD v1.8 Draft](AI-Research-Experimentation-Platform-PRD-v1.7-DRAFT.md)
+
 ## 2026-09-24 — Chuẩn hóa tài liệu REQ-TOOL và cập nhật package diagram
 
 ### Changed
