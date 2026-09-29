@@ -532,7 +532,7 @@
     </mxGraphModel>
   </diagram>
   <diagram name="Copy of Copy of Context Diagram" data-source="AI-Research-Experimentation-Platform-BRD-v1.8-DRAFT.md; AI-Research-Experimentation-Platform-PRD-v1.7-DRAFT.md" data-model="DFD Level 0: one system process with six external entities and 25 high-level data flows; internal modules are intentionally omitted." id="8NxLQbW52TVCkj68xiM9">
-    <mxGraphModel dx="2175" dy="1294" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1900" pageHeight="1300" background="#ffffff" math="0" shadow="0">
+    <mxGraphModel dx="1488" dy="885" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1900" pageHeight="1300" background="#ffffff" math="0" shadow="0">
       <root>
         <mxCell id="BMDbfyjtdYwduMOWigGW-0" />
         <mxCell id="BMDbfyjtdYwduMOWigGW-1" parent="BMDbfyjtdYwduMOWigGW-0" />
