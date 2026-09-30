@@ -4,6 +4,33 @@ Lịch sử thay đổi và registry của toàn bộ tài liệu canonical tron
 `capstone-project-docs`. Các đường dẫn bên dưới là đường dẫn tương đối từ
 repository root.
 
+## 2026-09-30 — Thêm Conceptual ERD
+
+### Added
+
+- Thêm [Conceptual ERD](diagrams/erd/conceptual-erd/AI-Research-Experimentation-Platform-Conceptual-ERD.drawio) dạng `.drawio` editable: 43 entity, 70 relationship, ký hiệu crow's foot, connector vuông góc.
+- Sơ đồ chia hai khung:
+  - Platform (calling service): Organization, User, Role, ProjectMember, Project, BillingAccount, Dataset/DatasetSnapshot, Comment, Notification, PublicationRelease.
+  - Popper (AI Scientist runtime), khung nét đứt. Các đường nối cắt qua ranh giới này là interface platform ↔ Popper (Popper architecture §4).
+  - Các record của Popper mà platform dùng tới được tô riêng: PolicyVersion, DecisionRequest, UsageRecord, EvaluationDecision, DatasetAssessment.
+- Thêm [ERD model](diagrams/erd/conceptual-erd/conceptual_erd.json) và [ERD builder](diagrams/erd/conceptual-erd/build_conceptual_erd.py). Model ghi reference nguồn cho từng entity. Builder có `--check` để kiểm tra geometry của connector, và hỗ trợ khung nhóm.
+- Nguồn: `docs/` của repo `popper`, gồm architecture §1, §4, §6, §7; state §1–§2; research-program §1–§2; error-control §2; Stage 1–5; runtime §7–§10; views-and-visualization §1; evaluation §5.
+- Ở mức conceptual, sơ đồ bỏ Artifact envelope, events, traces và các entity phụ (Construct, DataLead, Critique, Theory, Campaign, MethodLesson, Statement). Các phần này sẽ nằm trong logical ERD.
+- File `.drawio` đã được chỉnh tay trong draw.io sau khi build: bỏ legend, dòng Source, scope note và các note sends/receives; rút gọn tiêu đề hai khung. Builder chưa tái tạo các chỉnh sửa này, nên chạy lại builder sẽ ghi đè chúng.
+- `.gitignore`: bỏ qua output build, file tạm Office, `.DS_Store`, `__pycache__/`. Thêm `.vscode/settings.json` (port Live Server).
+- Không sửa BRD/PRD/Use Case Spec vì ERD chỉ mô hình hoá lại dữ liệu đã có trong tài liệu, không đổi requirement.
+
+### Validation
+
+- `build_conceptual_erd.py --check`: pass, 0 error; còn 24 điểm cắt, đều hiển thị bằng jump arc.
+- Render check file `.drawio` hiện tại bằng draw.io viewer (`viewer-static.min.js`) trên Chrome headless: pass.
+- `git diff --check`: pass.
+
+### References
+
+- [architecture.md](architecture.md)
+- Repo `popper`: `docs/architecture.md`, `docs/subsystems/*.md`
+
 ## 2026-09-28 — Đồng bộ BRD v1.9 / PRD v1.8 với kiến trúc đích Popper
 
 ### Changed

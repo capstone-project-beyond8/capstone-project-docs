@@ -1,0 +1,10 @@
+/outputs/*
+/outputs/scripts/
+/outputs/scripts/**
+/.slide-build/
+~$*.docx
+/example/
+/template_assets/
+.DS_Store
+__pycache__/
+/skills/
