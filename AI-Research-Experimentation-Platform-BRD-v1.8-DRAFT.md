@@ -3,8 +3,8 @@
 
 **Document Type:** Business Requirements Document  
 **Project:** AI Research Experimentation Platform  
-**Version:** 1.9 Draft\
-**Status:** Draft for supervisor review — aligned with target architecture ([architecture.md](architecture.md))\
+**Version:** 1.10 Draft\
+**Status:** Draft for supervisor review — aligned with target architecture ([Popper target architecture](../popper/docs/architecture.md))\
 
 ---
 
@@ -12,49 +12,29 @@
 
 AI Research Experimentation Platform là nền tảng hỗ trợ researcher thực hiện quy trình nghiên cứu dựa trên dữ liệu thông qua AI Agent.
 
-Người dùng có thể đưa dataset, research question, hypothesis và domain context vào hệ thống. AI Agent sau đó hỗ trợ hiểu dữ liệu, kiểm tra chất lượng, lựa chọn phương pháp phân tích, chạy experiment, kiểm tra giả định thống kê, đánh giá kết quả, sinh research finding và tiếp tục đề xuất hypothesis mới dựa trên evidence thu được.
+Người dùng có thể bắt đầu từ một vấn đề hoặc research question; dataset, hypothesis và domain context là input tùy chọn. Agent bổ sung brief và tìm dataset khi được researcher cho phép; mỗi trường ghi rõ `agent_supplied` hoặc `researcher_steered`. AI Agent sau đó hỗ trợ hiểu dữ liệu, kiểm tra chất lượng, lựa chọn phương pháp phân tích, chạy experiment, kiểm tra giả định thống kê, đánh giá kết quả, sinh research finding và tiếp tục đề xuất hypothesis mới dựa trên evidence thu được.
 
 Nền tảng không chỉ dừng ở việc "chat với dataset" hoặc chạy một phép kiểm thử thống kê đơn lẻ. Mục tiêu chính là hỗ trợ một vòng lặp nghiên cứu có cấu trúc:
 
 ```text
-Research Question + Dataset (Research Brief)
+Research Brief (problem/question; optional dataset, H0/H1, context)
     ↓
-Brief Intake + Dataset Understanding / Data Card
-    ↓
-Split: Exploration / Confirmation Partition
-    ↓
-Freeze Research Protocol (budgets, margins, stopping rules)
-    ↓
-┌─ Exploration phase (agent loop, exploration partition only) ─┐
-│  Research State + Research Program                            │
-│      ↓                                                        │
-│  Generate Candidate Hypotheses / Directions                   │
-│      ↓                                                        │
-│  Exploration Analyses (registered capabilities, ledgered)     │
-│      ↓                                                        │
-│  Critique → Refine → Structured Selection (decision layer)    │
-│      ↓                                                        │
-│  Next Move: explore further / alternative / critique / go on  │
-└───────────────────────────────────────────────────────────────┘
-    ↓
-Register Confirmation Batch (estimand, primary analysis, criteria, look budget)
-    ↓
-Execute Batch on Confirmation Partition (test epoch begins)
-    ↓
-Deterministic Scientific Validation + Severity / Robustness Checks
-    ↓
-Deterministic Evidence Sufficiency
-    ↓
-Finding / Negative Result / Inconclusive (+ Human Review when triggered)
-    ↓
-Update Research State; follow-ups need fresh data
-    ↓
-Research Report / Publication Views
+Understand ⇄ Ground ⇄ Discover
+(direction development ⇄ data preparation ⇄ sandboxed experiments/debug)
+    ↓                    ↑
+Results + figures + interpretation → feedback / next experiment
+    ├── Communicate → traceable report/view at any time
+    └── Verify on request
+        → reserve eligible unread units (no approval required)
+        → recorded approval + freeze Confirmation Contract and error allocation
+        → frozen executor: one primary look, no debug on confirmation data
+        → computed Finding / Negative Result / Inconclusive
+        → update Research Graph → continue research / communicate / stop
 ```
 
-Mọi finding quan trọng phải có evidence, provenance và execution trace. Các giả thuyết mới do AI sinh ra phải được đánh dấu là chưa được xác minh cho đến khi được kiểm thử trong confirmation batch; hypothesis sinh ra sau khi đã đọc confirmation data chỉ được kiểm thử trên dữ liệu mới.
+Mọi result quan trọng phải có evidence, provenance và execution trace. Nhãn `exploratory`, `reviewed`, `confirmed` do code gán theo cách tạo kết quả; review không nâng nhãn. Hypothesis mới là chưa xác minh; chỉ Verify trên các unit đủ điều kiện chưa đọc trong lineage mới tạo confirmed outcome, kể cả khi hypothesis có origin `post_test`.
 
-Kiến trúc nghiệp vụ tách bốn loại trách nhiệm: **reasoning agent** (generative reasoning) để lập kế hoạch, tạo và phản biện candidate hypothesis/experiment; **structured decision layer** để chọn trong một tập option đóng tại các decision point (intake, select, outbound check, next move) cùng confidence và khả năng abstain; **deterministic analytical tools** để tính toán facts khoa học, quyết định evidence sufficiency và official outcome; và **epistemic accounting** (Analysis Ledger, look budget, exploration/confirmation split) để ghi nhận hệ thống đã nhìn vào dữ liệu nào và đã kiểm thử gì. Decision layer chỉ được thu hẹp (narrow), không bao giờ nới rộng những gì deterministic validation cho phép; khi decision layer tắt, không khả dụng hoặc confidence thấp, deterministic rule quyết định và human review được kích hoạt theo trigger đã định nghĩa.
+Kiến trúc nghiệp vụ tách bốn loại trách nhiệm (decision layer là tùy chọn; look/error budget chỉ tồn tại khi dùng Verify): **reasoning agent** (generative reasoning) để lập kế hoạch, tạo và phản biện candidate hypothesis/experiment; **structured decision layer** để chọn trong một tập option đóng tại các decision point (intake, select, outbound check, next move) cùng confidence và khả năng abstain; **deterministic analytical tools** để tính toán facts khoa học, quyết định evidence sufficiency và official outcome; và **epistemic accounting** (Analysis Ledger, look budget, exploration/confirmation split) để ghi nhận hệ thống đã nhìn vào dữ liệu nào và đã kiểm thử gì. Decision layer chỉ được thu hẹp (narrow), không bao giờ nới rộng những gì deterministic validation cho phép; khi decision layer tắt, không khả dụng hoặc confidence thấp, deterministic rule quyết định và human review được kích hoạt theo trigger đã định nghĩa.
 
 Platform đồng thời cung cấp cơ chế benchmark và evaluation nhằm đo lường độ chính xác, reliability, traceability và hiệu quả của AI Research Agent cũng như chất lượng của các decision gates.
 
@@ -62,7 +42,7 @@ Ngoài execution correctness, platform phải kiểm soát scientific validity c
 
 Từ v1.3, platform bổ sung một số capability theo tinh thần AI Scientist: ideation có reflection, prior-work assessment tham khảo, cùng bản thảo nghiên cứu có automated review và phê duyệt của researcher.
 
-Từ v1.9, BRD được đồng bộ với kiến trúc đích [architecture.md](architecture.md): thứ tự các bước của Decision-Gated Research Loop được giữ làm **workflow floor** (deterministic playbook, luôn chạy được khi không có model), còn research loop được **agent điều hướng trong giới hạn budget và invariant** (BR-80) thay vì một luồng tuyến tính duy nhất. Loop tách **exploration** (thích nghi, không quyết định outcome) khỏi **confirmation** (một batch được đăng ký trước khi đọc dữ liệu, BR-79); official outcome được tính deterministic (BR-59); experiment chỉ chạy qua registered capabilities, không chạy code do model sinh (BR-22). Platform vẫn không phải tree-search engine không giới hạn: nhánh nghiên cứu chỉ là view có giới hạn trên Research Program (BR-81).
+Từ v1.10, BRD điều chỉnh theo [Popper target architecture](../popper/docs/architecture.md) §1, §3.4–§3.6: **Understand ⇄ Ground ⇄ Discover ⇄ Verify ⇄ Communicate** là các trách nhiệm nghiên cứu, không phải phase bắt buộc. Một coordinator và playbook có giới hạn là baseline; worker và nhánh song song là tùy chọn được đánh giá. Agent có thể viết, chạy và debug code trong sandbox. **Verify là tùy chọn**: run không gọi Verify vẫn hoàn tất với kết quả `exploratory`, visualization, interpretation, code, sources và experiment history. Khi dùng Verify, chỉ executor của contract đã freeze đọc dữ liệu reserved còn chưa bị đọc; outcome được tính bằng code. Paper/report là publication view của Research Graph.
 
 ---
 
@@ -311,7 +291,7 @@ LLM phù hợp cho việc sinh hypothesis, reasoning và lập kế hoạch như
 
 nếu chỉ dựa vào free-form reasoning có thể khó kiểm soát, khó đo lường và thiếu confidence rõ ràng.
 
-Platform cần một **structured decision layer** tách biệt với generative reasoning để chọn trong các option đã được deterministic validation cho phép tại những decision point có cấu trúc. Ngược lại, việc evidence đã đủ để tạo official outcome hay chưa là một **fact được tính deterministic** theo quy tắc đã đăng ký trước, không phải một quyết định của model.
+Platform có thể dùng một **structured decision layer tùy chọn** tách biệt với generative reasoning để chọn trong các option đã được deterministic validation cho phép tại những decision point có cấu trúc. Ngược lại, việc evidence đã đủ để tạo official outcome hay chưa là một **fact được tính deterministic** theo quy tắc đã đăng ký trước, không phải một quyết định của model.
 
 ---
 
@@ -510,13 +490,13 @@ Platform hỗ trợ tạo bản thảo từ validated findings với số liệu
 
 ## BO-20 — Xử lý candidate hypothesis ngang điểm một cách có kiểm soát
 
-Khi selection không thể phân biệt rõ candidate tốt nhất do điểm/confidence quá sát nhau, platform phải cho phép các candidate ngang điểm cùng vào **một confirmation batch** trong giới hạn look budget (BR-78), thay vì ép chọn một candidate duy nhất dựa trên khác biệt điểm số không đáng tin cậy hoặc mở nhiều nhánh thực thi song song, đồng thời giữ nguyên kiểm soát về chi phí, multiple-testing và audit.
+Khi selection không thể phân biệt rõ candidate tốt nhất do điểm/confidence quá sát nhau, platform phải cho phép các candidate ngang điểm cùng vào **một confirmation batch** trong giới hạn look budget (BR-78), thay vì ép chọn một candidate duy nhất dựa trên khác biệt điểm số không đáng tin cậy khi dùng Verify; exploratory parallelism là tùy chọn được đánh giá, đồng thời giữ nguyên kiểm soát về chi phí, multiple-testing và audit.
 
 ---
 
 ## BO-21 — Agent-directed research trong giới hạn budget và invariant
 
-Platform phải để reasoning agent điều hướng research loop (khám phá nhiều bước, sửa output khi bị từ chối, phản biện độc lập, quay lại khám phá thêm) trong khuôn khổ workflow floor, budget và các invariant deterministic, sao cho mọi nâng cấp của agent không làm mất bất kỳ bảo đảm nào mà workflow tuyến tính đã có.
+Coordinator chọn next work từ results/dependencies với bounded playbook và caller caps; optional delegation được đo ở cùng model/budget. Recording, history, labels, safety và Verify contract luôn được giữ.
 
 ---
 
@@ -713,22 +693,24 @@ Enter Research Brief (Research Question, H0 / H1, context, margins)
     ↓
 Brief Intake (complete / restate / clarify)
     ↓
-Exploration / Confirmation Split + Freeze Research Protocol
+Profile + Optional Verify Reservation
     ↓
 Build Research State + Research Program
     ↓
 Exploration loop (agent-directed, exploration partition, ledgered)
 ├── Generate Candidate Hypotheses / Directions
-├── Exploration Analyses via Registered Capabilities
+├── Exploration Analyses via Sandboxed Code / Capabilities
 ├── Critique → Refine
 ├── Structured Selection (decision layer: select)
 └── Next Move (decision layer): explore further / alternative / critique / go on
     ↓
-Register Confirmation Batch
+Optional Verify (otherwise continue / communicate exploratory results)
+→ Recorded approval + freeze Confirmation Contract
+→ Register Confirmation Batch
 (estimand, primary analysis, candidate methods + assumptions,
  δ_F / δ_N, success/falsification criteria, look budget)
     ↓
-Execute Batch on Confirmation Partition (test epoch)
+Execute Batch on Eligible Reserved Unread Units (test epoch)
     ↓
 Deterministic Scientific Validation + Severity + Robustness
     ↓
@@ -741,7 +723,7 @@ Deterministic Evidence Sufficiency
 Update Research State
     ↓
 Next Move / Stopping Criteria
-├── Follow-up → new run on fresh data
+├── Continue research / optional next Verify round on unread lineage units
 └── Stop → Final Outcomes
                   ↓
             Figures / Tables
@@ -772,7 +754,7 @@ Gap Analysis liên kết trực tiếp giữa pain point hiện tại, khoảng 
 | GA-13 | Bản thảo do AI viết khó kiểm chứng | Số liệu, hình và trích dẫn không truy vết được; thiếu review | Manuscript draft liên kết log, automated review và human approval | BR-73, BR-74, BR-75 |
 | GA-14 | Selection Gate phải ép chọn 1 candidate dù điểm/confidence giữa các candidate top gần như ngang nhau | Ép chọn cứng khi chênh lệch điểm nằm trong sai số đo lường của chính decision model có thể loại bỏ oan một hướng nghiên cứu tốt | Candidate ngang điểm cùng vào một confirmation batch trong look budget, chung một error-control family | BR-78, BRule-35 |
 | GA-15 | Agent tự do khám phá rồi kiểm thử lại trên cùng dữ liệu | Quá trình tìm kiếm có thể tạo finding giả dù từng bước hợp lệ | Exploration/confirmation split, Analysis Ledger, look budget và confirmation batch cố định trước test epoch | BR-79, BRule-36, BRule-37 |
-| GA-16 | Research loop tuyến tính một LLM call mỗi bước không thể khám phá nhiều bước, sửa output hoặc quay lại | Agent bị giới hạn ở single-path, còn tự do không kiểm soát thì mất bảo đảm | Agent loop trên workflow floor, decision points, hooks và budget | BR-80, BR-81, BRule-38 |
+| GA-16 | Research loop tuyến tính một LLM call mỗi bước không thể khám phá nhiều bước, sửa output hoặc quay lại | Agent bị giới hạn ở single-path, còn tự do không kiểm soát thì mất bảo đảm | Coordinator loop với result-adaptive playbook, optional decision layer và passive recording | BR-80, BR-81, BRule-38 |
 | GA-17 | Output chỉ là một report; khó kiểm tra số liệu và quá trình | Report có thể chứa số/claim không truy được, lộ dữ liệu cá nhân hoặc ẩn kết quả âm | Chuỗi artifact có kiểu, publication view được render, integrity audit và statistical disclosure control | BR-83, BR-84 |
 | GA-18 | Agent thiếu domain knowledge, theory và kiểm tra method trước khi tin | Reasoning nông, method không phù hợp với cấu trúc dữ liệu, giải thích hậu kiểm | Knowledge Layer chỉ thu hẹp, Simulation Lab, theory kiểm thử qua implication đăng ký trước, campaign cho nghiên cứu nhiều run | BR-82, BR-85, BR-86, BR-87 |
 
@@ -813,9 +795,9 @@ Gap Analysis liên kết trực tiếp giữa pain point hiện tại, khoảng 
 
 ### Decision & Verification Gates
 
-- Agent-directed research loop over a deterministic workflow floor (BR-80)
+- Single-coordinator research loop with a bounded, result-adaptive playbook (BR-80)
 - Candidate hypothesis/direction generation
-- Structured decision layer at decision points: intake, select, outbound check, next move
+- Optional structured decision layer at bounded decision points; pilot works without it
 - Decision confidence / uncertainty / abstention, with deterministic rule fallback
 - Deterministic evidence sufficiency: Finding / Negative Result / Inconclusive
 - Next moves: explore further / alternative method / replicate on fresh data / human review / stop
@@ -828,7 +810,7 @@ Gap Analysis liên kết trực tiếp giữa pain point hiện tại, khoảng 
 - Candidate method generation
 - Assumption checking
 - Method selection
-- Statistical analysis via registered capabilities (no model-generated code)
+- Statistical analysis via registered capabilities and agent-written sandboxed code
 - Triangulation / bounded robustness across methods (reported, never selected from)
 - Technical retry inside the execution tool
 - Hypothesis refinement
@@ -881,7 +863,7 @@ Gap Analysis liên kết trực tiếp giữa pain point hiện tại, khoảng 
 
 - Structured idea record & critique
 
-> **Implementation note:** TypeSafe/Jev là một candidate cho structured decision layer. BRD chỉ yêu cầu capability `Structured Decision Layer` (decision points với mode `on` / `shadow` / `off`); vendor/model cụ thể được quyết định ở PRD/SDD để tránh khóa kiến trúc vào một provider. Kiến trúc đích và các invariant được mô tả tại [architecture.md](architecture.md).
+> **Implementation note:** TypeSafe/Jev là một candidate cho structured decision layer. BRD chỉ yêu cầu capability `Structured Decision Layer` (decision points với mode `on` / `shadow` / `off`); vendor/model cụ thể được quyết định ở PRD/SDD để tránh khóa kiến trúc vào một provider. Kiến trúc đích và các invariant được mô tả tại [Popper target architecture](../popper/docs/architecture.md).
 
 ---
 
@@ -925,7 +907,7 @@ Gap Analysis liên kết trực tiếp giữa pain point hiện tại, khoảng 
 - Fully autonomous literature discovery
 - Fully autonomous paper publication
 - Automatic novelty guarantee
-- Execution of model-generated code, shell commands or unrestricted imports
+- Execution outside authorized sandbox/tools, unconsented egress or access to host credentials
 - Unbounded tree search over experiments
 - Training custom foundation models
 - Large-scale distributed big data
@@ -1004,7 +986,7 @@ Hệ thống phải cung cấp:
 - sample values;
 - potential relationships.
 
-Profile trên toàn snapshot chỉ chứa structural facts (kiểu, missingness từng biến, cardinality, identifier, duplicate, sentinel code). Mọi đại lượng liên hệ hai biến (potential relationships, missingness của biến này theo biến khác) chỉ được tính trên exploration partition (BR-79), để profiling không đọc confirmation data trước test epoch.
+Profile trên toàn snapshot chỉ chứa structural facts (kiểu, missingness từng biến, cardinality, identifier, duplicate, sentinel code). Mọi đại lượng liên hệ hai biến (potential relationships, missingness của biến này theo biến khác) được tính trên dữ liệu không reserved; các unit reserved chỉ cho phép structural disclosure được exposure policy liệt kê (BR-79).
 
 ---
 
@@ -1034,7 +1016,7 @@ Raw dataset không được ghi đè.
 
 ## BR-12 — Dataset Versioning
 
-Mỗi transformation phải tạo dataset version mới. Research run bắt đầu trên một snapshot version đã được approve; cleaning sau khi split là protocol deviation, và lựa chọn cleaning có thể thay đổi outcome (loại outlier, recode) được đăng ký thành robustness specification (BR-21) thay vì áp dụng ngầm.
+Mỗi transformation phải tạo dataset version mới. Research run bắt đầu trên một snapshot version đã được approve; cleaning sau freeze của một Verify round không sửa pipeline đã freeze; thay đổi là version/deviation mới, và lựa chọn cleaning có thể thay đổi outcome (loại outlier, recode) được đăng ký thành robustness specification (BR-21) thay vì áp dụng ngầm.
 
 ---
 
@@ -1082,7 +1064,7 @@ Hệ thống phải cho phép lưu:
 - important assumptions;
 - optional prior knowledge.
 
-Research question, context và dataset tạo thành **Research Brief** — input contract của một run. Ngoài các trường trên, brief có thể chứa: intended use và effect nhỏ nhất có ý nghĩa (δ_F / δ_N), declared hypotheses, target claim level, resolution criteria, prior exposure với dataset, data dictionary, scope/constraints và consent cho gửi dữ liệu ra model provider. Trường thiếu được ghi là **gap** giới hạn những gì run có thể claim. Trước khi đọc bất kỳ giá trị dữ liệu nào, hệ thống đánh giá brief (intake: proceed / restate / clarify); yêu cầu vượt quá claim level đạt được sẽ bị restate, không bao giờ bị nới rộng. Context và prior knowledge chỉ định hướng reasoning, không bao giờ là evidence.
+Problem/question cùng context, dataset hoặc registered generator tùy chọn tạo thành **Research Brief** — input contract của run. Agent bổ sung gap và tìm data dưới consent/licence phù hợp, ghi attribution; gap không tự chặn independent work. Ngoài các trường trên, brief có thể chứa: intended use và effect nhỏ nhất có ý nghĩa (δ_F / δ_N), declared hypotheses, target claim level, resolution criteria, prior exposure với dataset, data dictionary, scope/constraints và consent cho gửi dữ liệu ra model provider. Trường thiếu được ghi là **gap** giới hạn những gì run có thể claim. Trước khi đọc bất kỳ giá trị dữ liệu nào, hệ thống đánh giá brief (intake: proceed / restate / clarify); yêu cầu vượt quá claim level đạt được sẽ bị restate, không bao giờ bị nới rộng. Context và prior knowledge chỉ định hướng reasoning, không bao giờ là evidence.
 
 Trước khi run bắt đầu, researcher phải xem được **pre-run preview** cho các giá trị đã chọn: precision plan, phân phối outcome dự kiến, ước tính chi phí, answerability của từng câu hỏi trong brief, và evidential status có thể đạt được trên dataset lineage này.
 
@@ -1169,21 +1151,17 @@ Primary analysis được đăng ký trước; các method/specification khác l
 
 ## BR-22 — Experiment Execution
 
-Agent phải thực hiện experiment chỉ thông qua **registered capabilities** có typed parameters do hệ thống kiểm soát (ví dụ statistical test, profiling, chart). Hệ thống không được chạy code, SQL, shell command hoặc import không giới hạn do model sinh ra, ở cả exploration lẫn confirmation.
+Agent được thực hiện experiment bằng registered capabilities và code/SQL do agent viết qua execution tools trong **sandbox**. Runtime cô lập filesystem theo project/session, giới hạn tài nguyên, scrub credentials, tắt network mặc định và chỉ mở quyền theo grant/consent đã ghi nhận. Harness tự ghi code hash, environment, data version, units read, tool/model calls và failure; agent không phải tự khai báo để execution được ghi nhận.
+
+Chỉ frozen Verify executor được đọc các unit reserved đủ điều kiện, bằng eligible method, pinned code và data pipeline đã freeze trong Confirmation Contract (BR-79). Code sinh bởi agent được gắn nhãn `generated_method`; nhãn này không tự tạo confirmatory validity.
 
 ---
 
 ## BR-23 — Technical Retry (Self-Correction)
 
-Nếu execution lỗi, hệ thống có thể:
+Nếu execution lỗi, agent có thể quan sát error, sửa lỗi kỹ thuật/code hoặc typed parameters rồi chạy lại trong retry/resource cap. Mỗi attempt là execution record và ledger entry riêng. Thay đổi hypothesis, estimand, method, transformation hoặc deciding criteria là scientific refinement (BR-60), không phải technical retry.
 
-```text
-Observe Error (typed error + repair hint)
-→ Retry inside the registered capability, or correct typed parameters
-→ Retry
-```
-
-trong giới hạn cho phép. Technical retry giữ nguyên experiment, không tạo experiment hoặc look mới, và không sửa scientific intent (hypothesis, estimand, method, partition, criteria); thay đổi các trường đó là scientific refinement (BR-60).
+Trong Verify, lỗi trước protected read có thể retry cùng specification; khi primary look đã bắt đầu, lỗi hoặc mất durable result tiêu thụ look và tạo Inconclusive. Không debug/rerun trên confirmation data để thay outcome.
 
 ---
 
@@ -1241,11 +1219,11 @@ Claim-level gate là deterministic và xét riêng từng trục:
 
 | Evidential status | Yêu cầu |
 |---|---|
-| Hypothesis-generating | Mọi exploration hoặc post-test result |
+| Hypothesis-generating | Mọi result ngoài Verify; review không nâng evidence label |
 | Held-out | Được kiểm thử một lần trong batch cố định trước khi đọc dữ liệu, có family-wise error control |
-| Confirmatory | Đăng ký trong Research Protocol và kiểm thử trên sealed partition hoặc snapshot mới, error control ít nhất nghiêm ngặt như held-out |
+| Confirmatory | Verify trên eligible unread lineage units với approved frozen contract và registered error allocation; prior origin được disclosure |
 
-Capability exploratory association trong MVP đạt tối đa associational / held-out; các claim type khác và status confirmatory cần thay đổi contract có test riêng. Outcome chỉ chuyển `active → superseded | retracted` qua event append-only có lý do; outcome không bị xoá.
+MVP data-research slice ưu tiên descriptive/associational exploratory results; khi gọi Verify, label confirmed chỉ theo eligible frozen contract. Các claim type rộng hơn cần contract và validation phù hợp. Outcome chỉ chuyển `active → superseded | retracted` qua event append-only có lý do; outcome không bị xoá.
 
 ---
 
@@ -1295,7 +1273,7 @@ Research loop phải dừng khi:
 - researcher dừng;
 - result vẫn inconclusive sau giới hạn cho phép.
 
-**Hard stop** (resolution criteria đạt, hết look/exploration/resource budget, mọi câu hỏi còn lại unanswerable, cần review, vi phạm policy) được quyết định deterministic. Đề xuất dừng sớm do decision layer đưa ra chỉ được phép ở autonomy level cao nhất (BR-80) và chỉ có thể dừng sớm hơn, không kéo dài run. Hệ thống không được dừng khi confirmation batch đã đăng ký còn thiếu outcome hoặc đang chờ review. Budget được tính trên toàn run (gồm mọi subagent/branch), không tính riêng lẻ.
+**Hard stop** (resolution criteria đạt, hết look/exploration/resource budget, mọi câu hỏi còn lại unanswerable, cần review, vi phạm policy) được quyết định deterministic. Coordinator có thể đề xuất dừng theo marginal learning, cost và researcher steering; decision layer là adapter tùy chọn, không quyết định evidence status. Caller/resource stop luôn kết thúc work an toàn với partial artifacts; Verify look đã bắt đầu chưa có durable result thành Inconclusive, không rerun. Budget được tính trên toàn run (gồm mọi subagent/branch), không tính riêng lẻ.
 
 ---
 
@@ -1346,7 +1324,7 @@ Mọi finding quan trọng phải truy vết được về:
 - dataset version;
 - selected method;
 - assumptions;
-- registered capability, version và typed parameters;
+- code hash hoặc registered capability/version, environment và parameters;
 - data partition và test epoch;
 - raw output;
 - statistical result.
@@ -1374,7 +1352,7 @@ Mỗi experiment phải lưu tối thiểu:
 - dataset version;
 - method;
 - parameters;
-- registered capability và version;
+- code hash, environment hoặc registered capability/version;
 - execution time;
 - environment info;
 - output;
@@ -1410,7 +1388,7 @@ Agent phải hỗ trợ ghi rõ limitations của analysis, được phân loạ
 
 ## BR-41 — Research Report Generation
 
-Platform phải tạo research report từ validated outcomes: Finding và Negative Result được trình bày ngang nhau, Inconclusive outcome của confirmation batch luôn được hiển thị, còn exploration result chỉ xuất hiện với nhãn hypothesis-generating.
+Platform tạo report từ Research Graph bất kỳ lúc nào, kể cả run không dùng Verify. Exploratory result có figures, interpretation, code và sources; Finding, Negative Result và Inconclusive của Verify hiển thị ngang nhau cùng labels/provenance.
 
 ---
 
@@ -1420,7 +1398,7 @@ Trước khi finding xuất hiện trong report chính thức, hệ thống ph�
 
 ```text
 Has Evidence?
-From Confirmation Batch?
+If labelled confirmed: from approved frozen Verify round?
 Method Valid?
 Assumptions Documented?
 Severity Checks Passed?
@@ -1517,7 +1495,7 @@ Khi experiment sử dụng predictive/ML workflow, hệ thống phải cho phép
 
 Agent không được sử dụng test data để fit preprocessing, select features hoặc tune model nếu research design không cho phép.
 
-Với mọi workflow (không chỉ predictive/ML), exploration/confirmation partition theo BR-79 là cơ chế chống leakage giữa dữ liệu dùng để gợi ý hypothesis và dữ liệu dùng để kiểm thử nó.
+Verify tùy chọn bảo vệ reserved unread units (BR-79); predictive/ML split vẫn ngăn fit/tuning leakage. Exploratory run không bắt buộc chia confirmation data.
 
 ---
 
@@ -1532,7 +1510,7 @@ generated_from_exploration   — sinh trước test epoch có dùng kết quả 
 post_test                    — sinh sau test epoch hoặc có prior exposure với kết quả trên dataset
 ```
 
-và người tạo (User-defined / Agent-generated). Origin do hệ thống gán từ test epoch và context manifest của các bước sinh/chọn hypothesis, **không bao giờ do model tự khai báo**. Hypothesis `post_test` chỉ được kiểm thử trên dữ liệu mới; nếu không, outcome của nó là hypothesis-generating. Các nhãn cũ `Initial / Confirmatory` tương ứng `declared`, `Post-hoc / Exploratory` tương ứng `generated_from_exploration` hoặc `post_test`.
+và người tạo (User-defined / Agent-generated). Origin do hệ thống gán từ test epoch và context manifest của các bước sinh/chọn hypothesis, **không bao giờ do model tự khai báo**. Hypothesis `post_test` được tiếp tục explore trên non-reserved data; confirmation cần eligible unread lineage units và grant ở round sau, giữ origin/exposure trước đó. Các nhãn cũ `Initial / Confirmatory` tương ứng `declared`, `Post-hoc / Exploratory` tương ứng `generated_from_exploration` hoặc `post_test`.
 
 ---
 
@@ -1546,7 +1524,7 @@ Khi một workflow thực hiện nhiều hypothesis tests có liên quan, hệ t
 - lưu correction method;
 - lưu cả raw và adjusted significance values khi có.
 
-Testing family được xác định ở cấp **search**, không ở cấp một experiment: mọi proposal trong cùng một confirmation batch (bao gồm các candidate ngang điểm theo BR-78) thuộc cùng một family; interval quyết định outcome được điều chỉnh theo số look đã đăng ký trong batch (look budget là trần). Exploration analyses được ghi vào Analysis Ledger và disclosure nhưng không phải look và không quyết định official outcome (BR-79). Số look trước đó trên cùng dataset (hoặc snapshot gần trùng) qua các run của cùng project/tenant được đếm và báo cáo trên mọi outcome; nếu confirmation row đã bị một run trước đọc, outcome chỉ là hypothesis-generating. Bảo đảm error control áp dụng ở cấp run; ở cấp dataset chỉ là báo cáo.
+Testing family được xác định ở cấp **search**, không ở cấp một experiment: mọi proposal trong cùng một confirmation batch (bao gồm các candidate ngang điểm theo BR-78) thuộc cùng một family; interval quyết định outcome được điều chỉnh theo số look đã đăng ký trong batch (look budget là trần). Exploration analyses được ghi vào Analysis Ledger và disclosure nhưng không phải look và không quyết định official outcome (BR-79). Exposure và error spending được kế thừa qua run/snapshot trong lineage. Ngoài Program, Lineage Error Plan là root; trong Program, Program Error Plan là root duy nhất cấp grant tới lineage rồi round (BR-79). Unit đã đọc không xác nhận lại; outcome nêu scope và assumptions của registered composition.
 
 Ví dụ:
 
@@ -1556,7 +1534,7 @@ Holm
 Benjamini-Hochberg / FDR
 ```
 
-Official outcome phải được quyết định bằng method kiểm soát family-wise error và cho ra simultaneous interval (ví dụ Bonferroni ở mức 1 − α/L). Holm dùng để báo cáo adjusted p-value. FDR (Benjamini-Hochberg) chỉ dùng cho disclosure của exploration, không bao giờ quyết định official outcome.
+Official outcome phải được quyết định bằng method kiểm soát family-wise error và cho ra simultaneous interval (ví dụ Bonferroni ở mức 1 − α_r/L từ round grant α_r). Holm dùng để báo cáo adjusted p-value. FDR (Benjamini-Hochberg) chỉ dùng cho disclosure của exploration, không bao giờ quyết định official outcome.
 
 ---
 
@@ -1621,7 +1599,7 @@ Nếu nhiều experiment cho evidence trái chiều, hệ thống phải:
 - đánh dấu trạng thái `Conflicting Evidence`;
 - yêu cầu thêm analysis hoặc human review khi cần.
 
-Phạm vi này cũng áp dụng khi nhiều proposal trong cùng một confirmation batch (bao gồm candidate ngang điểm theo BR-78) cùng có outcome: hệ thống phải giữ lại tất cả outcome (Finding, Negative Result, Inconclusive), không được tự ý gộp hoặc chỉ báo cáo một outcome, và phải phân biệt trường hợp này (nhiều outcome độc lập từ hypothesis khác nhau) với `Conflicting Evidence` (evidence mâu thuẫn trên cùng một estimand). Synthesis rule chuyển bất đồng về hướng, hoặc một Finding đối lập một Negative Result, thành outcome Inconclusive có ghi conflict.
+Phạm vi này cũng áp dụng khi nhiều proposal trong cùng một confirmation batch (bao gồm candidate ngang điểm theo BR-78) cùng có outcome: hệ thống phải giữ lại tất cả outcome (Finding, Negative Result, Inconclusive), không được tự ý gộp hoặc chỉ báo cáo một outcome, và phải phân biệt trường hợp này (nhiều outcome độc lập từ hypothesis khác nhau) với `Conflicting Evidence` (evidence mâu thuẫn trên cùng một estimand). Synthesis ghi conflict/uncertainty như assessment có version, không sửa computed outcome hoặc execution cũ.
 
 ---
 
@@ -1651,7 +1629,7 @@ Mỗi official experiment phải lưu snapshot tối thiểu:
 
 - dataset version;
 - data split / partition và test epoch;
-- registered capability version và typed parameters;
+- pinned code hash, environment hoặc capability version và parameters;
 - parameters;
 - random seed;
 - statistical method;
@@ -1738,7 +1716,7 @@ Decision record tối thiểu phải có:
 - reason codes hoặc decision metadata;
 - Research State version được sử dụng.
 
-Trước selection, **deterministic screens** loại proposal infeasible, trivial/tautological, redundant với ledger, imprecise hoặc unanswerable ở target level; proposal vượt budget còn lại được defer thành follow-up candidate. **Admission gate** là deterministic: đủ trường có kiểu, screens pass, critique item đã resolve hoặc được ghi lại, allocation và budget cho phép. Vòng revision có giới hạn; khi hết round, **circuit breaker** admit bản nháp tốt nhất còn hợp lệ hoặc không admit gì, không bao giờ admit proposal không qua gate.
+Selection có thể dùng recorded feasibility/answerability/redundancy checks và cost estimate; screening không tự nâng evidence label. Hard checks bảo vệ safety/Verify contract; semantic blocking mới cần shadow evaluation trước enforce. **Verify admission** giữ strict structure, method/exposure, claim limits và allocation. Semantic screens/approval cho routine exploration bắt đầu shadow, đo trước enforce; ranking/review không nâng nhãn. Vòng revision có giới hạn; khi hết round, **circuit breaker** admit bản nháp tốt nhất còn hợp lệ hoặc không admit gì, không bao giờ admit proposal không qua gate.
 
 Khi nhiều candidate ngang điểm trong ngưỡng cấu hình được, xem BR-78.
 
@@ -1761,8 +1739,8 @@ Yêu cầu:
 
 - outcome category là fact được tính, **không** phải quyết định của model; decision-layer confidence không bao giờ đi vào sufficiency, evidence hoặc claim level;
 - chỉ kết quả của confirmation batch mới tạo official outcome; exploration result luôn là hypothesis-generating;
-- δ_F và δ_N do researcher đặt trong giới hạn policy, domain pack chỉ được siết chặt, và không thay đổi sau khi Research Protocol được freeze;
-- mỗi outcome mang claim level do deterministic claim-level gate quyết định (BR-27);
+- δ_F và δ_N do researcher đặt trong policy bounds; freeze theo Confirmation Contract của round và không sửa contract cũ;
+- mỗi confirmed outcome mang claim level do deterministic claim-level gate quyết định (BR-27);
 - Inconclusive và Negative Result là outcome hợp lệ, không được kích hoạt việc cố tìm significance.
 
 Các giá trị `NEED_MORE_EVIDENCE`, `TRY_ALTERNATIVE_METHOD`, `REPLICATE` của phiên bản trước **không còn là outcome của gate**; chúng trở thành option của decision point *next move* (BR-60). `NEED_HUMAN_REVIEW` trở thành escalation (BR-61). `ENOUGH_EVIDENCE` tương ứng Finding hoặc Negative Result.
@@ -1771,29 +1749,17 @@ Các giá trị `NEED_MORE_EVIDENCE`, `TRY_ALTERNATIVE_METHOD`, `REPLICATE` củ
 
 ## BR-60 — Scientific Refinement Loop (Next Move)
 
-Sau mỗi step hoặc result, reasoning agent đề xuất các next move hợp lệ theo phase, ví dụ:
+Sau mỗi result, coordinator chọn next move từ kết quả và dependency: khám phá thêm, method khác, critique, replication, Verify khi cần, communicate hoặc stop. Decision layer là adapter tùy chọn, không phải điều kiện để coordinator tiến hành nghiên cứu.
 
-```text
-NEED_MORE_EVIDENCE      — khám phá thêm
-TRY_ALTERNATIVE_METHOD  — thử method/specification khác
-REPLICATE               — replicate trên dữ liệu mới
-CRITIQUE_AGAIN
-MOVE_TO_NEXT_PHASE
-STOP
-```
-
-và decision layer (hoặc deterministic rule) chọn tại decision point *next move*.
-
-- **Trước test epoch:** refinement là exploration trên exploration partition, được ghi Analysis Ledger và nằm trong exploration budget.
-- **Sau test epoch:** refinement chỉ tạo **follow-up**: work mới được đăng ký với origin `post_test`, ghi nhận là protocol deviation và chuyển sang run sau trên dữ liệu mới. Không có gì được kiểm thử lại trên dữ liệu đã đọc trong run.
-
-Đây là scientific refinement, khác với technical retry do execution error (BR-23); hai loại được trace riêng.
+- Refinement tiếp tục trên dữ liệu không reserved, kể cả sau một round Verify; mỗi attempt được ghi nhận và giữ link về parent evidence.
+- Work sinh sau confirmation exposure boundary giữ origin `post_test`; Verify ở round sau cần unit chưa đọc trong lineage, grant từ Error Plan còn hợp lệ và contract/approval mới. Không bắt buộc mở run mới để tiếp tục nghiên cứu.
+- Revision không sửa execution, exposure, contract hay outcome cũ; technical retry được ghi riêng (BR-23).
 
 ---
 
 ## BR-61 — Confidence-Based Human Escalation
 
-Human escalation có **mức sàn deterministic**: các trigger đã version hóa luôn áp dụng bất kể decision layer trả lời gì, ví dụ:
+Human escalation có **mức sàn deterministic**: consent/authority trigger và adopted review policy luôn áp dụng; semantic restriction mới bắt đầu shadow và đo trước enforce, ví dụ:
 
 - severity check conflict hoặc evidence conflict nghiêm trọng;
 - ambiguity về variable semantics ảnh hưởng interpretation;
@@ -1802,7 +1768,7 @@ Human escalation có **mức sàn deterministic**: các trigger đã version hó
 - synthesis conflict giữa các outcome;
 - yêu cầu của autonomy level hoặc policy.
 
-Ngoài mức sàn đó, decision layer abstain hoặc có confidence dưới policy threshold chỉ được **thêm** escalation, không bao giờ loại bỏ escalation. Khi trigger kích hoạt, run tạm dừng bền vững ở trạng thái chờ review; hết hạn review, outcome liên quan trở thành Inconclusive (`review_timeout`). Reviewer có thể chấp nhận outcome đủ điều kiện kèm limitation, reject, yêu cầu follow-up, thêm limitation/context; reviewer **không** được biến evidence chưa đủ thành đủ, nâng claim level hoặc sửa experiment/protocol đã freeze.
+Ngoài mức sàn đó, decision layer abstain hoặc có confidence dưới policy threshold chỉ được **thêm** escalation, không bao giờ loại bỏ escalation. Required consent/authority hoặc adopted review trigger dừng dependent work bền vững; independent work tiếp tục. Review timeout là review status/limitation, không sửa computed Verify outcome. Reviewer có thể chấp nhận outcome đủ điều kiện kèm limitation, reject, yêu cầu follow-up, thêm limitation/context; reviewer **không** được biến evidence chưa đủ thành đủ, nâng claim level hoặc sửa experiment/protocol đã freeze.
 
 ---
 
@@ -1856,7 +1822,7 @@ Mọi thành phần có version (model, prompt, role profile, tool contract, sub
 
 ## BR-64 — Structured Idea Record & Reflection
 
-Mỗi candidate hypothesis phải có idea record gồm statement, experiment đề xuất, context liên quan và risk, và phải qua ít nhất một reflection round trước khi vào Hypothesis Selection Gate. Reflection là **critique theo loại validity** (statistical conclusion, construct, internal, external) do một Skeptic role thực hiện độc lập với rationale của người đề xuất; critique có thể dẫn tới revision, rejection, severity check hoặc limitation, nhưng không tự nâng vị thế của proposal.
+Mỗi candidate có idea record với statement, proposed experiment, context và risk. Bounded playbook có thể dùng reflection checkpoint; independent reviewer/debate là measured configuration, không phải invariant của mọi candidate. Reflection là **critique theo loại validity** (statistical conclusion, construct, internal, external) do một Skeptic role thực hiện độc lập với rationale của người đề xuất; critique có thể dẫn tới revision, rejection, severity check hoặc limitation, nhưng không tự nâng vị thế của proposal.
 
 ---
 
@@ -1890,54 +1856,47 @@ Hệ thống nên review bản thảo theo rubric (soundness, novelty, clarity) 
 
 ## BR-78 — Bounded Tied-Candidate Selection (One Confirmation Batch)
 
-Khi nhiều candidate hypothesis có điểm/confidence chênh nhau dưới một ngưỡng cấu hình được (tie threshold), Structured Hypothesis Selection Gate (BR-58) được phép đưa các candidate ngang điểm **cùng vào một confirmation batch** (BR-79) thay vì bắt buộc chọn duy nhất một candidate. Không có nhánh thực thi song song: mọi candidate được chọn chạy trong cùng batch, chung một error-control family (BR-49) và bị giới hạn bởi look budget và protocol allocation. Ngưỡng phải cấu hình được ở cấp project/policy, không hard-code. Decision layer phải xuất ra một điểm số dạng numeric có thể so sánh được (dùng để xác định tie) tách biệt với nhãn confidence định tính ở BR-54 (dùng cho giải thích/escalation); chất lượng calibration của điểm số này phải nằm trong phạm vi đánh giá của BR-63.
+Khi nhiều candidate hypothesis có điểm/confidence chênh nhau dưới một ngưỡng cấu hình được (tie threshold), Structured Hypothesis Selection Gate (BR-58) được phép đưa các candidate ngang điểm **cùng vào một confirmation batch** (BR-79) thay vì bắt buộc chọn duy nhất một candidate. Khi dùng Verify, candidate cùng round chia error grant/allocation (BR-49). Exploration có thể giữ nhiều hướng; parallel workers là tùy chọn được đo với baseline và resource cap (BR-80/81). Ngưỡng phải cấu hình được ở cấp project/policy, không hard-code. Decision layer phải xuất ra một điểm số dạng numeric có thể so sánh được (dùng để xác định tie) tách biệt với nhãn confidence định tính ở BR-54 (dùng cho giải thích/escalation); chất lượng calibration của điểm số này phải nằm trong phạm vi đánh giá của BR-63.
 
 ---
 
 ## BR-79 — Exploration / Confirmation Split & Analysis Ledger
 
-Hệ thống phải tách một run thành hai phase:
+Hệ thống ghi nhận mọi execution và data read bằng **Analysis Ledger** append-only. Run mặc định được khám phá dữ liệu đã được cấp quyền và không reserved; không bắt buộc split hoặc dùng Verify. Exposure được ghi bền vững theo identity của row/group/block trong dataset lineage; reorder/re-upload không khôi phục trạng thái unread.
 
-1. **Exploration:** agent khám phá thích nghi trên **exploration partition**; mọi phân tích là một entry trong **Analysis Ledger** và tính vào exploration budget, nhưng không phải look và không quyết định official outcome.
-2. **Confirmation:** trước khi đọc confirmation data, hệ thống đăng ký một **confirmation batch** gồm các Research Proposal (mỗi proposal một hypothesis kèm estimand, primary analysis, δ_F, δ_N, success/falsification criteria, severity checks, robustness specification, target claim level, look cost). Batch được chạy một lần trên **confirmation partition**; thời điểm phân tích đầu tiên trên confirmation data là **test epoch**.
+Khi researcher hoặc coordinator yêu cầu **Verify**:
 
-Yêu cầu:
+- Có thể reserve các unit còn chưa đọc bất kỳ lúc nào với lý do được ghi nhận, không cần approval; chỉ frozen Verify executor được đọc reserved units. Khi không đủ unread data, giữ result exploratory và báo data gap.
+- Pin reserved units vào round và freeze cần approval đã ghi nhận cho đúng selected work, mặc định từ researcher hoặc policy được researcher ủy quyền rõ trong scope; coordinator không tự approve freeze của mình. Program Error Plan do researcher approve khi có Program.
+- **Confirmation Contract** của round freeze estimand, eligible method/pinned code, data pipeline, primary analysis, δ_F/δ_N, checks, target claim level, unit manifest và error allocation trước protected read. Một experiment có một primary look; lỗi sau khi look bắt đầu tiêu thụ look thành Inconclusive.
+- Error control dùng **Lineage Error Plan** làm root ngoài Program; trong Program, **Program Error Plan** là root duy nhất cấp grant cho lineage rồi round. Run/snapshot tiếp nối lineage không mint α mới. Scheme và full grant chain được ghi trước read; one-batch hoặc rolling scheme tuân theo contract đã đăng ký.
+- Test epoch là exposure boundary của **round**, không đóng toàn bộ research loop. Mọi artifact sau đó có `post_test`; research được tiếp tục và round sau chỉ dùng eligible unread units với grant mới từ plan hiện có.
+- Read intent được ghi bền vững trước khi cấp values; reservation và read authorization được serialize. Exposure không chắc chắn sau recovery vẫn bị coi là ineligible, trừ khi chứng minh được chưa cấp values.
+- Full ledger, rejected ideas, failures và deviations nằm trong disclosure bundle. Search/resource budget không đổi thành error allowance.
 
-- partition được gán theo row/group/block bằng keyed hash, để reorder/re-upload/thêm row không xáo trộn partition cũ; dưới kích thước tối thiểu, split bị tắt và chỉ hypothesis `declared` / `generated_blind` được vào batch;
-- trước test epoch, hệ thống freeze **Research Protocol** (brief, question tree, budgets, error-control scheme, stopping rules, split, margins, autonomy level, decision-layer modes); mọi thay đổi sau đó là deviation có lý do;
-- **look budget** là trần số look của batch, cố định khi freeze protocol và không bao giờ tăng sau test epoch; exploration budget, look budget và resource budget không được trao đổi cho nhau;
-- mọi phân tích trên dữ liệu (kể cả failure) có ledger entry; không có bước reasoning nào đọc dữ liệu mà không đi qua registered capability;
-- mọi thứ được tạo sau test epoch (bởi role, agent, reviewer hoặc caller) có origin `post_test`;
-- toàn bộ ledger, rejected ideas, failed attempts và deviations được công bố trong disclosure bundle.
+Nguồn quy tắc: [architecture §3.6](../popper/docs/architecture.md), [pipeline §2 và §7.2](../popper/docs/subsystems/pipeline.md), [error control §2](../popper/docs/subsystems/error-control.md).
 
 ---
 
 ## BR-80 — Agent-Directed Research Loop within Budgets and Invariants
 
-Research loop phải được vận hành bởi **một main agent loop cho mỗi run**, tiến từng research step có kiểu (plan, explore, ideate, design, critique, register, confirm, interpret, report) trên Research State, thay vì một chuỗi LLM call cố định mỗi state.
+Một **coordinator** cho mỗi run chọn và thực hiện work từ Research State, kết quả và dependency qua Understand, Ground, Discover, Verify tùy chọn và Communicate. Baseline là single loop với playbook có giới hạn (prototype, baseline, experiment, repair, robustness); kết quả có thể thay đổi next action. Playbook không áp đặt phase sequence hoặc semantic approval cho routine work.
 
-- Thứ tự phase của Decision-Gated Research Loop được giữ làm **workflow floor**: một deterministic playbook luôn chạy được cùng các step, hook và gate khi không có model (autonomy level A0).
-- Trong một step, reasoning agent có thể gọi registered tools nhiều lần trong step budget, sửa output khi bị hook/gate trả về typed rejection (có giới hạn), và đề xuất quay lại (khám phá thêm, method khác, critique lại) khi next move cho phép.
-- Run tiến qua các **decision point** (intake, select, outbound check, next move); mỗi point chạy mode `on`, `shadow` hoặc `off` cố định cho run.
-- **Deterministic hooks** thực thi invariant trước/sau mỗi tool call, commit và stop (phase cho phép, budget, egress consent, partition access, ledger entry, gán origin); chỉ **commit tool** mới thay đổi state, và commit là nguyên tử, không đảo ngược.
-- Reasoning được tổ chức theo **role profile** có version (PI, Theorist, Methodologist, Skeptic, Interpreter, Reporter), mỗi profile có instruction, projection allowlist, tool set, output contract, deterministic fallback cùng contract và value metric riêng. Interpreter và Reporter chạy trong session mới sau test epoch.
-- Context của model được runtime **lắp ráp** từ Research State và Research Program (không kế thừa memory của provider). Khi gần hết context budget, tool result cũ được thay bằng artifact reference và summary (compaction) mà không mất state; mọi model call ghi context manifest.
-- Subagent (ví dụ Skeptic, Literature) chỉ được bật khi đo được là tốt hơn single-loop agent ở cùng budget; subagent không được commit.
-- **Autonomy level** (A0 playbook-only; A1 mặc định khi có model; các level cao hơn chỉ sau evaluation) cố định cho mỗi run và bị hạ khi model, prompt, tool contract hoặc policy thay đổi.
-- Run là job bền vững: clarification và review tạm dừng run và resume từ state đã commit; không có chat per step.
-
-Các forbidden transition của state machine cũ trở thành hook, nên nâng cấp agent loop không loại bỏ bảo đảm nào của workflow tuyến tính.
+- Trong task, reasoning/tool use/code là tự do trong sandbox, task contract và resource cap; artifact vào shared state mới cần minimal typed contract cho identity, version, citation và provenance.
+- Harness tự ghi execution/data read, giữ history append-only, tính labels, kiểm soát consent/egress và reserved-unit access; shared-state commit được serialize và do coordinator quyết định.
+- Role profile có version mô tả công việc, không bắt buộc là agent riêng. Worker/reviewer sessions và parallel branches là challenger so với baseline ở cùng model/budget; giữ cấu hình đơn giản khi benefit chưa rõ.
+- Worker tùy chọn nhận task objective, input, budget, output/stop contract, tự chạy execute–debug–inspect loop và trả artifact; coordinator không chỉ đạo từng tool call.
+- Context lắp ráp từ Research State/working memory có cited artifact, không dùng provider conversation làm state. Session giữ plan, progress, partial artifact và exposure để resume/handoff sau interruption.
+- Researcher inspect, correct và steer bất kỳ lúc nào; feedback được route tới work liên quan và gắn `researcher_steered`. Approval pending chỉ dừng dependent work; run-wide pause khi explicit pause, hết shared resource hoặc invariant failure ảnh hưởng toàn run.
+- Decision layer và autonomy/review policy là cấu hình tùy chọn có version; semantic restriction mới bắt đầu ở `shadow`, cần so sánh với baseline trước `enforce`. Provider fallback/deferral vẫn giữ safety và Verify contract.
 
 ---
 
 ## BR-81 — Research Program Branches (Bounded)
 
-Hệ thống nên cho phép Research Program biểu diễn các **nhánh nghiên cứu** dưới mỗi câu hỏi (question → direction → hypothesis → exploration → critique → refined hypothesis → registered proposal → outcome) như một **view** trên Research Graph.
+Research Program có thể biểu diễn nhánh nghiên cứu và experiment tree như view trên Research Graph. Agent expand, refine, fork hoặc prune từ result trên dữ liệu không reserved, kể cả sau một round Verify; mỗi thao tác giữ reason và dependency, không reset exposure/error spending. Status suy ra từ events; revision thêm version mới.
 
-- Trước test epoch, agent có thể expand, refine, fork hoặc prune nhánh dựa trên exploration result; mỗi thao tác là một selection step được ghi nhận và mọi phân tích cần cho nó là exploration analysis có ledger entry.
-- Sau test epoch, mọi thao tác nhánh bị hook từ chối; nhánh chỉ được interpret tới outcome hoặc thêm follow-up cho dữ liệu mới.
-- Branch status (`active`, `pruned` kèm lý do, `in_batch`, `resolved`, `follow_up`) được suy ra deterministic từ event, không lưu hay set trực tiếp; nhánh bị prune vẫn ở trong graph.
-- Branching bị giới hạn bởi exploration budget, round limit và diversity floor; đây không phải unbounded tree search. MVP không phụ thuộc vào capability này.
+Single coordinator loop là baseline. Parallel workers/branches là tùy chọn chỉ giữ khi evaluation ở cùng model/budget cho thấy benefit; operation tuân caller resource cap. Branch không nâng evidence label; Verify của nhánh cần contract, approval và eligible unread units riêng theo BR-79. MVP không phụ thuộc nhánh song song.
 
 ---
 
@@ -1996,7 +1955,7 @@ Hệ thống nên cho phép Theorist role đề xuất một **theory**: các co
 
 ## BR-87 — Research Campaign
 
-Các run tiếp nối một hướng nghiên cứu (follow-up, replication, snapshot mới của cùng dataset lineage) nên được liên kết thành một **campaign**, suy ra từ follow-up link và dataset lineage. Run vẫn là đơn vị khoa học: một protocol, một test epoch, một ledger, một look budget. Campaign **không gộp** look, error control hay evidence và không tạo outcome tổng hợp; view của campaign hiển thị outcome của từng run cạnh nhau ở claim level riêng. Follow-up được mang sang run sau như declared hypothesis có link về run nguồn và chỉ được kiểm thử trên row mà chưa run nào trước đó đọc. Meta-analysis giữa các run nằm ngoài phạm vi cho đến khi có contract riêng.
+Các run tiếp nối một hướng nghiên cứu (follow-up, replication, snapshot mới trong lineage) nên được liên kết thành campaign qua follow-up link và dataset lineage. Mỗi run giữ history và outcome riêng; campaign view không tạo combined outcome hoặc tự pool evidence. Khi dùng Verify, các run cùng lineage kế thừa Lineage Error Plan; trong Program, mọi lineage nhận grant từ Program Error Plan, không tạo α độc lập (BR-79). Follow-up giữ origin/exposure nguồn và chỉ được xác nhận trên eligible unread units. Meta-analysis cần contract riêng.
 
 ---
 
@@ -2033,7 +1992,7 @@ Priority được hiểu theo **cam kết cho bản capstone cuối**, không ph
 | BR-19 | Assumption Checking | Must | Thuộc core/final submission scope. |
 | BR-20 | Method Selection | Must | Thuộc core/final submission scope. |
 | BR-21 | Limited Experiment Branching (Triangulation & Bounded Robustness) | Must | Thuộc core/final submission scope. |
-| BR-22 | Experiment Execution (registered capabilities) | Must | Thuộc core/final submission scope. |
+| BR-22 | Experiment Execution (sandboxed code & capabilities) | Must | Thuộc core/final submission scope. |
 | BR-23 | Technical Retry (Self-Correction) | Must | Thuộc core/final submission scope. |
 | BR-24 | Experiment Validation | Must | Thuộc core/final submission scope. |
 | BR-25 | Replication | Should | Tăng độ mạnh evidence; core loop vẫn hoạt động khi chưa cần replication. |
@@ -2082,7 +2041,7 @@ Priority được hiểu theo **cam kết cho bản capstone cuối**, không ph
 | BR-75 | Automated Manuscript Review | Should | Phụ thuộc BR-74; có thể defer. |
 | BR-78 | Bounded Tied-Candidate Selection (one confirmation batch) | Must | Bảo vệ Hypothesis Selection Gate (BR-58, Must) khỏi ép chọn sai khi candidate ngang điểm; thuộc core decision-gate scope. |
 | BR-79 | Exploration / Confirmation Split & Analysis Ledger | Must | Bảo đảm search-process integrity (BP-18, GA-15); là điều kiện để official outcome có ý nghĩa khi agent được tự do khám phá. |
-| BR-80 | Agent-Directed Research Loop within Budgets and Invariants | Must | Kiến trúc thực thi của core research loop (BO-21, GA-16); deterministic playbook (A0) là fallback luôn có. |
+| BR-80 | Agent-Directed Research Loop within Budgets and Invariants | Must | Kiến trúc thực thi của core research loop (BO-21, GA-16); single coordinator với bounded playbook là baseline, decision layer/worker là tùy chọn. |
 | BR-81 | Research Program Branches (Bounded) | Should | Tăng khả năng điều hướng và giải thích quá trình nghiên cứu; MVP không phụ thuộc. |
 | BR-82 | Research Knowledge Layer | Should | Nâng chất lượng reasoning; chỉ thu hẹp nên core loop vẫn đúng khi chỉ có pack `general`. |
 | BR-83 | Research Artifacts & Visibility | Must | Output artifact-centered là nền cho provenance (BR-34), reproducibility (BR-55) và report (BR-41). |
@@ -2114,7 +2073,7 @@ Các NFR dưới đây mô tả **quality expectations ở mức BRD**. Threshol
 | NFR-10 | Observability & Cost Awareness | System phải ghi nhận execution status, error, latency, usage và cost-related telemetry đủ để vận hành và đánh giá research agent. |
 | NFR-11 | Scientific Integrity | System không được tự động biến hypothesis thành fact, association thành causation, exploration result thành confirmed outcome hoặc statistically significant result thành practical significance nếu thiếu evidence phù hợp; false-finding rate trên null data phải được giữ ở mức ≤ α đã đăng ký. |
 | NFR-12 | Decision Safety | Decision layer chỉ được thu hẹp, không nới rộng những gì deterministic validation cho phép; deterministic review triggers luôn áp dụng; low-confidence hoặc abstention chỉ thêm escalation; confidence không được dùng để thay thế deterministic scientific evidence. |
-| NFR-14 | Execution Safety | Chỉ registered capabilities được thực thi, trong môi trường cô lập có giới hạn tài nguyên; dataset text, brief, knowledge và model output là untrusted data, không bao giờ là instruction. |
+| NFR-14 | Execution Safety | Agent code và registered capabilities chạy qua execution tools trong môi trường cô lập có giới hạn tài nguyên; dataset text, brief, knowledge và model output là untrusted data, không bao giờ là instruction. |
 
 ### NFR Acceptance Direction
 
@@ -2148,7 +2107,7 @@ Scientific Integrity
 → false-finding rate on null / structured-null data
 
 Execution Safety
-→ no unregistered execution; sandbox limit tests
+→ sandbox isolation, passive exposure recording, reserved-unit and resource-limit checks
 ```
 
 ---
@@ -2360,7 +2319,7 @@ Khi Structured Hypothesis Selection Gate (BR-58) xác định nhiều candidate 
 
 ## BRule-36 — Budgets Are Not Exchanged
 
-Exploration budget, look budget và resource budget là ba loại riêng và không được đổi cho nhau. Exploration budget có thể phân bổ thích nghi giữa các nhánh; look budget cố định khi freeze protocol và không bao giờ tăng sau test epoch; hết resource budget kết thúc work an toàn và không bao giờ thay đổi claim của outcome. Số specification robustness (BR-21) được tính vào registration của proposal, không tạo look mới.
+Exploration budget, look budget và resource budget là ba loại riêng và không được đổi cho nhau. Exploration budget có thể phân bổ thích nghi giữa các nhánh; look allocation của round freeze trước protected read; round sau nhận grant từ Error Plan hiện có; hết resource budget kết thúc work an toàn và không bao giờ thay đổi claim của outcome. Số specification robustness (BR-21) được tính vào registration của proposal, không tạo look mới.
 
 ---
 
@@ -2399,9 +2358,9 @@ Add Domain Context, margins (δ_F / δ_N), budgets
     ↓
 Brief Intake (proceed / restate / clarify)
     ↓
-Profile Dataset + Exploration / Confirmation Split
+Profile Dataset + Non-reserved Data + Optional Verify Reservation
     ↓
-Freeze Research Protocol
+Configure Playbook (Verify contract freezes on request)
     ↓
 Start Research Loop
 ```
@@ -2410,15 +2369,15 @@ Start Research Loop
 
 # 13. Business Process — Decision-Gated Research Loop
 
-Thứ tự phase dưới đây là **workflow floor** (deterministic playbook). Ở autonomy level có model, mỗi phase được thực hiện bởi các agent step có tool, typed rejection và khả năng quay lại theo next move (BR-80); phase chỉ chuyển qua commit step.
+Luồng dưới đây là bounded playbook tham khảo (BR-80), quay lại theo result/dependency. Verify là nhánh tùy chọn; function switch không phải approval boundary. Shared-state artifact đi qua serialized commit.
 
 ```text
 Research State + Research Program
     ↓
-── EXPLORATION (exploration partition; ledgered; không quyết định outcome) ──
+── EXPLORATION (non-reserved data; ledgered; không quyết định outcome) ──
 Generate Candidate Hypotheses / Directions
     ↓
-Exploration Analyses (registered capabilities)
+Exploration Analyses (sandboxed code / capabilities)
     ↓
 Critique (Skeptic) → Refine
     ↓
@@ -2433,10 +2392,12 @@ Experiment Planning (estimand → method → criteria, δ_F / δ_N)
     ↓
 Generate Candidate Methods + Check Assumptions (exploration partition)
     ↓
-Register Confirmation Batch (admission gate, look budget)
+Optional Verify (otherwise continue / communicate exploratory results)
+→ Recorded approval + freeze Confirmation Contract
+→ Register Confirmation Batch (admission gate, look budget)
     ↓
 ── CONFIRMATION (test epoch) ──
-Execute Batch on Confirmation Partition
+Execute Batch on Eligible Reserved Unread Units
     ↓
 Deterministic Scientific Validation + Severity + Robustness
     ↓
@@ -2449,7 +2410,7 @@ Deterministic Evidence Sufficiency
 Update Research State
     ↓
 Next Move / Stopping Criteria
-├── REPLICATE / follow-up → new run on fresh data
+├── REPLICATE / follow-up → continue research; Verify uses unread units and grant
 └── STOP → Final Outcomes → Report
 ```
 
@@ -2483,7 +2444,7 @@ Status: Unverified
 Deep Reasoning + Experiment Planning
         ↓
 Registered Proposal in Confirmation Batch (before test epoch)
-or Follow-up for fresh data (after test epoch)
+or continue exploration; later Verify needs unread lineage units
 ```
 
 Candidate hypothesis chỉ trở thành active research direction sau khi được selection gate và policy/human review xử lý.
@@ -2584,7 +2545,7 @@ Deterministic Review Triggers?
 ├── Yes → Researcher Review (authority matrix)
 └── No  → Official Outcome
       ↓
-Next Move (decision point): follow-up on fresh data / stop
+Next Move: continue research / next eligible Verify round / communicate / stop
 ```
 
 ---
@@ -2691,9 +2652,9 @@ Revise   Researcher Approval
 - Predictive workflows phải kiểm soát data leakage.
 - Downstream findings có thể phụ thuộc evidence upstream.
 - Ground truth hoặc expert rubric cần thiết cho benchmark.
-- Structured decision capability có thể được triển khai bằng TypeSafe/Jev hoặc provider/model tương đương; business requirements không phụ thuộc một vendor cụ thể.
+- Optional structured decision capability có thể được triển khai bằng TypeSafe/Jev hoặc provider/model tương đương; business requirements không phụ thuộc một vendor cụ thể.
 - Decision confidence chỉ hỗ trợ routing/escalation, không thay thế deterministic statistical evidence.
-- Dataset đủ lớn để tách exploration/confirmation partition; nếu không, chỉ hypothesis được khai báo hoặc sinh trước khi xem dữ liệu mới được kiểm thử.
+- Verify cần eligible unread units đủ cho precision plan; nếu thiếu, run vẫn hoàn tất exploratory và báo data gap.
 - Researcher có thể khai báo hoặc chấp nhận default cho δ_F / δ_N trong giới hạn policy trước khi freeze Research Protocol.
 
 ---
@@ -2706,7 +2667,7 @@ Revise   Researcher Approval
 - Không train foundation model.
 - Phải kiểm soát cost.
 - Agent output có tính bất định.
-- Chỉ registered capabilities được thực thi; không chạy code do model sinh.
+- Agent code và registered capabilities chạy qua execution tools trong sandbox với passive recording; frozen Verify executor giữ contract riêng.
 - Research data phải được isolate.
 - Experiment history phải được lưu để audit.
 - Experiment exploration được giới hạn bởi exploration budget, round limit và diversity floor, và không thay thế human control.
@@ -2747,7 +2708,7 @@ Revise   Researcher Approval
 | R-29 | Tied candidates làm tăng chi phí hoặc false-positive nếu không gộp đúng testing family | High | Cùng một confirmation batch trong look budget (BRule-35) + gộp testing family (BR-49) + audit ngưỡng tie (BR-62) |
 | R-30 | Agent search tạo finding giả, hoặc kiểm thử hypothesis trên chính dữ liệu đã gợi ý nó | High | Exploration/confirmation split, Analysis Ledger, look budget, confirmation batch cố định trước test epoch, origin do hệ thống gán (BR-79) |
 | R-31 | Decision layer hoặc agent nới lỏng kiểm soát (prompt injection, confidence cao sai) | High | Narrow-only authority (BRule-38), deterministic hooks, mode `off`/`shadow`, untrusted-data marking, adversarial-agent tests |
-| R-32 | Model-generated code không an toàn hoặc không tái lập | High | Chỉ registered capabilities có typed parameters (BR-22) |
+| R-32 | Model-generated code không an toàn hoặc không tái lập | High | Sandbox isolation, code/environment hash, durable exposure, resource caps và network/credential grants (BR-22) |
 | R-33 | Report chứa số/claim không truy được hoặc lộ thông tin cá nhân | High | Claim template, slot-based numbers, integrity audit, statistical disclosure control (BR-84) |
 | R-34 | Researcher hoặc domain pack dịch margin để ép ra outcome | High | δ_F / δ_N trong policy bounds, pack chỉ siết chặt, freeze cùng protocol (BR-59) |
 | R-35 | Simulation hoặc benchmark gây hiểu nhầm (memorization, suite tự đánh giá mình) | Medium | Structure-preserving null, simulation chỉ thu hẹp, planted-signal variants, held-out promotion suite (BR-44, BR-63, BR-85) |
@@ -2808,13 +2769,13 @@ Platform được xem là đạt mục tiêu business khi:
 6. Agent kiểm tra assumptions trước khi chọn method.
 7. Agent chọn hoặc fallback method phù hợp.
 8. Experiment được chạy và lưu trace.
-9. Hệ thống có thể technical retry trong registered capability khi execution lỗi.
+9. Hệ thống retry/debug exploratory execution có trace; Verify look đã bắt đầu không được rerun để thay outcome.
 10. Raw dataset luôn được giữ nguyên.
 11. Finding có link về experiment.
 12. Finding quan trọng có evidence.
 13. Agent có thể đề xuất hypothesis mới từ finding.
 14. Hypothesis mới được đánh dấu unverified.
-15. Hypothesis mới được kiểm thử trong confirmation batch nếu sinh trước test epoch, hoặc thành follow-up cho dữ liệu mới nếu sinh sau test epoch.
+15. Hypothesis mới tiếp tục được nghiên cứu; nếu cần confirmed outcome, Verify dùng eligible unread units, approval và contract riêng của round.
 16. Agent có stopping criteria.
 17. Researcher có thể tạo figure/table.
 18. Researcher có thể tạo research report.
@@ -2837,8 +2798,8 @@ Platform được xem là đạt mục tiêu business khi:
 35. Deterministic scientific validation và severity checks hoàn tất trước Evidence Sufficiency Gate.
 36. Experiment chạy thành công không tự động trở thành validated finding.
 37. Evidence Sufficiency Gate tính deterministic một outcome category (Finding / Negative Result / Inconclusive) từ adjusted interval và δ_F / δ_N; không có model call nào quyết định outcome.
-38. `NEED_MORE_EVIDENCE`, `TRY_ALTERNATIVE_METHOD` và `REPLICATE` là option của next move: trước test epoch là exploration, sau test epoch là follow-up cho dữ liệu mới.
-39. Deterministic review trigger chuyển decision cho researcher và tạm dừng run bền vững.
+38. `NEED_MORE_EVIDENCE`, `TRY_ALTERNATIVE_METHOD` và `REPLICATE` là next move; sau Verify vẫn được explore dữ liệu không reserved, còn confirmation mới cần eligible unread units và grant.
+39. Required authority/consent trigger chuyển decision cho researcher và tạm dừng dependent work bền vững; independent work vẫn tiếp tục.
 40. Low-confidence/abstention chỉ thêm escalation; không có trường hợp confidence cao bỏ qua trigger bắt buộc.
 41. Technical retry và scientific refinement được trace riêng.
 42. Evaluation framework đo được quality của decision layer theo từng decision point và của evidence gate.
@@ -2847,10 +2808,10 @@ Platform được xem là đạt mục tiêu business khi:
 51. Bản thảo (nếu tạo) có số liệu truy được về log, trích dẫn xác minh, review và phê duyệt của researcher.
 53. Khi candidate hypothesis ngang điểm trong ngưỡng cấu hình, các candidate đó được đưa vào cùng một confirmation batch trong look budget thay vì chỉ 1, và quyết định này được ghi audit.
 54. Mọi phân tích trên dữ liệu có Analysis Ledger entry; exploration analysis không quyết định official outcome.
-55. Confirmation batch và Research Protocol được freeze trước khi đọc confirmation data; look budget không tăng sau test epoch.
-56. Hypothesis origin do hệ thống gán; hypothesis `post_test` không được kiểm thử trên dữ liệu đã đọc trong run.
-57. Không có code do model sinh được thực thi; mọi analysis đi qua registered capability.
-58. Research loop chạy được ở autonomy level A0 (deterministic playbook, không có model) với cùng hooks, gates và commit.
+55. Khi dùng Verify, approval và freeze contract/error allocation hoàn tất trước protected read; round allocation không tăng sau read và run cùng lineage không reset Error Plan.
+56. Origin do hệ thống gán; `post_test` không được confirmed trên unit đã đọc trong lineage, nhưng được explore trên dữ liệu không reserved.
+57. Agent code chạy/debug trong sandbox; harness tự ghi code hash, units read, failure và artifact provenance.
+58. Single coordinator hoàn tất pilot bằng playbook có giới hạn, không cần decision layer/worker hoặc Verify; output exploratory gồm figures, interpretation, code, sources và history.
 59. Mỗi bước của run để lại artifact có kiểu với envelope và visibility; researcher đọc được artifact trong khi run đang chạy.
 60. Report và view được render từ artifact; mọi số và statement resolve được về artifact; view chỉ thành `publishable` sau integrity audit và statistical disclosure control.
 61. Mỗi outcome có claim type và evidential status do deterministic gate quyết định; không câu nào vượt claim level.
@@ -2866,7 +2827,7 @@ Platform được xem là đạt mục tiêu business khi:
 Để giữ liên kết với mục tiêu nghiên cứu ban đầu của capstone, BRD operationalize ba Research Questions như sau:
 
 - **RQ1 — End-to-End Effectiveness:** AI Research Agent thực hiện end-to-end research experimentation trên user-provided datasets hiệu quả đến mức nào?
-- **RQ2 — Architecture Effectiveness:** Kiến trúc `Generate → Select → Reason → Execute → Validate → Verify → Refine`, vận hành bởi một agent loop trên workflow floor và kết hợp reasoning agent, deterministic scientific tools, structured decision layer và epistemic accounting, cải thiện reliability/quality của research workflow đến mức nào so với linear workflow và bare LLM?
+- **RQ2 — Architecture Effectiveness:** Kiến trúc `Generate → Select → Reason → Execute → Validate → Verify → Refine`, vận hành bởi một coordinator loop trên bounded playbook và kết hợp reasoning agent, deterministic scientific tools, structured decision layer và epistemic accounting, cải thiện reliability/quality của research workflow đến mức nào so với linear workflow và bare LLM?
 - **RQ3 — Task/Skill Performance:** AI Research Agent hoạt động như thế nào theo từng nhóm research task và skill khi được đánh giá bằng benchmark và quantitative metrics?
 
 Các RQ này giữ nguyên ý định cốt lõi của proposal: đánh giá end-to-end capability, giá trị của agentic architecture và performance theo task category.
@@ -2920,7 +2881,7 @@ Research Question
 ```text
 Research Brief / Research Question
       ↓
-Research Protocol (frozen)
+Research Brief / Playbook (Verify contract frozen when used)
       ↓
 Research State + Research Program
       ↓
@@ -2934,7 +2895,7 @@ Experiment
       ↓
 Method
       ↓
-Execution (registered capability, confirmation partition)
+Execution (registered capability, eligible reserved unread units)
       ↓
 Deterministic Scientific Evidence
       ↓
@@ -2978,11 +2939,11 @@ Method Selection
         +
 Assumption Checking
         +
-Experiment Execution (Registered Capabilities)
+Experiment Execution (Sandboxed Code / Capabilities)
         +
 Triangulation / Bounded Robustness
         +
-Exploration / Confirmation Split + Analysis Ledger
+Non-reserved Data + Optional Verify Reservation + Analysis Ledger
         +
 Agent-Directed Research Loop
         +
@@ -3062,17 +3023,17 @@ Systematic Evaluation
 | Negative Result | Official outcome: interval nằm hoàn toàn trong (−δ_N, δ_N) và checks pass — không có effect có ý nghĩa thực tế |
 | Finding Threshold δ_F / Equivalence Margin δ_N | Hai margin cố định trong Research Protocol, dùng để quyết định Finding và Negative Result; δ_N ≤ δ_F |
 | Next Move | Decision point sau mỗi step/result: khám phá thêm, method khác, critique lại, replicate trên dữ liệu mới, chuyển phase hoặc dừng |
-| Scientific Refinement | Work bổ sung vì evidence chưa đủ: exploration trước test epoch, follow-up trên dữ liệu mới sau test epoch; khác technical retry do lỗi execution |
-| Exploration / Confirmation Partition | Hai phần dữ liệu tách bằng keyed hash: exploration để gợi ý hypothesis, confirmation để kiểm thử confirmation batch |
+| Scientific Refinement | Work bổ sung vì evidence chưa đủ: work mới từ result/dependency trên non-reserved data; Verify tiếp theo cần unread units và grant; khác technical retry |
+| Exploration / Eligible Reserved Unread Units | Non-reserved data cho nghiên cứu và unread reserved pool tùy chọn cho Verify; durable unit identity giữ exposure |
 | Test Epoch | Thời điểm phân tích đầu tiên của confirmation batch trên confirmation data; mọi thứ tạo sau đó có origin `post_test` |
 | Analysis Ledger | Bản ghi append-only của mọi phân tích thực thi trên dữ liệu, kể cả exploration và failure |
 | Look / Look Budget | Look là interval có thể quyết định official outcome; look budget là trần số look của confirmation batch |
 | Confirmation Batch | Tập Research Proposal được đăng ký trước khi đọc confirmation data và chạy một lần, chung một error-control family |
-| Research Protocol | Kế hoạch cấp run được freeze trước khi đọc dữ liệu kiểm thử: brief, question tree, budgets, margins, split, stopping rules, autonomy level |
+| Research Protocol | Kế hoạch research có version; khi dùng Verify, Confirmation Contract và Error Plan freeze trước protected read |
 | Research Program | View của Research State dùng làm bộ nhớ làm việc của agent: question tree, branches, brief coverage, budget, plan rationale |
 | Registered Capability | Phân tích/tool được đăng ký với typed parameters, version và contract; là cách duy nhất để thực thi phân tích |
 | Hook | Kiểm tra deterministic trước/sau mỗi tool call, commit và stop; thực thi invariant bất kể model trả lời gì |
-| Autonomy Level | Mức A0 (playbook deterministic) → A4, xác định tool/loop/decision mode nào được bật; cố định cho mỗi run |
+| Autonomy Level | Cấu hình harness có version/rationale, đo với baseline; không làm yếu recording, safety, labels hoặc Verify contract |
 | Decision Confidence | Confidence/uncertainty metadata dùng cho routing và human escalation; không phải xác suất thống kê |
 | TypeSafe / Jev | Candidate implementation cho structured decision layer; không phải dependency bắt buộc của BRD |
 | Prior-Work Assessment (Novelty Assessment) | Đánh giá tham khảo quan hệ của idea với prior work kèm coverage record; không có nhãn `novel`, không bảo đảm novelty |
@@ -3090,7 +3051,7 @@ Systematic Evaluation
 | Portfolio Lens | Danh sách sort key có tên dùng để sắp xếp outcome theo mức ưu tiên chú ý; không phải composite score, không phải evidence |
 | Simulation Lab | Mô phỏng method trên cấu trúc dataset (null / plasmode) trước registration; chỉ thu hẹp |
 | Theory | Tập construct và quan hệ kèm observable implications; status tính từ implication đăng ký trước, không bao giờ là official outcome |
-| Research Campaign | Nhóm run nối tiếp một hướng nghiên cứu; không gộp look, error control hay evidence |
+| Research Campaign | Nhóm run nối tiếp; history/outcome riêng, Verify kế thừa lineage/program Error Plan; không tự gộp evidence |
 | Replay / Re-derivation | Hai mode tái lập: replay dùng recorded model outputs và phải khớp chính xác; re-derivation gọi lại model và báo cáo sai khác |
 | Reverse Provenance | Truy từ một nguồn (policy, pack, snapshot, model version) tới mọi outcome phụ thuộc |
 | Champion / Challenger | Cơ chế thay đổi thành phần có version: challenger chạy shadow và chỉ được promote bằng evaluation decision có ghi nhận |
@@ -3123,3 +3084,4 @@ Systematic Evaluation
 | 1.8 | 2026-09-22 |  | Removed the Sakana-style bounded tree-search layer added in v1.3 (BR-66 Experiment Tree, BR-67 Staged Exploration, BR-68 Experiment Manager, BR-69 Debug Node & Bounded Retry, BR-70 Search Budget Control, BR-71 Search Selection-Bias Control, BR-72 Replication & Aggregation Nodes, BR-76 Search Trace View, BR-77 Exploration Evaluation & Ablation) and their dependent BRule-30/31/32, BP-15, BO-16, BO-18, GA-11, R-24/27/28, KPI-19/20/24/25, NFR-13, acceptance criteria 44–49 and 52, Business Process 13.1, and related MoSCoW/traceability/glossary entries — restoring the platform's original linear, single-path Decision-Gated Research Loop (BR-21) as the sole execution architecture, since the tree-search layer conflicted with that original design choice and its Sakana-comparable value was judged not to justify the added scope/engineering risk for a capstone deliverable; retained the tree-independent parts of the same v1.3 addition (BR-64 Structured Idea Record & Reflection, BR-65 Novelty Assessment, BR-73 Figure Aggregation & Visual Feedback — reworded to reference BR-21 method-level results instead of experiment-tree nodes, BR-74 Manuscript Draft Generation, BR-75 Automated Manuscript Review) and the bounded tied-candidate selection capability (BR-78, BRule-35/36, BO-20, GA-14, R-29) which operates at the Hypothesis Selection Gate and is independent of tree search; existing requirements otherwise unchanged |
 | 1.5 | 2026-09-22 |  | Closed internal-consistency gaps left by v1.4: added BO-20 as a proper Business Objective for bounded tied-candidate selection (replacing the ad-hoc "BO-13 (mở rộng)" traceability label), added GA-14 (Gap Analysis) and R-29 (Risks & Mitigation) so the new capability is traceable end-to-end per BRD's own rule that every core capability must resolve a gap; existing requirements otherwise unchanged |
 | 1.9 | 2026-09-28 |  | Aligned with the target architecture in [architecture.md](architecture.md) (§7.10 "Proposed BRD/PRD changes"): replaced the linear single-path execution statement with an agent-directed research loop over a deterministic workflow floor (new BR-80, BO-21, GA-16, BRule-38); added exploration/confirmation split, Analysis Ledger, look budget, Research Protocol and confirmation batch (new BR-79, BP-18, GA-15, BRule-36 rewritten, BRule-37, KPI-27/28, R-30); made BR-59 evidence sufficiency deterministic (Finding / Negative Result / Inconclusive on adjusted intervals vs δ_F / δ_N) and moved `NEED_MORE_EVIDENCE` / `TRY_ALTERNATIVE_METHOD` / `REPLICATE` to the *next move* decision point (BR-60) and `NEED_HUMAN_REVIEW` to escalation; made deterministic triggers the floor of escalation with decision-layer confidence only adding to it (BR-61, BRule-28, BO-15); reworded BR-78 / BRule-35 from parallel branches to "tied candidates enter one confirmation batch within the look budget" and removed parallel-branch clauses from BR-30/49/51/53/56/61/62 (`co_selected_with` replaced by `registered_in`); replaced generated code with registered capabilities (BR-22/23/34/37/55, R-32, NFR-14); reframed BR-21 as triangulation/bounded robustness that never selects among specifications; reframed BR-65 as coverage-scoped Prior-Work Assessment without a `novel` label; added hypothesis origins `declared` / `generated_blind` / `generated_from_exploration` / `post_test` assigned by the system (BR-48); added optional bounded Research Program branches (BR-81, Should); updated Executive Summary, To-Be, Scope, business processes 12–16.1.1, acceptance criteria 33–43 and 53–58, traceability, glossary. BP-15, BO-16/18, GA-11 and NFR-13 IDs removed in v1.8 are not reused. Coverage audit against architecture.md then added BR-82 Research Knowledge Layer, BR-83 Research Artifacts & Visibility (Must), BR-84 Publication Views & Integrity Audit (Must), BR-85 Simulation Lab, BR-86 Theory & Observable Implications, BR-87 Research Campaign, GA-17/18, R-33→36, acceptance criteria 59–63; extended BR-07 (relational profile facts on exploration partition only), BR-12 (cleaning after split is a deviation), BR-16 (Research Brief, intake, pre-run preview), BR-25 (stability vs replication), BR-27 (claim-level requirements per type/status, outcome lifecycle), BR-34 (reverse provenance), BR-41/42, BR-44/45 (null / planted-signal ground truth), BR-55 (environment identity, replay vs re-derivation, tombstones), BR-58 (screens, admission gate, circuit breaker), BR-63 (champion/challenger, adversarial agent, review evaluation), BR-80 (role profiles, context assembly), BRule-07 (causal assumption endorsement), BR-40 (limitations by validity type, mandatory limitations), BR-49 (dataset-scope looks across runs), BR-56 (Research / Run / Execution state separation), new BRule-39 (versioned policy settings that cannot weaken guarantees), NFR-02/07; moved BR-78 from section 11 back to section 10 |
+| 1.10 | 2026-10-01 |  | Targeted alignment with the updated [Popper architecture](../popper/docs/architecture.md): optional strict Verify, sandboxed agent code, passive exposure/labels, coordinator with optional workers, continued research across rounds, lineage/program error accounting; existing IDs and structure retained. See [changelog](changelog.md) for scope and validation. |

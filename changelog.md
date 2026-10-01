@@ -4,6 +4,25 @@ Lịch sử thay đổi và registry của toàn bộ tài liệu canonical tron
 `capstone-project-docs`. Các đường dẫn bên dưới là đường dẫn tương đối từ
 repository root.
 
+## 2026-10-01 — Điều chỉnh BRD/PRD theo kiến trúc Popper cập nhật
+
+### Changed
+
+- Cập nhật [BRD v1.10](AI-Research-Experimentation-Platform-BRD-v1.8-DRAFT.md) và [PRD v1.9](AI-Research-Experimentation-Platform-PRD-v1.7-DRAFT.md), giữ nguyên tên file, cấu trúc module, thứ tự và toàn bộ mã requirement; không thêm module/BR/FR mới.
+- Nguồn đối chiếu là [Popper target architecture](../popper/docs/architecture.md) hiện tại: problem-first brief, Understand ⇄ Ground ⇄ Discover ⇄ Verify ⇄ Communicate, coordinator với bounded playbook; worker/decision layer là tùy chọn được đánh giá.
+- Sửa các câu mâu thuẫn trực tiếp: agent được viết/chạy/debug code trong sandbox; Verify tùy chọn; reserve unread units không cần approval, pin/freeze cần recorded approval; một primary look đã bắt đầu không được rerun để thay outcome.
+- BR-79 / Module AI: passive durable exposure/recording, round-scoped contract, Lineage/Program Error Plan kế thừa qua run, không cấp α mới cho mỗi batch/run. BR-60/80/81/87 và Module AF/AJ: tiếp tục nghiên cứu trên non-reserved data sau Verify, giữ origin/history, feedback/steering và recovery.
+- Đồng bộ summary, rules, acceptance criteria, provenance, risk và demo bị ảnh hưởng. Giữ các giá trị đề xuất của defaults, làm rõ one-batch demo grant và caller cap; run không Verify vẫn cung cấp exploratory figures, interpretation, code, sources và history.
+- Giữ [architecture.md](architecture.md) trong repo này như bản tham chiếu cũ; link kiến trúc hiện hành trong BRD/PRD trỏ trực tiếp tới repo `popper` bên cạnh, cần giữ cấu trúc thư mục này để resolve. Không sửa diagram/builder trong phạm vi BRD/PRD được yêu cầu; diagram hiện có cần đồng bộ ở đợt riêng trước commit/PR theo [AGENTS.md](AGENTS.md). Không commit/push/PR trong đợt này.
+
+### Validation
+
+- Đối chiếu source architecture §1, §3.4–§3.6, §6–§10; [pipeline §2, §7.2](../popper/docs/subsystems/pipeline.md), [error control §2](../popper/docs/subsystems/error-control.md), [runtime](../popper/docs/subsystems/runtime.md).
+- Kiểm tra 150 mã requirement trong BRD và 197 trong PRD: giữ nguyên danh sách/thứ tự so với HEAD; local links và code fences — pass.
+- Rà các rule hiện hành về generated code, reserved access, Verify retry và lineage error scope; kiểm tra cross-reference ID và link trong entry này — pass.
+- `git diff HEAD --check` — pass. Không chạy generator/render check vì không sửa diagram.
+- Các link hỏng trong entry changelog cũ được giữ ngoài phạm vi; entry mới không thêm link hỏng.
+
 ## 2026-09-30 — Thêm Conceptual ERD
 
 ### Added

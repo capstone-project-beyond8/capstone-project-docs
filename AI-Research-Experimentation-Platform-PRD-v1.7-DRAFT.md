@@ -3,10 +3,10 @@
 
 **Document Type:** Product Requirements Document  
 **Project:** AI Research Experimentation Platform  
-**Version:** 1.8 Draft\
-**Status:** Draft / Aligned with BRD v1.9 (Draft) and target architecture ([architecture.md](architecture.md))\
-**Source:** Business Requirements Document v1.9 (Draft)\
-**Date:** 2026-09-28\
+**Version:** 1.9 Draft\
+**Status:** Draft / Aligned with BRD v1.10 (Draft) and target architecture ([Popper target architecture](../popper/docs/architecture.md))\
+**Source:** Business Requirements Document v1.10 (Draft)\
+**Date:** 2026-10-01\
 
 ---
 
@@ -14,45 +14,26 @@
 
 AI Research Experimentation Platform là nền tảng web sử dụng AI Agent để hỗ trợ researcher thực hiện quy trình nghiên cứu dựa trên structured/tabular datasets.
 
-Sản phẩm không chỉ thực hiện một lần phân tích dữ liệu, mà quản lý một research loop có cấu trúc:
+Researcher có thể bắt đầu từ một vấn đề hoặc câu hỏi, với dataset và H0/H1 tùy chọn. Agent bổ sung brief, đề xuất các hướng để researcher chọn/steer, chuẩn bị dữ liệu dưới consent phù hợp và chạy pilot với visualization, interpretation, code, sources và experiment history. Mỗi input ghi rõ người cung cấp.
+
+Theo [Popper target architecture](../popper/docs/architecture.md) §1, §3.4–§3.6, **Understand ⇄ Ground ⇄ Discover ⇄ Verify ⇄ Communicate** là các trách nhiệm, không phải scheduler states. **Verify là tùy chọn**; run không dùng Verify vẫn là sản phẩm hoàn chỉnh với nhãn `exploratory`. Paper/report là view của Research Graph. Các module và ID hiện có được giữ nguyên; quy tắc freeze, look và confirmation dưới đây chỉ áp dụng khi Verify được gọi.
+
+Sản phẩm quản lý research loop có thể quay lại theo kết quả:
 
 ```text
-Research Brief (Research Question + Dataset + H0/H1 + context + δ_F / δ_N)
-        ↓
-Brief Intake + Dataset Understanding / Data Card
-        ↓
-Exploration / Confirmation Split + Freeze Research Protocol
-        ↓
-Build Research State + Research Program
-        ↓
-Exploration phase (agent loop, exploration partition, every analysis ledgered)
-├── Generate Candidate Hypotheses / Directions
-├── Exploration Analyses via Registered Capabilities
-├── Critique → Refine
-├── Structured Selection (decision point: select)
-└── Next Move (decision point): explore further / alternative / critique / go on
-        ↓
-Experiment Planning (estimand → method → criteria)
-        ↓
-Candidate Method Generation + Deterministic Assumption Checks
-        ↓
-Register Confirmation Batch (look budget)
-        ↓
-Execute Batch on Confirmation Partition (test epoch)
-        ↓
-Deterministic Scientific Validation + Severity + Robustness
-        ↓
-Deterministic Evidence Sufficiency
-├── FINDING (supported / contradicted)
-├── NEGATIVE_RESULT
-└── INCONCLUSIVE
-    (+ Researcher Review when a deterministic trigger fires)
-        ↓
-Update Research State
-        ↓
-Next Move / Stopping Criteria
-├── Follow-up → new run on fresh data
-└── Stop → Final Outcomes → Figures/Tables → Research Report
+Research Brief (problem/question; optional dataset, H0/H1, context)
+    ↓
+Understand ⇄ Ground ⇄ Discover
+(direction development ⇄ data preparation ⇄ sandboxed experiments/debug)
+    ↓                    ↑
+Results + figures + interpretation → feedback / next experiment
+    ├── Communicate → traceable report/view at any time
+    └── Verify on request
+        → reserve eligible unread units (no approval required)
+        → recorded approval + freeze Confirmation Contract and error allocation
+        → frozen executor: one primary look, no debug on confirmation data
+        → computed Finding / Negative Result / Inconclusive
+        → update Research Graph → continue research / communicate / stop
 ```
 
 Mọi finding quan trọng phải có khả năng truy ngược về:
@@ -64,7 +45,7 @@ Finding
 → Dataset Version
 → Selected Method
 → Assumption Checks
-→ Registered Capability + Parameters + Partition
+→ Code Hash / Capability Version + Parameters + Units Read
 → Raw Output
 → Statistical Result
 ```
@@ -95,7 +76,7 @@ Platform tập trung vào bảy giá trị sản phẩm:
 | PG-02 | Tự động profiling và hiểu dataset mà không yêu cầu khai báo schema thủ công |
 | PG-03 | Tự động đề xuất candidate analytical/statistical methods |
 | PG-04 | Kiểm tra assumptions trước khi thực thi method |
-| PG-05 | Thực thi experiment an toàn chỉ qua registered capabilities trong sandbox và hỗ trợ technical retry |
+| PG-05 | Thực thi capabilities và agent-written code trong sandbox, ghi mọi attempt và hỗ trợ exploratory debug |
 | PG-06 | Chuyển raw output thành evidence-backed finding |
 | PG-07 | Sinh/refine hypothesis mới từ validated finding |
 | PG-08 | Quản lý vòng lặp H → E → F → H(n+1) có stopping criteria |
@@ -109,8 +90,8 @@ Platform tập trung vào bảy giá trị sản phẩm:
 | PG-16 | Tính deterministic evidence sufficiency (Finding / Negative Result / Inconclusive) và tách next move (refinement, replication, review, stop) thành decision point riêng |
 | PG-17 | Đánh giá chất lượng decision layer theo từng decision point và so sánh với deterministic rule và LLM-only baseline |
 | PG-18 | Khi candidate hypothesis ngang điểm trong ngưỡng cấu hình, đưa chúng vào cùng một confirmation batch trong look budget thay vì ép chọn 1, có kiểm soát chi phí và multiple-testing |
-| PG-19 | Tách exploration khỏi confirmation, ghi mọi phân tích vào Analysis Ledger và cố định confirmation batch trước test epoch |
-| PG-20 | Vận hành research loop bằng một agent loop trên workflow floor, với hooks, commit tools, budgets và autonomy level |
+| PG-19 | Ghi mọi execution/read; optional Verify trên reserved unread units với approved frozen contract và error allocation |
+| PG-20 | Vận hành research loop bằng một coordinator loop trên bounded playbook, với hooks, commit tools, budgets và autonomy level |
 
 ---
 
@@ -127,10 +108,10 @@ Phiên bản capstone không nhằm xây dựng:
 - real-time streaming analytics;
 - scientific image/audio/video analysis;
 - full causal-inference engine;
-- execution of model-generated code, SQL, shell commands or unrestricted imports — analyses run only through registered capabilities with typed parameters (BR-22);
-- unbounded autonomous tree search (kiểu Sakana AI Scientist-v2) — platform không tổ chức experiment thành cây node cha-con được mở rộng không giới hạn. Research loop là **agent-directed trong budget và invariant** (BR-80): agent có thể khám phá nhiều bước, quay lại và prune hướng nghiên cứu trước test epoch, nhưng chỉ trong exploration budget, round limit và diversity floor; Research Program branches (BR-81, P2) chỉ là view có giới hạn trên Research Graph và MVP không phụ thuộc vào chúng.
+- execution outside authorized sandbox/tool capabilities, unconsented network/egress or access to host credentials (BR-22);
+- unbounded autonomous tree search (kiểu Sakana AI Scientist-v2) — platform không tổ chức experiment thành cây node cha-con được mở rộng không giới hạn. Research loop là **agent-directed trong budget và invariant** (BR-80): agent có thể viết code, khám phá và quay lại theo result trên non-reserved data trong caller caps; Research Program branches (BR-81, P2) chỉ là view có giới hạn trên Research Graph và MVP không phụ thuộc vào chúng.
 
-Platform tham khảo các agentic research systems (idea reflection, prior-work assessment, sequential falsification, agent harness với tools/hooks/subagents; xem [architecture.md](architecture.md) §3.1) nhưng giữ thứ tự Decision-Gated Research Loop làm workflow floor. Scope chính vẫn là **scientific analysis trên user-provided structured datasets**, có audit, dễ kiểm soát chi phí.
+Platform tham khảo các agentic research systems (idea reflection, prior-work assessment, sequential falsification, agent harness với tools/hooks/subagents; xem [Popper target architecture](../popper/docs/architecture.md) §3.1) với single coordinator và bounded playbook có thể đổi next action từ result. Scope chính vẫn là **scientific analysis trên user-provided structured datasets**, có audit, dễ kiểm soát chi phí.
 
 ---
 
@@ -239,7 +220,7 @@ Các bounded decision quan trọng phải dùng structured output có decision t
 
 ## PP-11 — Technical Retry Is Not Scientific Refinement
 
-Execution failure được xử lý bằng technical retry trong registered capability (cùng experiment, không tạo look mới); valid execution nhưng evidence chưa đủ phải đi vào scientific refinement (next move).
+Exploratory failure permits ledgered retry/debug with the same scientific intent. Started Verify looks fail as Inconclusive without rerun; changed intent is scientific refinement.
 
 ## PP-12 — Confidence Does Not Replace Evidence
 
@@ -280,9 +261,9 @@ Invariant (phase, budget, partition access, ledger, origin) được thực thi 
 - candidate method generation;
 - assumption checking;
 - method selection;
-- secure experiment execution via registered capabilities;
+- secure execution of capabilities and agent-written code through sandbox tools;
 - technical retry;
-- deterministic playbook (autonomy A0) with hooks and commit tools (Module AJ);
+- single-coordinator bounded playbook with passive recording and serialized commits (Module AJ);
 - statistical result;
 - finding generation;
 - provenance;
@@ -429,15 +410,15 @@ Define / Confirm Initial H0/H1, context, δ_F / δ_N (or accept defaults)
 ↓
 Brief Intake (decision point: intake → proceed / restate / clarify)
 ↓
-Exploration / Confirmation Split
+Non-reserved Data + Optional Verify Reservation
 ↓
-Freeze Research Protocol
+Configure Playbook (Verify contract freezes on request)
 ↓
 Build Research State + Research Program
 ↓
-Exploration loop (exploration partition only; every analysis ledgered)
+Exploration loop (authorized non-reserved data; every analysis ledgered)
 ├── Generate Candidate Hypotheses / Research Directions
-├── Exploration Analyses via Registered Capabilities
+├── Exploration Analyses via Sandboxed Code / Capabilities
 ├── Skeptic Critique → Refine
 ├── Structured Hypothesis Selection (decision point: select)
 │   ├── Select → Continue
@@ -453,12 +434,14 @@ Generate Candidate Methods
 ↓
 Deterministic Assumption Checks (exploration partition)
 ↓
-Register Confirmation Batch (admission gate, look budget)
+Optional Verify (otherwise continue / communicate exploratory results)
+→ Recorded approval + freeze Confirmation Contract
+→ Register Confirmation Batch (admission gate, look budget)
 ↓
-Execute Batch in Secure Sandbox on Confirmation Partition (test epoch)
+Execute Batch in Secure Sandbox on Eligible Reserved Unread Units (test epoch)
 ↓
 Execution Successful?
-├── No → Technical Retry inside capability
+├── No → Inconclusive if Verify look started; retry only before protected read
 └── Yes
      ↓
 Deterministic Scientific Validation + Severity + Robustness
@@ -472,7 +455,7 @@ Deterministic Evidence Sufficiency
 Update Research State
 ↓
 Next Move / Stopping Criteria?
-├── Follow-up → new run on fresh data
+├── Continue research / optional next Verify round on unread lineage units
 └── Stop → Final Outcomes → Figures/Tables → Research Report → Reproducibility Package
 ```
 
@@ -486,7 +469,7 @@ Technical Retry
 
 Scientific Refinement
 = execution succeeded, but evidence is insufficient
-  (exploration before the test epoch; follow-up on fresh data after it)
+  (new work on non-reserved data; a later Verify round needs unread units and grant)
 ```
 
 These paths must have different states, trace entries and evaluation metrics. The product must also visibly distinguish **exploration results** (hypothesis-generating, never official) from **confirmation-batch outcomes**.
@@ -744,7 +727,7 @@ Planner receives Data Card and selected samples/statistics, not unrestricted ful
 
 ### FR-PROFILE-04 — Structural vs Relational Facts
 
-The profile computed on the full snapshot exposes structural facts only (types, missingness per variable, cardinality, identifiers, duplicates, sentinel codes, declared order/group columns). Any quantity that relates two variables (Potential Relationships, near-deterministic flags, missingness of one variable by another, outcome-relevant distribution hints) is computed on the exploration partition only; without a split, only declared derivations are flagged. This keeps profiling from reading confirmation data before the test epoch (Module AI).
+The profile computed on the full snapshot exposes structural facts only (types, missingness per variable, cardinality, identifiers, duplicates, sentinel codes, declared order/group columns). Value-dependent/relational profiling uses only authorized non-reserved units and records exposure. Reserved units permit only structural disclosures explicitly enumerated by exposure policy (Module AI); a metadata label never permits arbitrary statistics.
 
 ## Acceptance Criteria
 
@@ -884,11 +867,11 @@ A missing optional field is recorded as a **gap** that limits what the run can d
 
 ### FR-RQ-02 — Brief Intake & Context Clarification
 
-Before any data value is read, the *intake* decision point assesses completeness, ambiguity, scope fit and causal wording (reading the column header only) and returns proceed, restate or clarify. On clarify, the agent calls `ask_user` and the run pauses durably in `awaiting_clarification` for a bounded number of rounds; at the deadline it proceeds with gaps recorded. A requested claim above the reachable level is restated, never widened, and the restatement is shown on every outcome. Clarifications create new brief versions; the brief is frozen into the Research Protocol.
+Before any data value is read, the *intake* decision point assesses completeness, ambiguity, scope fit and causal wording (reading the column header only) and returns proceed, restate or clarify. On clarify, the agent calls `ask_user` and dependent work pauses durably in `awaiting_clarification`; independent work continues for a bounded number of rounds; at the deadline it proceeds with gaps recorded. A requested claim above the reachable level is restated, never widened, and the restatement is shown on every outcome. Clarifications create new brief versions; the brief remains versioned; a requested Verify contract pins its exact input versions.
 
 ### FR-RQ-03 — Multiple Questions
 
-P1: one project may contain multiple research questions, but only one active loop per research question unless parallel runs are intentionally enabled. Each run keeps its own protocol, test epoch, ledger and look budget; runs are never pooled into one test.
+P1: one project may contain multiple research questions, but only one active loop per research question unless parallel runs are intentionally enabled. Each run keeps its ledger/history; Verify contracts and exposure boundaries are round-scoped, with inherited lineage/program error accounting (Module AI).
 
 ### FR-RQ-04 — Pre-Run Preview
 
@@ -971,7 +954,7 @@ AI-generated initial hypothesis requires researcher confirmation before becoming
 
 ### FR-HYP-02 — Hypothesis Origin
 
-Origin is derived by the runtime from the test epoch and the context manifests of every step that generated or selected the hypothesis; a model can never set or claim it. System must never silently label a post-result hypothesis as `declared`. A `post_test` hypothesis can only be tested on fresh data (new snapshot or unread sealed partition); otherwise its outcome is hypothesis-generating.
+Origin is derived by the runtime from the test epoch and the context manifests of every step that generated or selected the hypothesis; a model can never set or claim it. System must never silently label a post-result hypothesis as `declared`. A post_test hypothesis may be explored on non-reserved units; later confirmation requires eligible unread lineage units and grants from the existing Error Plan. Prior origin/exposure remains disclosed.
 
 ### FR-HYP-03 — Status Update
 
@@ -1068,7 +1051,7 @@ Planner must flag:
 
 ### FR-PLAN-04 — Plans for Tied Candidates in One Confirmation Batch
 
-When the Hypothesis Selection Gate (Module AD) finds tied candidates, Planner shall generate one independent Research Proposal per selected candidate, each referencing its own hypothesis and estimand, and all registered into the **same confirmation batch** (Module AI). There are no parallel execution branches. The `tie_threshold` (score-closeness margin) is a policy setting; the number of proposals is bounded by the look budget and the protocol's look allocation, not by a separate parallel-branch cap.
+When the Hypothesis Selection Gate (Module AD) finds tied candidates, Planner shall generate one independent Research Proposal per selected candidate, each referencing its own hypothesis and estimand, and all registered into the **same confirmation batch** (Module AI). Parallel exploratory workers/branches are optional measured configuration; a Verify batch does not require them. The `tie_threshold` (score-closeness margin) is a policy setting; the number of proposals is bounded by the look budget and the protocol's look allocation, not by a separate parallel-branch cap.
 
 ## Acceptance Criteria
 
@@ -1260,16 +1243,16 @@ The primary result decides the outcome. Sensitivity results are reported alongsi
 
 ## Objective
 
-Thực thi experiment an toàn chỉ qua registered capabilities có typed parameters. Không có code, SQL, shell command hoặc unrestricted import do model sinh được thực thi.
+Thực thi registered capabilities và agent-written code/SQL qua execution tools trong sandbox. Mỗi execution/data read được harness ghi thụ động; chỉ frozen Verify executor được đọc reserved units bằng contract đã approve và freeze (Module AI).
 
 ## Execution Flow
 
 ```text
-Frozen Experiment (registered proposal / exploration request)
+Exploratory task/code OR approved frozen Verify experiment
 ↓
 PreToolUse hooks (phase, budget, partition access, consent)
 ↓
-Registered Capability Dispatch
+Execution Tool Dispatch (capability / code sandbox / frozen Verify executor)
 ↓
 Sandbox
 ↓
@@ -1296,7 +1279,7 @@ Commit:   freeze_protocol, admit_proposal, register_batch, run_confirmation,
 Delegate: delegate (subagent, when enabled)
 ```
 
-`run_python` and `run_sql` from PRD v1.7 are removed. Cleaning is proposed by the agent and applied/versioned by the platform after approval (Module E).
+`run_python` / `run_sql` (or equivalent execution tools) support agent-written analysis, plotting and debug on authorized non-reserved units. Risky cleaning retains applicable approval; every transformation creates a version (Module E). Verify uses only pinned code/data pipeline from its frozen contract.
 
 ## Sandbox Requirements
 
@@ -1325,7 +1308,7 @@ Every execution stores:
 
 - execution ID;
 - experiment ID;
-- registered capability and version;
+- code hash/environment or registered capability and version;
 - typed parameters;
 - data partition;
 - input references;
@@ -1343,10 +1326,10 @@ On error:
 ```text
 Observe typed error
 → Diagnose
-→ Retry inside the capability OR correct typed parameters
+→ Repair technical code/error OR correct typed parameters
 ```
 
-Retry count is limited. Technical retry keeps the same experiment, creates a ledger entry but no new look, and never changes scientific intent; changing hypothesis, estimand, method, partition or criteria is scientific refinement (Module AF).
+Retry count is limited. Every exploratory debug attempt creates an execution record and ledger entry; a scientific-intent change is refinement (Module AF). Verify may retry before protected read; once a primary look starts, failure or missing durable result consumes it as Inconclusive. No debug/rerun on confirmation data replaces an outcome.
 
 ### FR-EXEC-03 — Cancellation
 
@@ -1355,8 +1338,8 @@ User can cancel long-running experiment.
 ## Acceptance Criteria
 
 - execution cannot access other project data;
-- no unregistered code, query or shell command is executed;
-- exploration tools cannot read the confirmation partition;
+- agent code runs only through isolated execution tools with recorded code hash and data exposure;
+- exploration tools cannot read the eligible reserved unread units;
 - timeout terminates process;
 - every retry is traceable;
 - failed execution does not create validated finding.
@@ -1428,11 +1411,11 @@ A deterministic claim-level gate assigns each outcome a claim type and evidentia
 
 | Evidential status | Requires |
 |---|---|
-| Hypothesis-generating | Any exploration or post-test result |
+| Hypothesis-generating | Any result outside Verify; review never upgrades the label |
 | Held-out | Tested once in a batch fixed before its data were read, with family-wise error control |
-| Confirmatory | Registered in the protocol and tested on a sealed partition or new snapshot, error control at least as strict |
+| Confirmatory | Approved frozen Verify contract on eligible unread lineage units with registered error allocation; prior origin disclosed |
 
-The MVP exploratory association capability reaches associational / held-out at most; other types and confirmatory status need an explicit contract change with tests.
+The MVP slice prioritizes descriptive/associational exploratory outputs; confirmed labels require an eligible Verify contract. Wider claim types need their own valid design/contract and validation.
 
 ### FR-VALID-06 — Causal Assumption Endorsement
 
@@ -1468,13 +1451,13 @@ Giảm false-positive risk trong iterative/multi-test workflow.
 
 ### FR-MTEST-01 — Testing Family Tracking
 
-Multiplicity is a property of the search. All proposals in one confirmation batch (including tied candidates from Module AD) share one testing-family ID, and every deciding interval is adjusted for the m looks registered in the batch; the look budget is the cap. Exploration analyses are Analysis Ledger entries in the disclosure bundle but are not looks and never decide an official outcome (Module AI). Prior looks on the same or near-duplicate snapshot content across the tenant's runs are counted and shown on every outcome (dataset scope is reported, not guaranteed); confirmation rows already read by an earlier run of the tenant yield hypothesis-generating outcomes only.
+Multiplicity is a property of the search. All proposals in one confirmation batch (including tied candidates from Module AD) share one testing-family ID, and every deciding interval is adjusted for the m looks registered in the batch; the look budget is the cap. Exploration analyses are Analysis Ledger entries in the disclosure bundle but are not looks and never decide an official outcome (Module AI). Verify exposure and grants/spending are inherited across lineage runs and near-duplicate snapshots (Module AI). Outcomes cite the frozen root-to-round Error Plan chain, scope and assumptions; no new run mints fresh α, and exposed units never regain unread status.
 
 ### FR-MTEST-02 — Correction
 
 When applicable, support:
 
-- Bonferroni — simultaneous intervals at 1 − α/L; the only adjustment used for deciding intervals of official outcomes (Module AE);
+- Bonferroni — simultaneous intervals at 1 − α_r/L using the frozen round grant; the registered adjustment used for deciding intervals of official outcomes (Module AE);
 - Holm — adjusted p-values for reporting;
 - Benjamini-Hochberg / FDR — exploration disclosure only; never decides an official outcome because it does not control family-wise error.
 
@@ -1570,9 +1553,9 @@ Preprocessing/feature selection/tuning must not fit on held-out test data unless
 
 Agent flags suspicious target leakage or inappropriate data access.
 
-### FR-LEAK-04 — Relation to Exploration / Confirmation Split
+### FR-LEAK-04 — Relation to Non-reserved Data + Optional Verify Reservation
 
-For every workflow (not only predictive/ML), the exploration/confirmation partition of Module AI is the leakage guard between the data that suggested a hypothesis and the data that tests it. Predictive train/validation/test splits are applied inside the partition that the analysis is allowed to read.
+Verify protects optional reserved unread units (Module AI). Predictive train/validation/test splits still prevent fit/tuning leakage within authorized analysis units. Exploratory runs need no mandatory confirmation split.
 
 ## Acceptance Criteria
 
@@ -1696,7 +1679,7 @@ Agent proposes H2
 ↓
 H2 = post_test / Agent-generated / Unverified
 ↓
-Follow-up → later run on fresh data (never retested on data already read)
+Continue research on non-reserved data; later Verify uses eligible unread lineage units
 ```
 
 ## Functional Requirements
@@ -1726,14 +1709,14 @@ Require approval for every new hypothesis
 Require approval only for high-impact/ambiguous hypothesis
 ```
 
-For capstone MVP, default should favor explicit researcher review.
+For capstone MVP, researcher chooses/steers the direction and can inspect/redirect at any time. Routine revisions proceed within authorization; added approval restrictions start shadow and need measured benefit.
 
 ## Acceptance Criteria
 
 - H2 cannot exist without system-assigned origin;
 - H2 links to the result that motivated it;
 - H2 remains unverified until a confirmation outcome resolves it;
-- `post_test` H2 is only recorded as a follow-up for fresh data;
+- post_test H2 may continue exploration; later confirmation needs unread lineage units, grant and frozen contract;
 - user can reject hypothesis and stop the line of research.
 
 **Priority:** P1 / Must for final capstone (BR-28 Hypothesis Refinement is Must in BRD MoSCoW)
@@ -1880,7 +1863,7 @@ Any configured combination of:
 
 ### FR-STOP-01
 
-Hard stops (resolution criteria met, budget or capability limits reached, every open question unanswerable, review required, policy violation) are deterministic. *Stop* is otherwise one option of the *next move* decision point (Module AJ); a decision-layer stop is allowed only at autonomy level A4 and may only end a run earlier. A Stop hook prevents ending while a registered batch lacks outcomes, a review is pending, or brief items are unaddressed without a recorded reason. Budget consumption is counted across the whole run, including every subagent. Without resolution criteria, a run can end *completed within budget* but never *objective resolved*.
+Caller stops, resource exhaustion and invariant failures end/pause work safely. Coordinator may recommend stop from marginal learning, cost and researcher steering (Module AJ). Pending approval/review pauses dependent work; it never prevents a caller/resource stop. Keep committed/partial artifacts and mark a started Verify look without durable result Inconclusive; never rerun it. Budget consumption is counted across the whole run, including every subagent. Without resolution criteria, a run can end *completed within budget* but never *objective resolved*.
 
 ### FR-STOP-02
 
@@ -1927,12 +1910,12 @@ Store:
 - variables;
 - filters;
 - dataset version and partition;
-- registered chart capability, version and chart specification;
+- plotting code hash/environment or registered chart capability/version/specification;
 - data hash;
 - caption;
 - source finding.
 
-Figures in evidence or reports are drawn only by registered chart capabilities so they can be redrawn exactly; no model-generated plotting code runs.
+Figures may use registered charts or agent-written plotting code in the sandbox. Code hash, environment, data version and sources are retained; every reported number resolves to an artifact. Figure review does not raise evidence status.
 
 ### FR-VIZ-03 — Figure Review
 
@@ -2272,7 +2255,7 @@ No Hypothesis Selection Gate
 No Evidence Sufficiency Gate
 No Tied-Candidate Batching (single-select baseline)
 No Hooks / Commit Gates (bare agent loop)
-Deterministic Playbook Only (A0)
+Single Coordinator + Bounded Playbook Baseline
 Single-loop Agent (no subagents)
 LLM-only Decision Baseline
 Single-Pass Agent
@@ -2519,7 +2502,7 @@ Mode
 └── on      # model decides within narrow-only authority
 ```
 
-*select* runs `off` or `shadow` at autonomy A0–A1 and may run `on` only from A2, after beating its rule on the ground-truth suites.
+Optional select adapter starts off/shadow; on/enforce requires recorded benefit against the complete single-loop baseline. Named autonomy tiers are not scientific prerequisites.
 
 ### FR-HGATE-06 — No Silent Activation / Narrow Only
 
@@ -2591,7 +2574,7 @@ Gate shall compute the outcome from the adjusted interval relative to δ_F and �
 
 ### FR-EGATE-03 — Official Outcome Protection
 
-Only `FINDING_*` and `NEGATIVE_RESULT` from the confirmation batch become official outcomes, and only after the deterministic claim-level gate assigns claim type and evidential status. Exploration results are always hypothesis-generating.
+Only Verify produces confirmed Finding, Negative Result or Inconclusive under frozen contract and claim limits. Other results remain exploratory/reviewed and are valid output/report artifacts; review never upgrades them.
 
 ### FR-EGATE-04 — Inconclusive and Negative Are Valid
 
@@ -2599,14 +2582,14 @@ Only `FINDING_*` and `NEGATIVE_RESULT` from the confirmation batch become offici
 
 ### FR-EGATE-05 — Frozen Margins
 
-δ_F and δ_N are set in the Research Brief within policy bounds (δ_F ≥ δ_min; δ_N at most min(δ_F, policy ceiling)); a domain pack may only raise δ_F or lower δ_N; both freeze with the Research Protocol and never move afterwards.
+δ_F and δ_N are set in the Research Brief within policy bounds (δ_F ≥ δ_min; δ_N at most min(δ_F, policy ceiling)); a domain pack may only raise δ_F or lower δ_N; both freeze with the Verify round contract; later approved contracts never edit the old one.
 
 ## Acceptance Criteria
 
 - every completed confirmation-batch experiment has a deterministic outcome category before official outcome;
 - outcome is reproducible from recorded inputs and policy version;
 - `INCONCLUSIVE` can terminate or continue according to stopping policy;
-- margins cannot change after the protocol is frozen;
+- margins cannot change within an already frozen round contract;
 - outcome links to validation outputs, checks, robustness and Research State.
 
 **Priority:** P1 / Must for final capstone
@@ -2621,30 +2604,30 @@ Xử lý các trường hợp experiment chạy đúng nhưng evidence chưa đ�
 
 ## Refinement Routing (Next Move)
 
-The reasoning agent proposes candidate next moves allowed in the current phase; the decision layer (or the deterministic rule when `off`, abstaining or below threshold) chooses one.
+Coordinator chooses next work from results/dependencies; an optional decision adapter/rule may select among eligible options without changing evidence labels.
 
 ```text
-Before the test epoch (exploration):
+Research work on non-reserved data:
 NEED_MORE_EVIDENCE      → another exploration round (ledgered)
 TRY_ALTERNATIVE_METHOD  → alternative method/specification on the exploration partition
 CRITIQUE_AGAIN          → Skeptic critique
-MOVE_TO_NEXT_PHASE      → register confirmation batch
+MOVE_TO_NEXT_PHASE      → choose dependent work / communicate / request optional Verify
 
-After the test epoch:
+After a Verify round (origin/exposure retained):
 REPLICATE / NEED_MORE_EVIDENCE / TRY_ALTERNATIVE_METHOD
-                        → follow-up (origin post_test, protocol deviation)
-                        → later run on fresh data
+                        → new work (origin post_test, source/exposure retained)
+                        → continue research; later Verify needs unread units/grant
 STOP                    → only where the Stop hook and hard stops allow
 
 Deterministic review trigger or abstention
-                        → Researcher Review Task (run pauses durably)
+                        → Researcher Review Task (dependent work pauses durably)
 ```
 
 ## Functional Requirements
 
 ### FR-REFLOOP-01 — Scientific Refinement
 
-System shall create new exploration work before the test epoch, or a follow-up for fresh data after it, when the chosen next move requests more scientific work. Nothing is tested again on data already read in the run.
+Coordinator creates work from results/dependencies on non-reserved data before or after Verify. New confirmation requires unread lineage units, approval/freeze and existing Error Plan grants; exploratory rereads never become new confirmatory evidence.
 
 ### FR-REFLOOP-02 — Technical vs Scientific Classification
 
@@ -2657,7 +2640,7 @@ SCIENTIFIC_REFINEMENT
 
 ### FR-REFLOOP-03 — Budget Guard
 
-Scientific refinement must respect the exploration budget, look budget and resource budget; the three are never exchanged, and the look budget never grows after the test epoch.
+Search, Verify error and caller resource budgets are distinct. Round allocation never grows after protected read; later rounds spend existing-plan grants. Resource exhaustion yields partial artifacts/safe stop without changing outcomes.
 
 ### FR-REFLOOP-04 — Escalation Policy
 
@@ -2669,7 +2652,7 @@ Deterministic, versioned triggers are the floor of escalation and always apply:
 - ambiguity severity;
 - budget / autonomy-level requirement.
 
-Decision-layer abstention or confidence below threshold may add escalation; it never removes escalation. At the review deadline the affected outcome becomes Inconclusive with `review_timeout`.
+Decision-layer abstention or confidence below threshold may add escalation; it never removes escalation. Required pending review pauses dependent work; independent work continues. At deadline, record review_timeout as status/limitation while preserving computed outcomes. Additional semantic restrictions start shadow and need baseline comparison before enforce.
 
 ### FR-REFLOOP-05 — Researcher Actions
 
@@ -2688,13 +2671,13 @@ Researcher may **not** turn insufficient evidence into sufficient, raise a claim
 
 ### FR-REFLOOP-06 — Research Campaign (Should, BR-87)
 
-Runs that continue one line of research (follow-ups, replications, new snapshots of one dataset lineage) are linked into a campaign derived from follow-up links and dataset lineage. Each run keeps its own protocol, test epoch, ledger and look budget; a campaign pools no looks, no error control and no evidence, and issues no combined outcome. A follow-up enters the later run as a declared hypothesis linked to its source run and is tested only on rows no earlier run has read. Campaign views show each run's outcomes side by side at their own claim levels.
+Runs that continue one line of research (follow-ups, replications, new snapshots of one dataset lineage) are linked into a campaign derived from follow-up links and dataset lineage. Each run keeps its ledger/history and issues no combined campaign outcome. Verify inherits the Lineage Error Plan; inside a Program, the sole Program Error Plan grants to lineages (Module AI), without fresh α per run. Follow-ups retain source origin/exposure and may continue exploration; confirmed outcomes require eligible unread lineage units. Campaign views show each run's outcomes side by side at their own claim levels.
 
 ## Acceptance Criteria
 
 - scientific refinement is visible separately from technical retry;
 - refinement preserves parent hypothesis/experiment/evidence links;
-- post-test refinement becomes a follow-up, never a retest on data already read;
+- post-test refinement preserves origin/exposure and may continue non-reserved work; Verify never reuses exposed units;
 - deterministic triggers always escalate; low-confidence decisions can add escalation;
 - review actions stay within the authority matrix;
 - loop stops when budget or stopping criteria require it.
@@ -2810,7 +2793,7 @@ Mỗi candidate hypothesis phải có idea record gồm tối thiểu: statement
 
 ### FR-IDEA-02 — Reflection Round
 
-Candidate hypothesis phải qua ít nhất một reflection round trước khi vào Hypothesis Selection Gate. Reflection là typed critique theo loại validity (statistical conclusion, construct, internal, external) do Skeptic role thực hiện; Skeptic chỉ thấy proposal, không thấy rationale của người đề xuất. Critique có thể dẫn tới revision, rejection, registered severity check hoặc limitation; nó không bao giờ tự nâng vị thế của proposal.
+A bounded playbook may include reflection; mandatory independent review/debate is measured configuration, not an invariant for every candidate. Reflection là typed critique theo loại validity (statistical conclusion, construct, internal, external) do Skeptic role thực hiện; Skeptic chỉ thấy proposal, không thấy rationale của người đề xuất. Critique có thể dẫn tới revision, rejection, registered severity check hoặc limitation; nó không bao giờ tự nâng vị thế của proposal.
 
 ### FR-IDEA-03 — Prior-Work Assessment (tham khảo)
 
@@ -2834,7 +2817,7 @@ Bản thảo phải được researcher phê duyệt trước khi dùng bên ngo
 
 ## Acceptance Criteria
 
-- candidate hypothesis có idea record và ít nhất một critique round trước Module AD;
+- candidate has an idea record; configured critique checkpoints and their effects are recorded;
 - khi bật, prior-work assessment hiển thị nguồn tham khảo và coverage record, hoặc trạng thái "chưa đánh giá"; không có nhãn `novel`;
 - figure trong bản thảo (nếu có) truy được về experiment log tương ứng;
 - bản thảo (nếu tạo) có số liệu truy được về log, trích dẫn xác minh, kết quả automated review, và trạng thái phê duyệt của researcher trước khi export/chia sẻ.
@@ -2847,54 +2830,55 @@ Bản thảo phải được researcher phê duyệt trước khi dùng bên ngo
 
 ## Objective
 
-Giữ bảo đảm của phép kiểm thử khi agent được tự do khám phá: mọi lần nhìn vào dữ liệu được đếm, và phép kiểm thử quyết định outcome được cố định trước khi đọc dữ liệu của nó (BR-79).
+Ghi mọi execution/data read và cung cấp Verify **tùy chọn**, giữ exposure identity theo lineage và strict contract khi xác nhận (BR-79).
 
 ## User Stories
 
 **US-SPLIT-01**\
-As a researcher, I want exploration and confirmation to use different data so that a hypothesis is never confirmed on the data that suggested it.
+As a researcher, I want to reserve unread data when confirmation is useful, while exploratory research remains useful without Verify.
 
 **US-SPLIT-02**\
-As a reviewer, I want to see every analysis the agent ran, including failed and exploratory ones, so that I can judge how much searching preceded a finding.
+As a reviewer, I want the full analysis history, including failures, code and units read.
 
 ## Functional Requirements
 
 ### FR-SPLIT-01 — Partition
 
-System shall assign rows/groups/blocks to exploration and confirmation partitions with a keyed hash (deployment secret), so reordering, re-uploading or adding rows never reshuffles existing assignments. An optional **sealed** partition, read only by its confirmatory test, supports confirmatory status. Below a policy minimum size, splitting is disabled and only `declared` / `generated_blind` hypotheses may enter the batch.
+Agents may read authorized non-reserved data by default. Researcher or coordinator may reserve eligible unread row/group/block units with a recorded reason, without approval. Stable lineage/unit identity survives reorder, re-upload and near-duplicate snapshots. Reserved units are inaccessible to non-Verify tools; permitted structural disclosures follow exposure policy. Insufficient unread data leaves results exploratory with a recorded gap.
 
 ### FR-SPLIT-02 — Research Protocol
 
-Before any confirmation data is read, `freeze_protocol` shall freeze and hash: brief version and restatement, initial question tree, target claim levels, exploration budget, look budget and error-control scheme, stopping rules and resolution criteria, split, δ_F / δ_N, domain pack and policy versions, autonomy level and decision-layer modes. Every later change is a **deviation** event with reason and test epoch.
+When Verify is requested, pinning units to a round and freezing its Confirmation Contract requires recorded approval for the exact selected work: researcher by default, or an explicitly authorized scoped policy. The coordinator cannot approve its own freeze. Before protected read, durably freeze/hash the estimand, eligible method/pinned code, data pipeline, primary analysis, margins, checks, unit manifest and error allocation. Later revisions are new work, never edits of frozen records. Program Error Plans require researcher approval.
 
 ### FR-SPLIT-03 — Analysis Ledger
 
-Every analysis executed against data (exploration, confirmation, severity check, robustness specification, simulation, failure) shall create an append-only ledger entry with proposal, capability, parameters, partition and outcome. Only confirmation intervals that can decide an official outcome are **looks**.
+Harness passively records every execution, data read, model/tool call and failure with execution ID, code hash/capability version, data version, units, parameters, outputs and provenance. Read intent is durable before releasing values; reservation and read authorization are serialized. Recovery treats uncertain exposure as ineligible unless no release can be proven. Only Verify deciding intervals are looks; other analyses remain ledgered exploratory work.
 
 ### FR-SPLIT-04 — Confirmation Batch
 
-`register_batch` shall admit a set of Research Proposals (Module H contract) only if, for every proposal, deterministic features are present (precision margin, answerability and reachable claim level, look cost, brief priority, question-tree coverage, redundancy), zero-value proposals are rejected, and the look budget, protocol allocation and diversity floor are respected. The agent's ranking and the decision layer's *select* answer are recorded.
-
-Before admission, deterministic screens reject proposals that are infeasible, trivial or tautological, redundant with the ledger, imprecise or unanswerable at the target level; a proposal whose look cost exceeds the remaining budget is deferred as a follow-up candidate. The admission gate is deterministic (required typed fields, screens passed, critique items resolved or recorded, allocation and budget allow). Revision rounds are bounded; at the round limit a **circuit breaker** admits the best admissible draft or none, never a proposal that fails the gate. Rejected ideas stay in the idea pool with reasons.
+A Verify round admits the approved selected proposals under structural/method-validity, exposure, claim-limit and registered error-control checks. Outside a Program, the Lineage Error Plan is the root; inside one, the Program Error Plan is the sole root granting to lineage and then round. Later runs/snapshots inherit lineage accounting without fresh α. Each contract cites the full grant chain. One-batch and rolling schemes keep their registered scope; no plan is reopened after protected read. Additional semantic screens/review restrictions start in `shadow` and require measured benefit before `enforce`.
 
 ### FR-SPLIT-05 — Test Epoch
 
-`run_confirmation` executes the batch once on the confirmation partition; its first analysis starts the **test epoch**. At the test epoch every open agent session closes; interpretation and reporting run in new sessions whose outputs are `post_test`. After the test epoch the look budget never grows and nothing is retested on data already read.
+`run_confirmation` executes each frozen experiment with one primary look on its eligible reserved units. Its first protected read starts the round's exposure boundary (test epoch). After a look starts, error or missing durable result consumes the look as Inconclusive; no debug loop or replacement look. Later work retains `post_test` and inherited exposure; research may continue on non-reserved data and later Verify rounds need eligible unread units, new approval/contract and grants from the existing plan.
 
 ### FR-SPLIT-06 — Disclosure
 
-The full ledger, rejected ideas, failed attempts and protocol deviations shall be available as a disclosure bundle and summarised on every outcome (looks, deviations, origin, partition).
+Full ledger, rejected ideas, failed attempts, exposure and deviations are available in a disclosure bundle. Every result shows its production label; confirmed outcomes also show round/contract identity, allocation and lineage/program scope.
 
 ## Acceptance Criteria
 
-- exploration tools are rejected by hooks on the confirmation or sealed partition;
-- every analysis has a ledger entry, including failures;
-- confirmation batch and protocol are frozen before confirmation data is read;
-- look budget cannot increase after the test epoch;
-- outcomes show looks, deviations, origin and partition;
-- disclosure bundle lists every ledger entry.
+- run without Verify completes with exploratory outputs and spends no error allowance;
+- reserving unread units needs no approval; pinning/freezing requires recorded authority;
+- non-Verify tools cannot read reserved units;
+- every execution/read, including failure, is durably recorded;
+- no started Verify look is rerun or given extra allocation;
+- later rounds use unread lineage units and the existing Error Plan;
+- disclosure and result labels resolve to source artifacts.
 
-**Priority:** P1 / Must for final capstone (BR-79 Must in BRD MoSCoW)
+**Priority:** P1 / Must for final capstone (BR-79); Verify invocation is optional per run.
+
+**Source:** [architecture §3.6](../popper/docs/architecture.md), [pipeline §2 and §7.2](../popper/docs/subsystems/pipeline.md), [error control §2](../popper/docs/subsystems/error-control.md).
 
 ---
 
@@ -2902,21 +2886,21 @@ The full ledger, rejected ideas, failed attempts and protocol deviations shall b
 
 ## Objective
 
-Vận hành research loop bằng **một main agent loop cho mỗi run** trên workflow floor, với decision points, deterministic hooks, commit tools, budgets và autonomy levels (BR-80), và tùy chọn biểu diễn nhánh nghiên cứu trong Research Program (BR-81).
+Vận hành một coordinator với bounded playbook, optional decision layer/worker sessions, passive recording, serialized commits và researcher steering (BR-80); nhánh là view trên Research Graph (BR-81).
 
 ## Functional Requirements
 
 ### FR-LOOP-01 — Main Loop and Typed Steps
 
-Each run has one main loop that advances step by step over Research State. A step has a kind (plan, explore, ideate, design, critique, register, confirm, interpret, report), an input projection, an output contract and a budget. Inside a step the reasoning agent may call tools several times; the step ends with one typed output, never free prose.
+One coordinator per run chooses and performs work from results and dependencies across Understand, Ground, Discover, optional Verify and Communicate. Task-internal reasoning, tools and code are free-form within sandbox/resource boundaries; only shared-state artifacts require minimal typed identity, version, citation and provenance contracts.
 
 ### FR-LOOP-02 — Workflow Floor (Playbook)
 
-The phase order of Section 38 is the deterministic playbook. At autonomy A0, or when no model route is available, the playbook and decision rules run the same steps through the same hooks, gates and commits.
+Section 38 is a bounded initial playbook with prototype, baseline, experiment/debug and robustness checkpoints; results can reopen earlier work or change the next action. Functions are responsibilities, not mandatory states. A single coordinator is the baseline. The pilot remains useful without the optional decision layer or delegation; unavailable reasoning may use a contract-preserving fallback or explicit deferral.
 
 ### FR-LOOP-03 — Decision Points
 
-The run advances through four decision points answered by the decision layer within its authority, by the deterministic rule when `off`, abstaining or below threshold, and by escalation when neither may decide:
+Coordinator may use these bounded decision points with an optional decision-layer adapter, rule/fallback or explicit deferral. The pilot remains useful without the adapter:
 
 | Decision point | Question | Options |
 |---|---|---|
@@ -2929,54 +2913,47 @@ Model tier is configuration, not a decision point; escalation is deterministic t
 
 ### FR-LOOP-04 — Hooks and Commit Tools
 
-Deterministic hooks run at SessionStart, PreToolUse, PostToolUse, PreCompact and Stop and enforce: tool enabled for the phase and autonomy level; budget and egress consent; partition access; no branch operation after the test epoch; ledger entry for every analysis; origin assignment; untrusted marking of returned content; Stop conditions. Only commit tools change state; a hook or gate rejection returns a typed reason (`rule`, `field`, `reason`, `allowed_options`) to the same step for a bounded number of repairs. The forbidden transitions of the PRD v1.7 state machine are hooks.
+Harness hooks enforce passive durable execution/exposure recording, append-only history, computed labels, artifact-backed numbers, sandbox isolation, consent/egress and reserved-unit access. Verify preconditions enforce approval, unread eligibility, pinned contract/error allocation and one primary look. Coordinator admits shared-state artifacts through serialized commits. Semantic approval/screen restrictions start in shadow and require comparison with baseline before enforce; routine function switches are not approval gates.
 
 ### FR-LOOP-05 — Autonomy Levels
 
-| Level | Enabled | Decision-layer mode cap |
-|---|---|---|
-| A0 | Deterministic playbook only; no model calls | all `off` |
-| A1 (default with a model route) | Reasoning agent steps; narrow-only classes may be `on` | intake/outbound up to `on`; select/next move up to `shadow` |
-| A2–A3 | Decision-layer select/next move may influence order; more exploration rounds | up to `on`, no stop option |
-| A4 | Decision-layer early stop through the Stop hook | up to `on`, stop included |
-
-The level is fixed per run and recorded in reproduction context. Levels above A1 require a recorded evaluation decision and are demoted on any change of model, prompt, tool contract, role profile, decision class or domain pack.
+Autonomy/review modes are versioned harness configuration, with explicit rationale and caller resource caps. Baseline is a single coordinator and bounded playbook; delegation depth, worker count, parallelism and critique cadence are measured challengers at equal model/budget. Retain the simpler configuration if benefit is inconclusive. Configuration never changes recording, history, labels, safety or the Verify contract.
 
 ### FR-LOOP-06 — Context and Durability
 
-Model context is assembled by the runtime from Research State and the Research Program, never inherited from provider memory; every model call records a context manifest. Context is ordered from most to least stable (role instructions and tool contracts, frozen brief and protocol, Program summary, recent steps). When a session nears its context budget, old tool results are replaced by artifact references and an agent-written summary under the PreCompact hook; nothing is lost from state. No session crosses the test epoch. Clarification and review pause the run durably (`awaiting_clarification`, `awaiting_review`) and it resumes from the last commit.
+Context derives from Research State and cited working memory, never provider conversation as canonical state. Each call records a context manifest and inherited exposure. Sessions checkpoint task plan, progress, partial artifacts and pending requests for resume/handoff; compaction replaces old tool outputs with artifact references. Researcher feedback is routed to the relevant task and attributed as researcher_steered. Pending approval pauses dependent work; only explicit pause, exhausted shared resource or a run-wide invariant failure pauses the whole run.
 
 ### FR-LOOP-07 — Subagents
 
-Subagents (Skeptic, Literature, Branch explorer, Interpreter/Reporter) are secondary loops started by `delegate`, depth one, with budget granted by the main loop, and never call commit tools. A subagent type is enabled only after it beats the single-loop agent at equal budget.
+Optional worker/reviewer sessions receive objective, inputs, budget, output contract and stop condition, then perform their own execute–debug–inspect loops. Workers return artifacts; the coordinator decides shared-state admission and the runtime serializes commits. Delegation depth/parallelism are measured configuration, not fixed scientific limits; adoption is evaluated against the complete single-loop baseline.
 
 ### FR-LOOP-08 — Research Program Branches (Should, BR-81)
 
-The Research Program may show branches per question (question → direction → hypothesis → exploration → critique → refined hypothesis → registered proposal → outcome). Branch status (`active`, `pruned` with reason, `in_batch`, `resolved`, `follow_up`) is derived from events, never set directly. Branch operations are allowed only before the test epoch, bounded by the exploration budget, round limit and diversity floor. MVP does not depend on this requirement.
+Branches and experiment-tree nodes are views on Research Graph, preserving versions, dependencies, rationale and all attempts. Operations on non-reserved data can continue after a Verify round; they never reset exposure, spending or old outcomes. Parallel branches are optional measured challengers subject to caller caps; MVP uses a single-loop baseline.
 
 ### FR-LOOP-09 — Role Profiles
 
-Reasoning is organised into versioned role profiles, each with instructions, a projection allowlist, a tool set, an output contract, a deterministic fallback of the same contract and its own value metric:
+Versioned role profiles describe work rather than mandatory agents. Coordinator switches profiles as needed; optional worker sessions use one profile. Each has instructions, projection/tool contract, fallback or explicit deferral and a value metric. Before/after below describe relation to Verify exposure; they do not prohibit ordinary research after a round:
 
 | Profile | Typed output | Test epoch |
 |---|---|---|
 | PI | Research Program, question tree, priorities, look allocation, next moves | Before, then after |
-| Theorist | Directions, theories with observable implications | Before |
-| Methodologist | Estimand, operationalization, primary analysis, robustness and severity specification | Before |
-| Skeptic | Critique by validity type, negative-control suggestions | Before |
-| Interpreter | Interpretation and synthesis of validated results | After, new session |
-| Reporter | Explanations and view narrative, slot-based numbers | After, new session |
+| Theorist | Directions, theories with observable implications | Before and after |
+| Methodologist | Estimand, operationalization, primary analysis, robustness and severity specification | Before and after |
+| Skeptic | Critique by validity type, negative-control suggestions | Before and after |
+| Interpreter | Interpretation and synthesis of validated results | Whenever results are available; exposure recorded |
+| Reporter | Explanations and view narrative, slot-based numbers | Whenever results are available; exposure recorded |
 
 High-stakes outputs (estimand, operationalization, critique) may be sampled several times; code measures agreement on typed fields and disagreement routes to the Skeptic or to review.
 
 ## Acceptance Criteria
 
-- run completes end to end at A0 with no model calls;
+- single coordinator completes the pilot without decision-layer calls, workers or Verify;
 - every decision point records mode, rule answer and decision-layer answer;
 - no state change happens outside a commit tool;
-- hooks reject disallowed tools, partitions and post-epoch branch operations regardless of model output;
+- hooks enforce sandbox/consent, passive recording and reserved-unit access regardless of model output;
 - typed rejections are returned to the step and repair attempts are bounded;
-- autonomy level and decision modes are fixed per run and recorded;
+- harness configuration is versioned, recorded and evaluated against the single-loop baseline;
 - paused runs resume from the last commit.
 
 **Priority:** P0 for FR-LOOP-02/04 (playbook, hooks, commit); P1 / Must for final capstone for FR-LOOP-01/03/05/06/09 (BR-80); P2 for FR-LOOP-07 subagents and FR-LOOP-08 branches (BR-81 Should)
@@ -3088,7 +3065,7 @@ The same generators produce the null, structured-null, planted-signal and semi-s
 
 ## Acceptance Criteria
 
-- simulations never read the confirmation partition;
+- simulations never read the eligible reserved unread units;
 - simulation reports include Monte Carlo error;
 - a failing simulation can block or limit a method but never promote one.
 
@@ -3098,7 +3075,7 @@ The same generators produce the null, structured-null, planted-signal and semi-s
 
 # 38. Agent Runtime Product Behavior
 
-The state machine below is the **workflow floor** (deterministic playbook, Module AJ FR-LOOP-02). At A1 and above, the main agent loop runs each phase as typed agent steps with tools inside, typed rejections and repairs, independent critique, and **going back** (another exploration round, an alternative method, a new critique) when the *next move* calls for it — always within budgets and the test epoch. Phases change only through commit tools, and the forbidden transitions of this state machine are enforced as hooks, so the agent loop never removes a guarantee the workflow has.
+This is an example bounded playbook (Module AJ), not a mandatory stage sequence. Coordinator chooses work from results/dependencies; research and communication can continue without Verify. Shared-state commits are serialized; optional Verify follows its strict approved frozen contract and exposure/error boundaries.
 
 ```text
 IDLE
@@ -3107,13 +3084,13 @@ INTAKE                                   # decision point: intake
 ├── Clarify → AWAITING_CLARIFICATION
 └── Proceed / Restate
       ↓
-PROFILE_AND_SPLIT
+PROFILE_AND_OPTIONAL_RESERVATION
 ↓
-FREEZE_PROTOCOL                          # commit: freeze_protocol
+CONFIGURE_BOUNDED_PLAYBOOK                # Verify contract freeze occurs on request
 ↓
 BUILD_RESEARCH_STATE
 ↓
-EXPLORE (exploration partition only; every analysis ledgered)
+EXPLORE (authorized non-reserved data; every analysis ledgered)
 ├── GENERATE_CANDIDATES
 ├── EXPLORATION_ANALYSES
 ├── CRITIQUE
@@ -3132,12 +3109,16 @@ CHECK_ASSUMPTIONS (exploration partition)
 ↓
 SELECT_METHOD (primary + registered sensitivity specifications)
 ↓
+VERIFY_REQUESTED?
+├── No → UPDATE_RESEARCH_STATE / EXPLORE / INTERPRET_AND_REPORT
+└── Yes → RESERVE_UNREAD → RECORDED_APPROVAL → FREEZE_CONTRACT
+          ↓
 REGISTER_BATCH                           # commit: register_batch
 ↓
 RUN_CONFIRMATION                         # commit: run_confirmation; test epoch begins
 ↓
 OBSERVE
-├── Error → TECHNICAL_RETRY (inside capability)
+├── Error after primary look starts → INCONCLUSIVE (consumed; no rerun)
 └── Success
       ↓
 DETERMINISTIC_VALIDATE (+ severity + robustness)
@@ -3156,8 +3137,8 @@ REVIEW_TRIGGERS?
 UPDATE_RESEARCH_STATE
       ↓
 NEXT_MOVE / EVALUATE_STOPPING (Stop hook)
-├── Follow-up → record for a later run on fresh data
-└── Stop → INTERPRET_AND_REPORT (new post-test sessions) → FINALIZE
+├── Continue → EXPLORE on non-reserved data / next approved Verify round
+└── Stop → INTERPRET_AND_REPORT (labels/exposure preserved) → FINALIZE
 ```
 
 ## Agent Responsibility Model
@@ -3170,7 +3151,7 @@ Structured Decision Layer (e.g. TypeSafe / Jev)
 = choose at decision points (intake, select, outbound check, next move); narrow only
 
 Analytical / Statistical Tools (Scientific Core)
-= calculate + execute registered capabilities + deterministic checks
+= calculate via capabilities/pinned code + deterministic checks
   + sufficiency outcome + claim level
 
 Hooks / Commit Tools (Runtime)
@@ -3195,8 +3176,8 @@ Hooks / Commit Tools (Runtime)
 14. Keep technical retry and scientific refinement as separate trace categories.
 15. Preserve all structured decision records and human overrides.
 16. If a structured decision provider is unavailable, run the decision point `off` (deterministic rule) or require human review; do not silently skip the decision point.
-17. Never execute model-generated code; analyse data only through registered capabilities.
-18. Never read the confirmation partition with an exploration tool, and never retest on data already read.
+17. Execute agent code only through authorized sandbox tools with passive recording and no host secrets/network without grant.
+18. Never read reserved units outside the frozen Verify executor; exploratory rereads never count as fresh confirmatory evidence.
 19. Never let the decision layer admit a proposal, pass a gate or change an outcome.
 20. Never change state except through a commit tool.
 
@@ -3350,14 +3331,15 @@ Shadow Recorded (rule decided)
 Requested
 → Planning
 → Ready
-→ Executing (exploration, before test epoch)
+→ Executing (non-reserved data, before or after Verify)
 → Re-verified
 ```
 
 After the test epoch:
 
 ```text
-Requested → Follow-up Recorded (post_test, deviation) → Carried to Later Run
+Requested → New Work Recorded (post_test, source links retained)
+→ Explore non-reserved data / approved Verify round on unread units
 ```
 
 ## 40.8. Run
@@ -3366,11 +3348,9 @@ Requested → Follow-up Recorded (post_test, deviation) → Carried to Later Run
 Created
 → Intake
 → Awaiting Clarification (optional, durable pause)
-→ Protocol Frozen
-→ Exploring
-→ Batch Registered
-→ Confirming (test epoch)
-→ Assessing
+→ Researching (Understand ⇄ Ground ⇄ Discover)
+→ Optional Verify: Approved Contract Frozen → Confirming → Assessing
+→ Researching / Reporting
 → Awaiting Review (optional, durable pause)
 → Reporting
 → Completed within Budget / Objective Resolved
@@ -3431,7 +3411,7 @@ Primary workspace should show:
 
 ```text
 Research Question / Brief (with gaps and restatements)
-Research Protocol (frozen) and Deviations
+Research Brief / Playbook (Verify contract frozen when used) and Deviations
 Research State / Research Program Summary
 Candidate Hypotheses / Directions (with origin)
 Hypothesis Selection Decision
@@ -3834,7 +3814,7 @@ Operational telemetry is never an input to evidence, decisions or outcomes.
 
 ## NFR-15 — Execution Safety
 
-- only registered capabilities execute, in a scrubbed sandbox under resource limits;
+- agent code and capabilities execute through isolated tools in a scrubbed sandbox under resource limits;
 - dataset strings, brief text, knowledge, retrieved text and re-projected model output are bounded, marked as data and never treated as instructions;
 - data-derived content is sent to external model providers only as allowlisted projections under per-run consent.
 
@@ -3914,7 +3894,7 @@ Product is accepted when:
 17. Agent can generate candidate methods.
 18. Agent can execute deterministic assumption checks.
 19. Agent records selected method and rationale.
-20. Agent can execute experiment in isolated sandbox through registered capabilities only; no model-generated code runs.
+20. Agent executes/debugs code and capabilities in sandbox; code hash, environment, units read and failures are recorded.
 21. Execution error can trigger bounded technical retry inside the capability.
 22. Technical retry is recorded separately from scientific refinement.
 23. Experiment creates inspectable raw/statistical result.
@@ -3929,9 +3909,9 @@ Product is accepted when:
 32. No model call decides or changes the sufficiency outcome.
 33. δ_F and δ_N cannot change after the Research Protocol is frozen.
 34. Exploration results are always labelled hypothesis-generating and never become official outcomes.
-35. Only `FINDING_*` and `NEGATIVE_RESULT` from the confirmation batch, after the claim-level gate, become official outcomes.
-36. `NEED_MORE_EVIDENCE`, `TRY_ALTERNATIVE_METHOD`, and `REPLICATE` are *next move* options: exploration before the test epoch, follow-up on fresh data after it.
-37. A deterministic review trigger creates a researcher review task and pauses the run durably; low confidence only adds escalation.
+35. Only Verify supplies confirmed Finding, Negative Result and Inconclusive under the frozen contract and claim limits; other results remain valid exploratory artifacts.
+36. Next moves continue research on non-reserved data after Verify; confirmation needs eligible unread lineage units and existing error grants.
+37. Required authority/review triggers pause dependent work durably; independent work continues. Low confidence cannot remove a required trigger.
 38. Validated outcome links to hypothesis, proposal, batch, experiment, dataset version, partition, validation, sufficiency outcome and execution trace.
 39. Dataset transformations create new versions.
 40. User can inspect experiment trace and provenance/evidence.
@@ -3950,10 +3930,10 @@ Product is accepted when:
 53. System runs the decision point `off` (deterministic rule) or requires human review if structured decision provider is unavailable.
 54. Final report uses validated outcomes only and gives Negative Results and Inconclusive outcomes the same standing as Findings.
 55. Every analysis on data has an Analysis Ledger entry; the disclosure bundle lists them all.
-56. Research Protocol and confirmation batch are frozen before confirmation data is read; look budget cannot grow after the test epoch.
-57. Hooks reject exploration tools on the confirmation partition and branch operations after the test epoch.
-58. Tied candidates enter one confirmation batch within the look budget; no parallel execution branches are created.
-59. The full loop runs at autonomy A0 (deterministic playbook, no model calls) with the same hooks, gates and commits.
+56. Verify requires approval and contract/error-allocation freeze before read; no added round looks after exposure, no fresh α for later lineage runs.
+57. Hooks reject non-Verify reads of reserved units; research/branches on non-reserved data remain allowed and recorded.
+58. Tied candidates may share a frozen Verify batch within its grant; exploratory parallelism is evaluated separately.
+59. A single coordinator completes the pilot without decision layer/workers/Verify; exploratory output includes figures, interpretation, code, sources and history.
 60. No state change happens outside a commit tool.
 61. Every committed step leaves an artifact with a complete envelope and deterministic visibility.
 62. No view becomes `publishable` without passing the integrity audit and statistical disclosure control.
@@ -3974,10 +3954,10 @@ Deliver:
 
 ```text
 CSV
-→ Data Profile + Exploration / Confirmation Split
+→ Data Profile + Non-reserved Data + Optional Verify Reservation
 → Research Protocol
 → Research State
-→ Deterministic Playbook (A0) + Mock / Structured DecisionProvider (shadow)
+→ Single Coordinator + Bounded Playbook (DecisionProvider optional/off or shadow)
 → Planner
 → registered statistical_test capability
 → Deterministic Validation
@@ -3986,7 +3966,7 @@ CSV
 
 Must prove:
 
-- sandbox execution of registered capabilities;
+- sandbox execution/debug of agent code and registered capabilities;
 - hooks and commit tools;
 - Analysis Ledger;
 - structured decision schema;
@@ -4021,7 +4001,7 @@ Dataset + declared H1
 → Split + Protocol
 → Research State
 → Confirmation Batch {H1}
-→ E1 on confirmation partition
+→ E1 on eligible reserved unread units
 → Validation
 → Sufficiency Outcome
 → Finding / Negative Result / Inconclusive
@@ -4053,7 +4033,7 @@ Exploration partition
 → Critique → Refine
 → Selection Gate (select)
 → Confirmation Batch {H-A, H-C if tied}
-→ E on confirmation partition
+→ E on eligible reserved unread units
 → Validation + Severity + Robustness
 → Sufficiency Outcomes
 → Follow-up / Stop
@@ -4200,7 +4180,7 @@ No Hypothesis Refinement
 No Hypothesis Selection Gate
 No Evidence Sufficiency Gate
 No Hooks / Commit Gates (bare agent loop)
-Deterministic Playbook Only (A0)
+Single Coordinator + Bounded Playbook Baseline
 Single-loop Agent (no subagents)
 LLM-only Decision Baseline
 Single-Pass / Text-to-Code Baseline
@@ -4257,11 +4237,11 @@ Decision-gate evaluation should include:
 | Agent hallucinates business meaning | Research context + ask-user |
 | Agent overclaims causality | Causal-language guard |
 | Agent p-hacks through many tests | Analysis Ledger + exploration/confirmation split + look budget + batch-level correction |
-| Agent search manufactures findings or retests on data it has read | Confirmation batch frozen before test epoch; system-assigned origin; follow-ups only on fresh data |
+| Agent search manufactures findings or retests on data it has read | Confirmation batch frozen before test epoch; system-assigned origin; later Verify uses unread lineage units and existing grants |
 | Agent cherry-picks results | Registered primary analysis; preserve specifications/conflicts; disclosure bundle |
 | Experiment chain depends on invalid result | Dependency graph + downstream invalidation |
 | Dataset is damaged by cleaning | Immutable raw + versioning + approval |
-| Generated code is unsafe or irreproducible | No generated code: registered capabilities only + sandbox + limits + no network by default |
+| Generated code is unsafe or irreproducible | Sandbox isolation + code/environment hashes + passive exposure + limits + no network/credentials without grant |
 | Result cannot be reproduced | Reproducibility snapshot |
 | Loop runs forever | Stopping criteria + budgets |
 | Too much scope for capstone | P0/P1/P2 prioritization |
@@ -4299,7 +4279,7 @@ These decisions should be finalized before implementation freeze:
 18. Which benchmark tasks have gold/rubric labels suitable for decision-gate calibration.
 19. Whether candidate hypothesis count is fixed or budget-driven.
 20. Whether human override should feed future evaluation only or also adaptive policy tuning.
-21. Default exploration/confirmation split ratio and minimum partition size for a split.
+21. Optional Verify reservation ratio and minimum eligible unread units for the requested design.
 22. Default look budget, exploration budget and error-control scheme (e.g. Holm vs sequential e-values).
 23. Initial decision-layer mode per decision point at A1 (which classes start `on` vs `shadow`).
 24. Registered capability set and tool contracts for the MVP.
@@ -4312,11 +4292,11 @@ The values below are **proposals** based on common statistical practice, offered
 
 | Parameter | Proposed default | Rationale | Decision # |
 |---|---|---|---|
-| α (family-wise, per confirmation batch) | 0.05 | Conventional level; also the absolute ceiling for the false-finding rate in KPI-28 | 22 |
-| Deciding interval (sufficiency, Module AE) | Two-sided simultaneous CI at level 1 − α/L (Bonferroni over the L registered looks; 99% when L = 5) | Sufficiency is decided on intervals; Bonferroni gives simultaneous intervals with FWER ≤ α, which step-down Holm does not | 22 |
+| α (root Lineage Error Plan; Program root when applicable) | 0.05 | Verify only; rounds receive α_r grants, no fresh α per batch/run | 22 |
+| Deciding interval (sufficiency, Module AE) | Two-sided simultaneous CI at 1 − α_r/L over the round's L looks (99% only if α_r = 0.05, L = 5) | Sufficiency is decided on intervals; Bonferroni gives simultaneous intervals with FWER ≤ α, which step-down Holm does not | 22 |
 | Adjusted p-values (reporting only) | Holm over the batch's looks | Reported alongside the interval; never used to override the interval-based outcome | 22 |
 | FDR (Benjamini–Hochberg) | Exploration disclosure only | FDR does not control FWER, so it never decides an official outcome | 22 |
-| Confirmatory status (fresh / sealed data) | Same interval rule at the same α; sequential e-values reserved for multi-run follow-ups | Keeps confirmatory at least as strict as held-out | 22 |
+| Confirmatory status (eligible unread data) | Approved frozen Verify contract and existing-plan α_r; one-batch scheme for first demo | Rolling plans need registered composition; no fresh allowance per run | 22 |
 | Planning power | 0.80 | Conventional target for the precision plan in the pre-run preview (FR-RQ-04) | 15 |
 
 **Margins (standardized effect sizes)**
@@ -4345,21 +4325,21 @@ For measures not listed, the Methodologist must state δ_F in the measure's unit
 
 | Parameter | Proposed default | Rationale | Decision # |
 |---|---|---|---|
-| Exploration / confirmation split | 50 / 50 by keyed hash on row, group or block | Balances exploration breadth against confirmation precision | 21 |
+| Optional Verify reservation | Off by default; 50 / 50 stable units for requested one-batch demo | Exploratory pilot needs no split; reserve before value access | 21 |
 | Sealed partition | Off by default; 20% when the researcher asks for confirmatory status | Only needed for confirmatory claims | 21 |
-| Minimum partition size for a split | 100 units (rows, or groups when clustered) per partition | Below this, split is disabled and only `declared` / `generated_blind` hypotheses enter the batch. This is the floor for enabling a split, not a size that makes conclusions likely (see sample-size guidance below) | 21 |
-| Look budget L | 5 per run | Deciding intervals at 99%; each extra look widens every interval in the batch | 22 |
+| Minimum partition size for a split | 100 units (rows, or groups when clustered) per partition | Below this proposed demo floor, retain exploratory output or acquire eligible unread data under consent; origin alone never grants eligibility. This is the floor for enabling a split, not a size that makes conclusions likely (see sample-size guidance below) | 21 |
+| Look budget L | Up to 5 per requested demo round | Freeze with α_r; 99% only for a full 0.05 one-batch grant | 22 |
 | Exploration budget | 30 exploration analyses per run | Enough for several directions without unbounded search | 22 |
-| Max experiments per run | 5 registered proposals + their registered checks | Equal to the look budget | 5 |
+| Max experiments per run | Pilot cap: 5 experiments plus configured checks | Caller cap; exploratory experiments are not Verify looks | 5 |
 | Sensitivity specifications per proposal | Up to 3 | Bounded robustness (Module K) | 7 |
-| Technical retries per execution | 2 | Separates transient errors from real failures | 6 |
+| Technical retries per execution | 2 for exploration/before protected read; 0 after Verify look starts | Started failed looks become Inconclusive | 6 |
 | Typed-rejection repair attempts per step | 2 | Bounded repair (FR-LOOP-04) | — (policy setting) |
 | Clarification rounds at intake | 2, deadline 72 h | Then proceed with gaps recorded (FR-RQ-02) | — (policy setting) |
 | Candidate hypotheses per exploration round | Budget-driven, 3–5 | Diversity floor of at least 2 distinct constructs or question types | 19 |
 
-**Sample-size guidance (two-group comparison, confirmation partition, α = 0.05, L = 5 so 99% intervals, power 0.80)**
+**Sample-size guidance (two-group, one-batch grant α_r = 0.05, L = 5, 99% intervals, power 0.80; smaller grants require recalculation)**
 
-| Target outcome | δ_F / δ_N | True effect d | Units per group in the confirmation partition |
+| Target outcome | δ_F / δ_N | True effect d | Units per group in the eligible reserved unread units |
 |---|---|---|---|
 | Finding | δ_F = 0.20 | 0.50 | ≈ 260 |
 | Finding | δ_F = 0.20 | 0.40 | ≈ 585 |
@@ -4425,8 +4405,8 @@ Margins: δ_F and δ_N set in the brief (or policy defaults).
 Brief Intake → proceed (causal wording, if any, restated to associational)
 
 ↓
-Split rows into exploration / confirmation partitions
-Freeze Research Protocol (budgets, δ_F / δ_N, error control, A1 modes)
+Split rows into exploration / eligible reserved unread units
+Configure Playbook (Verify contract freezes on request) (budgets, δ_F / δ_N, error control, A1 modes)
 
 ↓
 Build Research State + Research Program
@@ -4437,7 +4417,7 @@ Build Research State + Research Program
 - ledger = empty; look budget = L
 
 ↓
-Exploration (exploration partition only)
+Exploration (authorized non-reserved data)
 Generate Candidate Research Directions
 A. Overall association between AI usage and score
 B. Association differs by major
@@ -4464,10 +4444,12 @@ LLM Deep Reasoning
 Deterministic Assumption Checks (exploration partition)
 
 ↓
-Register Confirmation Batch {H1, C}  (2 looks ≤ L)
+Optional Verify (otherwise continue / communicate exploratory results)
+→ Recorded approval + freeze Confirmation Contract
+→ Register Confirmation Batch {H1, C}  (2 looks ≤ L)
 
 ↓
-Run Confirmation on confirmation partition (test epoch)
+Run Confirmation on eligible reserved unread units (test epoch)
 
 ↓
 Deterministic Validation
@@ -4484,7 +4466,7 @@ C  → INCONCLUSIVE (interval crosses δ_F)
 
 ↓
 Next Move
-Follow-up for C recorded (post_test) → later run on fresh data
+Follow-up for C recorded (post_test) → continue research; later Verify needs unread units and grant
 
 ↓
 Update Research State
@@ -4523,7 +4505,7 @@ LLM handles reasoning + bounded decisions (no hooks)
 vs
 
 Configuration B
-Deterministic playbook only (A0)
+Single coordinator + bounded playbook baseline
 
 vs
 
@@ -4613,3 +4595,4 @@ Benchmark & Evaluation Protocol
 | 1.6 | 2026-09-22 | A follow-up cross-audit (comparing every BRD Must-priority BR against its PRD module's Priority line) found the same priority-signal mismatch fixed for Module K in v1.5 was still present in 8 more modules; annotated all of them with "Must for final capstone" plus the specific Must BR(s) driving it: Module N (BR-49), Module O (BR-50, BR-54), Module R (BR-28), Module U (BR-30), Module V (BR-32, BR-38; advanced visual/VLM reviewer sub-item stays P2), Module W (BR-41, BR-42), Module Z (BR-55), Module AA (BR-43, BR-63) — every PRD module that contains at least one BRD Must requirement is now annotated consistently; no functional/FR changes |
 | 1.7 | 2026-09-22 | Fixed a different kind of priority mismatch in Module I: BR-31 (Statistical Analysis, Must in BRD, flat list with no internal split) had been silently split by the PRD into P0 and P1 sub-lists, demoting "interaction analysis" and "basic time-series analysis" to P1 despite both being explicitly named in the Must-priority BR-31; moved both into the P0/Must list so it now matches BR-31 exactly, and kept "simple repeated-measure support" and "selected ML prediction workflows" (which are PRD-only additions not present in BR-31 at all) at P1 with a note that they are extensions beyond BR-31 and not required for Must compliance |
 | 1.8 | 2026-09-28 | Aligned with BRD v1.9 and the target architecture in [architecture.md](architecture.md): replaced the tree-search/linear-flow Non-Goal with "agent-directed within budgets and invariants" and added a no-generated-code Non-Goal; added PG-19/20, PP-13/14/15; new Module AI (Exploration / Confirmation Split & Analysis Ledger, BR-79) and Module AJ (Agent Research Loop, Decision Points & Hooks, autonomy levels, optional Research Program branches; BR-80/81); rewrote Module AE as a deterministic sufficiency gate (`FINDING_SUPPORTED` / `FINDING_CONTRADICTED` / `NEGATIVE_RESULT` / `INCONCLUSIVE` on adjusted intervals vs frozen δ_F / δ_N) and moved `NEED_MORE_EVIDENCE` / `TRY_ALTERNATIVE_METHOD` / `REPLICATE` to the *next move* decision point in Module AF and `NEED_HUMAN_REVIEW` to escalation; Module AD now records rule outcome, mode and abstention, runs `off`/`shadow`/`on`, and sends tied candidates into one confirmation batch (FR-HGATE-07, FR-PLAN-04; `max_parallel_candidates` / `max_total_concurrent_branches` and `co_selected_with` removed, `registered_in` added); deterministic triggers are the escalation floor (FR-HGATE-04, FR-REFLOOP-04, Section 39); Module L replaces `run_python` / `run_sql` with registered capabilities and typed tool contracts; Module K becomes triangulation/bounded robustness; Module G uses system-assigned origins; Module AH uses coverage-scoped Prior-Work Assessment; updated Sections 1, 3, 4, 6, 7, 8, 9, 38–49, 50, 51, 52, 53, 54, 55 accordingly. Coverage audit against architecture.md then added Module AK (Research Artifacts & Publication Views: envelope, visibility, views, claim faithfulness, portfolio lens, integrity audit, statistical disclosure control; BR-83/84), Module AL (Research Knowledge Layer; BR-82), Module AM (Simulation Lab; BR-85), FR-STATE-06 (theory, BR-86), FR-REFLOOP-06 (campaign, BR-87), FR-LOOP-09 (role profiles), FR-VALID-05/06 (claim-level gate, causal endorsement), FR-PROV-04 (lineage, reverse provenance), FR-REPRO-04/05 (replay vs re-derivation, tombstones), FR-EVAL-06 (champion/challenger, adversarial verification), FR-RQ-02/04 (intake, pre-run preview), FR-PROFILE-04, FR-ADMIN-04 (settings and policy versions), circuit breaker in FR-SPLIT-04, NFR-02/03 (consent, failure classification, integrity mismatch), acceptance criteria 61–66, entities, release plan and traceability for BR-82→87. Added §53.1 Proposed Defaults (α, Bonferroni deciding intervals with Holm for reporting, margins per summary measure, sample-size guidance for `general` and software-engineering packs, split, budgets, decision-layer modes and thresholds at A1, evaluation margins, MVP capability set), pending team and supervisor approval |
+| 1.9 | 2026-10-01 | Targeted alignment with BRD v1.10 and updated [Popper architecture](../popper/docs/architecture.md): optional Verify and reserved-unit approval, sandboxed code/debug, exposure/recovery and round-scoped error accounting, coordinator/optional workers and researcher steering; existing modules and IDs retained. See [changelog](changelog.md). |
