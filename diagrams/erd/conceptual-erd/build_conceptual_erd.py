@@ -20,8 +20,8 @@ import xml.etree.ElementTree as ET
 
 
 HERE = Path(__file__).resolve().parent
-DEFAULT_MODEL = HERE / "conceptual_erd.json"
-DEFAULT_OUTPUT = HERE / "AI-Research-Experimentation-Platform-Conceptual-ERD.drawio"
+DEFAULT_MODEL = HERE / "platform_be_conceptual_erd.json"
+DEFAULT_OUTPUT = HERE / "Platform-BE-Conceptual-ERD.drawio"
 
 # Crow's-foot markers shipped with draw.io.
 CARDINALITY = {
@@ -256,8 +256,8 @@ def add_relationship(root: ET.Element, relation: dict) -> None:
         "mxCell",
         {
             "id": relation["id"],
-            # Names stay in the model as documentation; the diagram shows cardinality only.
-            "value": "",
+            # A conceptual ERD names every relationship; read the verb from `from` to `to`.
+            "value": text_value(relation.get("label", "")),
             "style": style,
             "edge": "1",
             "parent": "1",
