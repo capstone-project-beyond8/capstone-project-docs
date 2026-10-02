@@ -11,7 +11,7 @@
     "subsystems/views-and-visualization.md §1",
     "subsystems/evaluation.md §5"
   ],
-  "scope_note": "Conceptual level: entity names, relationships and crow's-foot cardinality only. Lines that cross the dashed Popper boundary are the platform↔Popper interface (architecture §4). Platform entities cover the responsibilities architecture §1 leaves to the calling platform (authentication, organizations and projects, billing, notifications, collaboration, publication workflow, dataset ingestion); runs and artifacts are tenant-scoped (§7). PolicyVersion, DecisionRequest, UsageRecord, EvaluationDecision and DatasetAssessment are Popper records surfaced through the Settings API, human decision points, resource reporting, evaluation and data acquisition (architecture §7.1, runtime §7/§10, evaluation §5, stage-2 §2); the platform ingests and versions an approved snapshot. Every work product is an immutable Artifact with one envelope (state §1.4), so Artifact is not a separate box. Events, traces, Construct, DataLead, Critique, Theory, Campaign, MethodLesson and Statement belong to the logical ERDs.",
+  "scope_note": "Conceptual level: entity names, relationships and crow's-foot cardinality only. Lines that cross the dashed Popper boundary are the platform↔Popper interface (architecture §4). Platform entities cover the responsibilities architecture §1 leaves to the calling platform (authentication, projects and project membership, billing, notifications, collaboration, publication workflow, dataset ingestion); runs and artifacts are tenant-scoped (§7), and the tenant is the Project: BRD/PRD define no organization above it. PolicyVersion, DecisionRequest, UsageRecord, EvaluationDecision and DatasetAssessment are Popper records surfaced through the Settings API, human decision points, resource reporting, evaluation and data acquisition (architecture §7.1, runtime §7/§10, evaluation §5, stage-2 §2); the platform ingests and versions an approved snapshot. Every work product is an immutable Artifact with one envelope (state §1.4), so Artifact is not a separate box. Events, traces, Construct, DataLead, Critique, Theory, Campaign, MethodLesson and Statement belong to the logical ERDs.",
   "canvas": {
     "width": 3060,
     "height": 2220
@@ -52,7 +52,7 @@
       "label": "ProjectMember",
       "col": 5,
       "row": 0,
-      "ref": "architecture §7 tenant-scoped runs",
+      "ref": "PRD §10 FR-AUTH-03 (project membership); BRD BRule-01",
       "group": "platform"
     },
     {
@@ -60,7 +60,7 @@
       "label": "Project",
       "col": 2,
       "row": 0,
-      "ref": "research-program §1 (grouping runs is the calling service's)",
+      "ref": "PRD §11 (top-level scope); research-program §1 (grouping runs is the calling service's)",
       "group": "platform"
     },
     {
@@ -328,19 +328,11 @@
       "group": "core"
     },
     {
-      "id": "organization",
-      "label": "Organization",
-      "col": 4,
-      "row": 0,
-      "ref": "architecture §1, §7 (tenant scope)",
-      "group": "platform"
-    },
-    {
       "id": "billing_account",
       "label": "BillingAccount",
       "col": 3,
       "row": 0,
-      "ref": "architecture §1, §7 (cost caps)",
+      "ref": "architecture §1, §7 (cost caps); PRD §37 (usage by project)",
       "group": "platform"
     },
     {
@@ -546,6 +538,44 @@
       "label": "owns",
       "from_card": "one",
       "to_card": "zero_many"
+    },
+    {
+      "id": "r_user_project",
+      "from": "user",
+      "to": "project",
+      "label": "owns",
+      "from_card": "one",
+      "to_card": "zero_many",
+      "exit": [
+        "top",
+        0.5
+      ],
+      "entry": [
+        "right",
+        0.125
+      ],
+      "points": [
+        [
+          2830,
+          144
+        ],
+        [
+          990,
+          144
+        ],
+        [
+          990,
+          210
+        ]
+      ]
+    },
+    {
+      "id": "r_project_billing",
+      "from": "project",
+      "to": "billing_account",
+      "label": "billed through",
+      "from_card": "one",
+      "to_card": "zero_one"
     },
     {
       "id": "r_policy_run",
@@ -1465,82 +1495,6 @@
       "to_card": "zero_many"
     },
     {
-      "id": "r_org_project",
-      "from": "organization",
-      "to": "project",
-      "label": "owns",
-      "from_card": "one",
-      "to_card": "zero_many",
-      "exit": [
-        "top",
-        0.16666666666666666
-      ],
-      "entry": [
-        "right",
-        0.125
-      ],
-      "points": [
-        [
-          1450,
-          160
-        ],
-        [
-          990,
-          160
-        ],
-        [
-          990,
-          210
-        ]
-      ]
-    },
-    {
-      "id": "r_org_user",
-      "from": "organization",
-      "to": "user",
-      "label": "has member",
-      "from_card": "one_many",
-      "to_card": "zero_many",
-      "exit": [
-        "right",
-        0.125
-      ],
-      "entry": [
-        "bottom",
-        0.16666666666666666
-      ],
-      "points": [
-        [
-          1720,
-          210
-        ],
-        [
-          1720,
-          170
-        ],
-        [
-          2050,
-          170
-        ],
-        [
-          2050,
-          330
-        ],
-        [
-          2770,
-          330
-        ]
-      ]
-    },
-    {
-      "id": "r_org_billing",
-      "from": "organization",
-      "to": "billing_account",
-      "label": "billed through",
-      "from_card": "one",
-      "to_card": "one"
-    },
-    {
       "id": "r_billing_usage",
       "from": "billing_account",
       "to": "usage_record",
@@ -1724,7 +1678,7 @@
   "groups": {
     "platform": {
       "fill": "#dbeafe",
-      "label": "Platform-owned (calling service): identity, tenant organizations, projects, dataset ingestion, billing, notifications, collaboration, publication workflow"
+      "label": "Platform-owned (calling service): identity, projects, project members, dataset ingestion, billing, notifications, collaboration, publication workflow"
     },
     "boundary": {
       "fill": "#fef3c7",
@@ -1738,7 +1692,7 @@
   "frames": [
     {
       "id": "frame_platform",
-      "label": "Platform (calling service) — identity, organizations & projects, dataset ingestion & versioning, billing, notifications, collaboration, publication workflow, UI (architecture §1, §4)",
+      "label": "Platform (calling service) — identity, projects & project members, dataset ingestion & versioning, billing, notifications, collaboration, publication workflow, UI (architecture §1, §4)",
       "x": 35,
       "y": 95,
       "width": 2990,

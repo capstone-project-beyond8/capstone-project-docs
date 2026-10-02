@@ -1,5 +1,5 @@
 <mxfile host="Electron" agent="Codex drawio-skill">
-  <diagram id="ai-research-conceptual-erd" name="Conceptual ERD" data-source="popper/docs/architecture.md §1, §4, §6, §7; subsystems/state.md §1, §2; subsystems/research-program.md §1–§2; subsystems/error-control.md §2; subsystems/stage-1…stage-5 (stage-2 §2 data acquisition); subsystems/runtime.md §7–§10; subsystems/views-and-visualization.md §1; subsystems/evaluation.md §5" data-model="Conceptual level: entity names, relationships and crow&#39;s-foot cardinality only. Lines that cross the dashed Popper boundary are the platform↔Popper interface (architecture §4). Platform entities cover the responsibilities architecture §1 leaves to the calling platform (authentication, organizations and projects, billing, notifications, collaboration, publication workflow, dataset ingestion); runs and artifacts are tenant-scoped (§7). PolicyVersion, DecisionRequest, UsageRecord, EvaluationDecision and DatasetAssessment are Popper records surfaced through the Settings API, human decision points, resource reporting, evaluation and data acquisition (architecture §7.1, runtime §7/§10, evaluation §5, stage-2 §2); the platform ingests and versions an approved snapshot. Every work product is an immutable Artifact with one envelope (state §1.4), so Artifact is not a separate box. Events, traces, Construct, DataLead, Critique, Theory, Campaign, MethodLesson and Statement belong to the logical ERDs.">
+  <diagram id="ai-research-conceptual-erd" name="Conceptual ERD" data-source="popper/docs/architecture.md §1, §4, §6, §7; subsystems/state.md §1, §2; subsystems/research-program.md §1–§2; subsystems/error-control.md §2; subsystems/stage-1…stage-5 (stage-2 §2 data acquisition); subsystems/runtime.md §7–§10; subsystems/views-and-visualization.md §1; subsystems/evaluation.md §5" data-model="Conceptual level: entity names, relationships and crow&#39;s-foot cardinality only. Lines that cross the dashed Popper boundary are the platform↔Popper interface (architecture §4). Platform entities cover the responsibilities architecture §1 leaves to the calling platform (authentication, projects and project membership, billing, notifications, collaboration, publication workflow, dataset ingestion); runs and artifacts are tenant-scoped (§7), and the tenant is the Project: BRD/PRD define no organization above it. PolicyVersion, DecisionRequest, UsageRecord, EvaluationDecision and DatasetAssessment are Popper records surfaced through the Settings API, human decision points, resource reporting, evaluation and data acquisition (architecture §7.1, runtime §7/§10, evaluation §5, stage-2 §2); the platform ingests and versions an approved snapshot. Every work product is an immutable Artifact with one envelope (state §1.4), so Artifact is not a separate box. Events, traces, Construct, DataLead, Critique, Theory, Campaign, MethodLesson and Statement belong to the logical ERDs.">
     <mxGraphModel dx="3913" dy="2733" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="3060" pageHeight="2220" background="#ffffff" math="0" shadow="0">
       <root>
         <mxCell id="0" />
@@ -130,9 +130,6 @@
         <mxCell id="method_card" parent="1" style="rounded=0;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#ffffff;strokeColor=#111827;strokeWidth=1.5;fontFamily=Helvetica;fontSize=13;fontStyle=1;fontColor=#111827;" value="MethodCard" vertex="1">
           <mxGeometry height="80" width="180" x="1750" y="1300" as="geometry" />
         </mxCell>
-        <mxCell id="organization" parent="1" style="rounded=0;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#dbeafe;strokeColor=#111827;strokeWidth=1.5;fontFamily=Helvetica;fontSize=13;fontStyle=1;fontColor=#111827;" value="Organization" vertex="1">
-          <mxGeometry height="80" width="180" x="1420" y="200" as="geometry" />
-        </mxCell>
         <mxCell id="billing_account" parent="1" style="rounded=0;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#dbeafe;strokeColor=#111827;strokeWidth=1.5;fontFamily=Helvetica;fontSize=13;fontStyle=1;fontColor=#111827;" value="BillingAccount" vertex="1">
           <mxGeometry height="80" width="180" x="1090" y="200" as="geometry" />
         </mxCell>
@@ -198,6 +195,18 @@
           </mxGeometry>
         </mxCell>
         <mxCell id="r_project_dataset" edge="1" parent="1" source="project" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#111827;strokeWidth=1.2;fontColor=#111827;fontFamily=Helvetica;fontSize=11;labelBackgroundColor=#ffffff;jumpStyle=arc;jumpSize=8;startArrow=ERmandOne;startFill=0;startSize=12;endArrow=ERzeroToMany;endFill=0;endSize=12;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" target="dataset" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="r_user_project" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#111827;strokeWidth=1.2;fontColor=#111827;fontFamily=Helvetica;fontSize=11;labelBackgroundColor=#ffffff;jumpStyle=arc;jumpSize=8;startArrow=ERmandOne;startFill=0;startSize=12;endArrow=ERzeroToMany;endFill=0;endSize=12;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=1;entryY=0.125;entryDx=0;entryDy=0;" edge="1" parent="1" source="user" target="project">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="2830" y="144" />
+              <mxPoint x="990" y="144" />
+              <mxPoint x="990" y="210" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="r_project_billing" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#111827;strokeWidth=1.2;fontColor=#111827;fontFamily=Helvetica;fontSize=11;labelBackgroundColor=#ffffff;jumpStyle=arc;jumpSize=8;startArrow=ERmandOne;startFill=0;startSize=12;endArrow=ERzeroToOne;endFill=0;endSize=12;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="project" target="billing_account">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="r_policy_run" edge="1" parent="1" source="policy_version" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#111827;strokeWidth=1.2;fontColor=#111827;fontFamily=Helvetica;fontSize=11;labelBackgroundColor=#ffffff;jumpStyle=arc;jumpSize=8;startArrow=ERmandOne;startFill=0;startSize=12;endArrow=ERzeroToMany;endFill=0;endSize=12;exitX=0;exitY=0.875;exitDx=0;exitDy=0;entryX=1;entryY=0.125;entryDx=0;entryDy=0;" target="run" value="">
@@ -488,29 +497,6 @@
           </mxGeometry>
         </mxCell>
         <mxCell id="r_view_outcome" edge="1" parent="1" source="publication_view" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#111827;strokeWidth=1.2;fontColor=#111827;fontFamily=Helvetica;fontSize=11;labelBackgroundColor=#ffffff;jumpStyle=arc;jumpSize=8;startArrow=ERzeroToMany;startFill=0;startSize=12;endArrow=ERzeroToMany;endFill=0;endSize=12;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="outcome" value="">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="r_org_project" edge="1" parent="1" source="organization" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#111827;strokeWidth=1.2;fontColor=#111827;fontFamily=Helvetica;fontSize=11;labelBackgroundColor=#ffffff;jumpStyle=arc;jumpSize=8;startArrow=ERmandOne;startFill=0;startSize=12;endArrow=ERzeroToMany;endFill=0;endSize=12;exitX=0.166667;exitY=0;exitDx=0;exitDy=0;entryX=1;entryY=0.125;entryDx=0;entryDy=0;" target="project" value="">
-          <mxGeometry relative="1" as="geometry">
-            <Array as="points">
-              <mxPoint x="1450" y="160" />
-              <mxPoint x="990" y="160" />
-              <mxPoint x="990" y="210" />
-            </Array>
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="r_org_user" edge="1" parent="1" source="organization" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#111827;strokeWidth=1.2;fontColor=#111827;fontFamily=Helvetica;fontSize=11;labelBackgroundColor=#ffffff;jumpStyle=arc;jumpSize=8;startArrow=ERoneToMany;startFill=0;startSize=12;endArrow=ERzeroToMany;endFill=0;endSize=12;exitX=1;exitY=0.125;exitDx=0;exitDy=0;entryX=0.166667;entryY=1;entryDx=0;entryDy=0;" target="user" value="">
-          <mxGeometry relative="1" as="geometry">
-            <Array as="points">
-              <mxPoint x="1720" y="210" />
-              <mxPoint x="1720" y="170" />
-              <mxPoint x="2050" y="170" />
-              <mxPoint x="2050" y="330" />
-              <mxPoint x="2770" y="330" />
-            </Array>
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="r_org_billing" edge="1" parent="1" source="organization" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#111827;strokeWidth=1.2;fontColor=#111827;fontFamily=Helvetica;fontSize=11;labelBackgroundColor=#ffffff;jumpStyle=arc;jumpSize=8;startArrow=ERmandOne;startFill=0;startSize=12;endArrow=ERmandOne;endFill=0;endSize=12;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" target="billing_account" value="">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="r_billing_usage" edge="1" parent="1" source="billing_account" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#111827;strokeWidth=1.2;fontColor=#111827;fontFamily=Helvetica;fontSize=11;labelBackgroundColor=#ffffff;jumpStyle=arc;jumpSize=8;startArrow=ERmandOne;startFill=0;startSize=12;endArrow=ERzeroToMany;endFill=0;endSize=12;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="usage_record" value="">
