@@ -4,6 +4,25 @@ Lịch sử thay đổi và registry của toàn bộ tài liệu canonical tron
 `capstone-project-docs`. Các đường dẫn bên dưới là đường dẫn tương đối từ
 repository root.
 
+## 2026-10-02 — Conceptual ERD: chỉ vẽ cho Platform BE
+
+### Changed
+
+- Thay Conceptual ERD chung của cả hệ thống bằng [Platform BE Conceptual ERD](diagrams/erd/conceptual-erd/Platform-BE-Conceptual-ERD.drawio), sinh từ [ERD model](diagrams/erd/conceptual-erd/platform_be_conceptual_erd.json): 13 entity, 19 relationship.
+- Lý do: Popper v2 thay kiến trúc cũ nên nhóm entity core của Popper v1 không còn khớp, và phần Popper hiện chưa đủ rõ để vẽ. Sơ đồ chỉ gồm những gì Platform BE quản lý.
+- Entity: `User`, `Role`, `Project`, `ProjectMember`, `Dataset`, `DatasetVersion`, `ResearchContext`, `Run`, `FrameReview`, `RunArtifact`, `Comment`, `Notification`, `AuditLog`.
+- Sơ đồ theo chuẩn conceptual ERD: mỗi khái niệm nghiệp vụ xuất hiện đúng một lần, mọi relationship có tên và cardinality crow's-foot, không có thuộc tính, khoá hay chi tiết lưu trữ.
+- Entity mới so với bản trước: `ResearchContext`, `FrameReview`, `RunArtifact`, `AuditLog`. `DatasetSnapshot` đổi tên thành `DatasetVersion` theo PRD §44.
+- Bỏ `BillingAccount`, `PublicationRelease`, `PolicyVersion`, `DecisionRequest`, `EvaluationDecision`, `DatasetAssessment`, `UsageRecord` và toàn bộ entity core của Popper v1.
+- Xoá file `.drawio` và model của ERD chung cũ; [builder](diagrams/erd/conceptual-erd/build_conceptual_erd.py) nay mặc định sinh ERD của Platform BE và in tên relationship lên đường nối (trước đây để trống).
+- Quyết định nghiệp vụ đi kèm: Reviewer chỉ đọc và bình luận, không có bước ký duyệt; dataset đợt này chỉ nhận CSV.
+- Chưa sửa BRD/PRD: hai tài liệu này vẫn tham chiếu kiến trúc Popper cũ (các điểm quyết định, Verify, publication view) và cần một đợt đồng bộ riêng với Popper v2.
+
+### Validation
+
+- `python3 diagrams/erd/conceptual-erd/build_conceptual_erd.py`: `entities=13 relationships=19 crossings=0`, không có lỗi routing.
+- Export PNG bằng draw.io desktop và kiểm tra bằng mắt: không có đường đè lên entity, marker chồng nhau hay nhãn che nhau.
+
 ## 2026-10-02 — Conceptual ERD: bỏ Organization, Project là scope cao nhất
 
 ### Changed
