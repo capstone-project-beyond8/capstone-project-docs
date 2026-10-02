@@ -1,0 +1,203 @@
+<?xml version='1.0' encoding='utf-8'?>
+<mxfile host="app.diagrams.net" version="31.4.5" type="device" agent="Codex drawio-skill">
+  <diagram id="ai-research-conceptual-erd" name="Platform BE Conceptual ERD" data-source="BRD BR-03, BRule-01; PRD §9 flow, §10 permission model, §11 projects, §12 datasets, §43 notifications, §44 entities; popper-v2/docs/ARCHITECTURE.md §4 run status, §4.1 research context and review, §10 publication" data-model="Conceptual level: the business entities Platform BE manages, their named relationships and crow's-foot cardinality; no attributes, keys or storage detail. Read each relationship name from the entity at the 'one' (or 'zero or one') end toward the other entity. Project is the top-level scope: BRD/PRD define no organization above it. A Run is carried out by Popper; the scientific content Popper produces inside a run is in the overall Conceptual ERD, not here. Every entity also records the user who created it; only the user links that carry a business rule are drawn.">
+    <mxGraphModel grid="1" gridSize="10" page="1" pageScale="1" pageWidth="1400" pageHeight="1400" background="#ffffff" pageBackgroundColor="#ffffff" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="diagram_title" value="&lt;b&gt;Platform BE — Conceptual ERD&lt;/b&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;fontFamily=Helvetica;fontSize=20;fontStyle=1;fontColor=#111827;" vertex="1" parent="1">
+          <mxGeometry x="40" y="18" width="1320" height="34" as="geometry" />
+        </mxCell>
+        <mxCell id="diagram_source" value="Source: BRD BR-03, BRule-01 • PRD §9 flow, §10 permission model, §11 projects, §12 datasets, §43 notifications, §44 entities • popper-v2/docs/ARCHITECTURE.md §4 run status, §4.1 research context and review, §10 publication" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;fontFamily=Helvetica;fontSize=9;fontColor=#4b5563;" vertex="1" parent="1">
+          <mxGeometry x="40" y="56" width="1320" height="22" as="geometry" />
+        </mxCell>
+        <mxCell id="role" value="Role" style="rounded=0;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#dbeafe;strokeColor=#111827;strokeWidth=1.5;fontFamily=Helvetica;fontSize=13;fontStyle=1;fontColor=#111827;" vertex="1" parent="1">
+          <mxGeometry x="100" y="200" width="180" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="project_member" value="ProjectMember" style="rounded=0;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#dbeafe;strokeColor=#111827;strokeWidth=1.5;fontFamily=Helvetica;fontSize=13;fontStyle=1;fontColor=#111827;" vertex="1" parent="1">
+          <mxGeometry x="430" y="200" width="180" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="user" value="User" style="rounded=0;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#dbeafe;strokeColor=#111827;strokeWidth=1.5;fontFamily=Helvetica;fontSize=13;fontStyle=1;fontColor=#111827;" vertex="1" parent="1">
+          <mxGeometry x="760" y="200" width="180" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="notification" value="Notification" style="rounded=0;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#dbeafe;strokeColor=#111827;strokeWidth=1.5;fontFamily=Helvetica;fontSize=13;fontStyle=1;fontColor=#111827;" vertex="1" parent="1">
+          <mxGeometry x="1090" y="200" width="180" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="audit_log" value="AuditLog" style="rounded=0;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#dbeafe;strokeColor=#111827;strokeWidth=1.5;fontFamily=Helvetica;fontSize=13;fontStyle=1;fontColor=#111827;" vertex="1" parent="1">
+          <mxGeometry x="100" y="420" width="180" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="project" value="Project" style="rounded=0;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#dbeafe;strokeColor=#111827;strokeWidth=1.5;fontFamily=Helvetica;fontSize=13;fontStyle=1;fontColor=#111827;" vertex="1" parent="1">
+          <mxGeometry x="430" y="420" width="180" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="frame_review" value="FrameReview" style="rounded=0;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#dbeafe;strokeColor=#111827;strokeWidth=1.5;fontFamily=Helvetica;fontSize=13;fontStyle=1;fontColor=#111827;" vertex="1" parent="1">
+          <mxGeometry x="760" y="420" width="180" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="comment" value="Comment" style="rounded=0;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#dbeafe;strokeColor=#111827;strokeWidth=1.5;fontFamily=Helvetica;fontSize=13;fontStyle=1;fontColor=#111827;" vertex="1" parent="1">
+          <mxGeometry x="1090" y="420" width="180" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="dataset" value="Dataset" style="rounded=0;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#dbeafe;strokeColor=#111827;strokeWidth=1.5;fontFamily=Helvetica;fontSize=13;fontStyle=1;fontColor=#111827;" vertex="1" parent="1">
+          <mxGeometry x="100" y="640" width="180" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="research_context" value="ResearchContext" style="rounded=0;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#dbeafe;strokeColor=#111827;strokeWidth=1.5;fontFamily=Helvetica;fontSize=13;fontStyle=1;fontColor=#111827;" vertex="1" parent="1">
+          <mxGeometry x="430" y="640" width="180" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="run" value="Run" style="rounded=0;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#dbeafe;strokeColor=#111827;strokeWidth=1.5;fontFamily=Helvetica;fontSize=13;fontStyle=1;fontColor=#111827;" vertex="1" parent="1">
+          <mxGeometry x="760" y="640" width="180" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="run_artifact" value="RunArtifact" style="rounded=0;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#dbeafe;strokeColor=#111827;strokeWidth=1.5;fontFamily=Helvetica;fontSize=13;fontStyle=1;fontColor=#111827;" vertex="1" parent="1">
+          <mxGeometry x="1090" y="640" width="180" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="dataset_version" value="DatasetVersion" style="rounded=0;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fillColor=#dbeafe;strokeColor=#111827;strokeWidth=1.5;fontFamily=Helvetica;fontSize=13;fontStyle=1;fontColor=#111827;" vertex="1" parent="1">
+          <mxGeometry x="100" y="860" width="180" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="r_role_member" value="assigned in" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#111827;strokeWidth=1.2;fontColor=#111827;fontFamily=Helvetica;fontSize=11;labelBackgroundColor=#ffffff;jumpStyle=arc;jumpSize=8;startArrow=ERmandOne;startFill=0;startSize=12;endArrow=ERzeroToMany;endFill=0;endSize=12;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="role" target="project_member">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="r_user_member" value="holds" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#111827;strokeWidth=1.2;fontColor=#111827;fontFamily=Helvetica;fontSize=11;labelBackgroundColor=#ffffff;jumpStyle=arc;jumpSize=8;startArrow=ERmandOne;startFill=0;startSize=12;endArrow=ERzeroToMany;endFill=0;endSize=12;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="user" target="project_member">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="r_project_member" value="has" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#111827;strokeWidth=1.2;fontColor=#111827;fontFamily=Helvetica;fontSize=11;labelBackgroundColor=#ffffff;jumpStyle=arc;jumpSize=8;startArrow=ERmandOne;startFill=0;startSize=12;endArrow=ERoneToMany;endFill=0;endSize=12;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="project" target="project_member">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="r_user_project" value="owns" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#111827;strokeWidth=1.2;fontColor=#111827;fontFamily=Helvetica;fontSize=11;labelBackgroundColor=#ffffff;jumpStyle=arc;jumpSize=8;startArrow=ERmandOne;startFill=0;startSize=12;endArrow=ERzeroToMany;endFill=0;endSize=12;exitX=0.2;exitY=1;exitDx=0;exitDy=0;entryX=0.8;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="user" target="project">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="796" y="350" />
+              <mxPoint x="574" y="350" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="r_user_notification" value="receives" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#111827;strokeWidth=1.2;fontColor=#111827;fontFamily=Helvetica;fontSize=11;labelBackgroundColor=#ffffff;jumpStyle=arc;jumpSize=8;startArrow=ERmandOne;startFill=0;startSize=12;endArrow=ERzeroToMany;endFill=0;endSize=12;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="user" target="notification">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="r_user_audit" value="performs" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#111827;strokeWidth=1.2;fontColor=#111827;fontFamily=Helvetica;fontSize=11;labelBackgroundColor=#ffffff;jumpStyle=arc;jumpSize=8;startArrow=ERzeroToOne;startFill=0;startSize=12;endArrow=ERzeroToMany;endFill=0;endSize=12;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="user" target="audit_log">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="850" y="140" />
+              <mxPoint x="50" y="140" />
+              <mxPoint x="50" y="460" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="r_project_audit" value="scopes" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#111827;strokeWidth=1.2;fontColor=#111827;fontFamily=Helvetica;fontSize=11;labelBackgroundColor=#ffffff;jumpStyle=arc;jumpSize=8;startArrow=ERzeroToOne;startFill=0;startSize=12;endArrow=ERzeroToMany;endFill=0;endSize=12;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="project" target="audit_log">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="r_user_frame_review" value="submits" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#111827;strokeWidth=1.2;fontColor=#111827;fontFamily=Helvetica;fontSize=11;labelBackgroundColor=#ffffff;jumpStyle=arc;jumpSize=8;startArrow=ERmandOne;startFill=0;startSize=12;endArrow=ERzeroToMany;endFill=0;endSize=12;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="user" target="frame_review">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="r_run_frame_review" value="reviewed in" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#111827;strokeWidth=1.2;fontColor=#111827;fontFamily=Helvetica;fontSize=11;labelBackgroundColor=#ffffff;jumpStyle=arc;jumpSize=8;startArrow=ERmandOne;startFill=0;startSize=12;endArrow=ERzeroToMany;endFill=0;endSize=12;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="run" target="frame_review">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="r_user_comment" value="writes" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#111827;strokeWidth=1.2;fontColor=#111827;fontFamily=Helvetica;fontSize=11;labelBackgroundColor=#ffffff;jumpStyle=arc;jumpSize=8;startArrow=ERmandOne;startFill=0;startSize=12;endArrow=ERzeroToMany;endFill=0;endSize=12;exitX=0.8;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="user" target="comment">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="904" y="350" />
+              <mxPoint x="1180" y="350" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="r_run_comment" value="discussed in" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#111827;strokeWidth=1.2;fontColor=#111827;fontFamily=Helvetica;fontSize=11;labelBackgroundColor=#ffffff;jumpStyle=arc;jumpSize=8;startArrow=ERmandOne;startFill=0;startSize=12;endArrow=ERzeroToMany;endFill=0;endSize=12;exitX=0.8;exitY=0;exitDx=0;exitDy=0;entryX=0.2;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="run" target="comment">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="904" y="570" />
+              <mxPoint x="1126" y="570" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="r_artifact_comment" value="annotated by" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#111827;strokeWidth=1.2;fontColor=#111827;fontFamily=Helvetica;fontSize=11;labelBackgroundColor=#ffffff;jumpStyle=arc;jumpSize=8;startArrow=ERzeroToOne;startFill=0;startSize=12;endArrow=ERzeroToMany;endFill=0;endSize=12;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="run_artifact" target="comment">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="r_project_dataset" value="has" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#111827;strokeWidth=1.2;fontColor=#111827;fontFamily=Helvetica;fontSize=11;labelBackgroundColor=#ffffff;jumpStyle=arc;jumpSize=8;startArrow=ERmandOne;startFill=0;startSize=12;endArrow=ERzeroToMany;endFill=0;endSize=12;exitX=0.2;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="project" target="dataset">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="466" y="570" />
+              <mxPoint x="190" y="570" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="r_dataset_version" value="has" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#111827;strokeWidth=1.2;fontColor=#111827;fontFamily=Helvetica;fontSize=11;labelBackgroundColor=#ffffff;jumpStyle=arc;jumpSize=8;startArrow=ERmandOne;startFill=0;startSize=12;endArrow=ERoneToMany;endFill=0;endSize=12;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="dataset" target="dataset_version">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="r_project_context" value="has" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#111827;strokeWidth=1.2;fontColor=#111827;fontFamily=Helvetica;fontSize=11;labelBackgroundColor=#ffffff;jumpStyle=arc;jumpSize=8;startArrow=ERmandOne;startFill=0;startSize=12;endArrow=ERzeroToMany;endFill=0;endSize=12;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="project" target="research_context">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="r_project_run" value="contains" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#111827;strokeWidth=1.2;fontColor=#111827;fontFamily=Helvetica;fontSize=11;labelBackgroundColor=#ffffff;jumpStyle=arc;jumpSize=8;startArrow=ERmandOne;startFill=0;startSize=12;endArrow=ERzeroToMany;endFill=0;endSize=12;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.15;entryDx=0;entryDy=0;" edge="1" parent="1" source="project" target="run">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="685" y="460" />
+              <mxPoint x="685" y="652" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="r_context_run" value="used by" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#111827;strokeWidth=1.2;fontColor=#111827;fontFamily=Helvetica;fontSize=11;labelBackgroundColor=#ffffff;jumpStyle=arc;jumpSize=8;startArrow=ERmandOne;startFill=0;startSize=12;endArrow=ERzeroToMany;endFill=0;endSize=12;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="research_context" target="run">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="r_version_run" value="used by" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#111827;strokeWidth=1.2;fontColor=#111827;fontFamily=Helvetica;fontSize=11;labelBackgroundColor=#ffffff;jumpStyle=arc;jumpSize=8;startArrow=ERmandOne;startFill=0;startSize=12;endArrow=ERzeroToMany;endFill=0;endSize=12;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.8;entryDx=0;entryDy=0;" edge="1" parent="1" source="dataset_version" target="run">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="685" y="900" />
+              <mxPoint x="685" y="704" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="r_run_artifact" value="produces" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#111827;strokeWidth=1.2;fontColor=#111827;fontFamily=Helvetica;fontSize=11;labelBackgroundColor=#ffffff;jumpStyle=arc;jumpSize=8;startArrow=ERmandOne;startFill=0;startSize=12;endArrow=ERzeroToMany;endFill=0;endSize=12;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="run" target="run_artifact">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="legend_frame" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#111827;strokeWidth=1;" vertex="1" parent="1">
+          <mxGeometry x="100" y="1010" width="900" height="270" as="geometry" />
+        </mxCell>
+        <mxCell id="legend_title" value="Crow's-foot notation (marker at an entity = how many of that entity)" style="text;html=1;align=left;verticalAlign=middle;fontFamily=Helvetica;fontSize=12;fontStyle=1;fontColor=#111827;" vertex="1" parent="1">
+          <mxGeometry x="116" y="1018" width="868" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="legend_one" value="" style="endArrow=ERmandOne;endFill=0;endSize=12;startArrow=none;html=1;strokeColor=#111827;strokeWidth=1.2;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="124" y="1072" as="sourcePoint" />
+            <mxPoint x="214" y="1072" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="legend_one_text" value="Exactly one (1)" style="text;html=1;align=left;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=#111827;" vertex="1" parent="1">
+          <mxGeometry x="228" y="1059" width="310" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="legend_zero_one" value="" style="endArrow=ERzeroToOne;endFill=0;endSize=12;startArrow=none;html=1;strokeColor=#111827;strokeWidth=1.2;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="124" y="1116" as="sourcePoint" />
+            <mxPoint x="214" y="1116" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="legend_zero_one_text" value="Zero or one (0..1)" style="text;html=1;align=left;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=#111827;" vertex="1" parent="1">
+          <mxGeometry x="228" y="1103" width="310" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="legend_one_many" value="" style="endArrow=ERoneToMany;endFill=0;endSize=12;startArrow=none;html=1;strokeColor=#111827;strokeWidth=1.2;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="574" y="1072" as="sourcePoint" />
+            <mxPoint x="664" y="1072" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="legend_one_many_text" value="One or many (1..*)" style="text;html=1;align=left;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=#111827;" vertex="1" parent="1">
+          <mxGeometry x="678" y="1059" width="310" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="legend_zero_many" value="" style="endArrow=ERzeroToMany;endFill=0;endSize=12;startArrow=none;html=1;strokeColor=#111827;strokeWidth=1.2;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="574" y="1116" as="sourcePoint" />
+            <mxPoint x="664" y="1116" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="legend_zero_many_text" value="Zero or many (0..*)" style="text;html=1;align=left;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=#111827;" vertex="1" parent="1">
+          <mxGeometry x="678" y="1103" width="310" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="legend_reading" value="Read each line from both ends: the marker next to an entity says how many of that entity relate to one instance at the other end, e.g. Project ||——o&lt; Dataset: each Dataset belongs to exactly one Project; a Project has zero or many Datasets." style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;fontFamily=Helvetica;fontSize=10;fontColor=#4b5563;" vertex="1" parent="1">
+          <mxGeometry x="116" y="1160" width="868" height="56" as="geometry" />
+        </mxCell>
+        <mxCell id="legend_group_platform" value="" style="rounded=0;html=1;fillColor=#dbeafe;strokeColor=#111827;strokeWidth=1.2;" vertex="1" parent="1">
+          <mxGeometry x="124" y="1224" width="90" height="24" as="geometry" />
+        </mxCell>
+        <mxCell id="legend_group_platform_text" value="Entity managed by Platform BE" style="text;html=1;align=left;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=#111827;" vertex="1" parent="1">
+          <mxGeometry x="228" y="1223" width="750" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="scope_note" value="Scope: Conceptual level: the business entities Platform BE manages, their named relationships and crow's-foot cardinality; no attributes, keys or storage detail. Read each relationship name from the entity at the 'one' (or 'zero or one') end toward the other entity. Project is the top-level scope: BRD/PRD define no organization above it. A Run is carried out by Popper; the scientific content Popper produces inside a run is in the overall Conceptual ERD, not here. Every entity also records the user who created it; only the user links that carry a business rule are drawn." style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;fontFamily=Helvetica;fontSize=10;fontColor=#4b5563;" vertex="1" parent="1">
+          <mxGeometry x="40" y="1310" width="1320" height="50" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

@@ -4,6 +4,37 @@ Lịch sử thay đổi và registry của toàn bộ tài liệu canonical tron
 `capstone-project-docs`. Các đường dẫn bên dưới là đường dẫn tương đối từ
 repository root.
 
+## 2026-10-02 — Conceptual ERD: chỉ vẽ cho Platform BE
+
+### Changed
+
+- Thay Conceptual ERD chung của cả hệ thống bằng [Platform BE Conceptual ERD](diagrams/erd/conceptual-erd/Platform-BE-Conceptual-ERD.drawio), sinh từ [ERD model](diagrams/erd/conceptual-erd/platform_be_conceptual_erd.json): 13 entity, 19 relationship.
+- Lý do: Popper v2 thay kiến trúc cũ nên nhóm entity core của Popper v1 không còn khớp, và phần Popper hiện chưa đủ rõ để vẽ. Sơ đồ chỉ gồm những gì Platform BE quản lý.
+- Entity: `User`, `Role`, `Project`, `ProjectMember`, `Dataset`, `DatasetVersion`, `ResearchContext`, `Run`, `FrameReview`, `RunArtifact`, `Comment`, `Notification`, `AuditLog`.
+- Sơ đồ theo chuẩn conceptual ERD: mỗi khái niệm nghiệp vụ xuất hiện đúng một lần, mọi relationship có tên và cardinality crow's-foot, không có thuộc tính, khoá hay chi tiết lưu trữ.
+- Entity mới so với bản trước: `ResearchContext`, `FrameReview`, `RunArtifact`, `AuditLog`. `DatasetSnapshot` đổi tên thành `DatasetVersion` theo PRD §44.
+- Bỏ `BillingAccount`, `PublicationRelease`, `PolicyVersion`, `DecisionRequest`, `EvaluationDecision`, `DatasetAssessment`, `UsageRecord` và toàn bộ entity core của Popper v1.
+- Xoá file `.drawio` và model của ERD chung cũ; [builder](diagrams/erd/conceptual-erd/build_conceptual_erd.py) nay mặc định sinh ERD của Platform BE và in tên relationship lên đường nối (trước đây để trống).
+- Quyết định nghiệp vụ đi kèm: Reviewer chỉ đọc và bình luận, không có bước ký duyệt; dataset đợt này chỉ nhận CSV.
+- Chưa sửa BRD/PRD: hai tài liệu này vẫn tham chiếu kiến trúc Popper cũ (các điểm quyết định, Verify, publication view) và cần một đợt đồng bộ riêng với Popper v2.
+
+### Validation
+
+- `python3 diagrams/erd/conceptual-erd/build_conceptual_erd.py`: `entities=13 relationships=19 crossings=0`, không có lỗi routing.
+- Export PNG bằng draw.io desktop và kiểm tra bằng mắt: không có đường đè lên entity, marker chồng nhau hay nhãn che nhau.
+
+## 2026-10-02 — Conceptual ERD: bỏ Organization, Project là scope cao nhất
+
+### Changed
+
+- Cập nhật [Conceptual ERD](diagrams/erd/conceptual-erd/AI-Research-Experimentation-Platform-Conceptual-ERD.drawio) và [ERD model](diagrams/erd/conceptual-erd/conceptual_erd.json): còn 42 entity, 69 relationship.
+- Bỏ entity `Organization` và ba relationship của nó (`owns` Project, `has member` User, `billed through` BillingAccount). BRD (BR-03, BRule-01) và PRD (§9, §10 FR-AUTH-03, §11, §44) không định nghĩa organization hay workspace: user đăng nhập rồi tạo project trực tiếp, và project là ranh giới cách ly dữ liệu. Tenant mà Popper yêu cầu (architecture §7) chính là Project.
+- Thêm `User owns Project` (1 — 0..n): người tạo project là owner (PRD FR-PROJ-01).
+- Thêm `Project billed through BillingAccount` (1 — 0..1) thay cho liên kết qua Organization, vì usage/cost được theo dõi theo project (PRD §37).
+- Khung Platform của sơ đồ: User, Role, ProjectMember, Project, BillingAccount, Dataset/DatasetSnapshot, Comment, Notification, PublicationRelease.
+- File `.drawio` được vá trực tiếp (không chạy lại builder) để giữ các chỉnh tay trước đó; `build_conceptual_erd.py --check` vẫn pass trên model mới.
+- Không sửa BRD/PRD: thay đổi này đưa ERD về đúng với hai tài liệu đó.
+
 ## 2026-10-01 — Điều chỉnh BRD/PRD theo kiến trúc Popper cập nhật
 
 ### Changed

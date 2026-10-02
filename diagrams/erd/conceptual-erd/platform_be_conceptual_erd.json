@@ -1,0 +1,432 @@
+{
+  "title": "Platform BE — Conceptual ERD",
+  "page_name": "Platform BE Conceptual ERD",
+  "source_documents": [
+    "BRD BR-03, BRule-01",
+    "PRD §9 flow, §10 permission model, §11 projects, §12 datasets, §43 notifications, §44 entities",
+    "popper-v2/docs/ARCHITECTURE.md §4 run status, §4.1 research context and review, §10 publication"
+  ],
+  "scope_note": "Conceptual level: the business entities Platform BE manages, their named relationships and crow's-foot cardinality; no attributes, keys or storage detail. Read each relationship name from the entity at the 'one' (or 'zero or one') end toward the other entity. Project is the top-level scope: BRD/PRD define no organization above it. A Run is carried out by Popper; the scientific content Popper produces inside a run is in the overall Conceptual ERD, not here. Every entity also records the user who created it; only the user links that carry a business rule are drawn.",
+  "canvas": {
+    "width": 1400,
+    "height": 1400
+  },
+  "grid": {
+    "x0": 100,
+    "y0": 200,
+    "dx": 330,
+    "dy": 220,
+    "width": 180,
+    "height": 80
+  },
+  "legend": {
+    "x": 100,
+    "y": 1010,
+    "width": 900,
+    "height": 270
+  },
+  "route_bounds": {
+    "x0": 40,
+    "x1": 1340,
+    "y0": 130,
+    "y1": 970
+  },
+  "groups": {
+    "platform": {
+      "fill": "#dbeafe",
+      "label": "Entity managed by Platform BE"
+    }
+  },
+  "frames": [],
+  "notes": [],
+  "entities": [
+    {
+      "id": "role",
+      "label": "Role",
+      "col": 0,
+      "row": 0,
+      "ref": "PRD §10 permission model",
+      "group": "platform"
+    },
+    {
+      "id": "project_member",
+      "label": "ProjectMember",
+      "col": 1,
+      "row": 0,
+      "ref": "PRD §11, §44",
+      "group": "platform"
+    },
+    {
+      "id": "user",
+      "label": "User",
+      "col": 2,
+      "row": 0,
+      "ref": "PRD §10, §44",
+      "group": "platform"
+    },
+    {
+      "id": "notification",
+      "label": "Notification",
+      "col": 3,
+      "row": 0,
+      "ref": "PRD §43",
+      "group": "platform"
+    },
+    {
+      "id": "audit_log",
+      "label": "AuditLog",
+      "col": 0,
+      "row": 1,
+      "ref": "PRD §44; BRule-01",
+      "group": "platform"
+    },
+    {
+      "id": "project",
+      "label": "Project",
+      "col": 1,
+      "row": 1,
+      "ref": "PRD §11, §44",
+      "group": "platform"
+    },
+    {
+      "id": "frame_review",
+      "label": "FrameReview",
+      "col": 2,
+      "row": 1,
+      "ref": "popper-v2 ARCHITECTURE §4.1 review",
+      "group": "platform"
+    },
+    {
+      "id": "comment",
+      "label": "Comment",
+      "col": 3,
+      "row": 1,
+      "ref": "PRD §10 reviewer role",
+      "group": "platform"
+    },
+    {
+      "id": "dataset",
+      "label": "Dataset",
+      "col": 0,
+      "row": 2,
+      "ref": "PRD §12, §44",
+      "group": "platform"
+    },
+    {
+      "id": "research_context",
+      "label": "ResearchContext",
+      "col": 1,
+      "row": 2,
+      "ref": "popper-v2 ARCHITECTURE §4.1 research context",
+      "group": "platform"
+    },
+    {
+      "id": "run",
+      "label": "Run",
+      "col": 2,
+      "row": 2,
+      "ref": "PRD §9; popper-v2 ARCHITECTURE §4 run status",
+      "group": "platform"
+    },
+    {
+      "id": "run_artifact",
+      "label": "RunArtifact",
+      "col": 3,
+      "row": 2,
+      "ref": "popper-v2 ARCHITECTURE §10 publication",
+      "group": "platform"
+    },
+    {
+      "id": "dataset_version",
+      "label": "DatasetVersion",
+      "col": 0,
+      "row": 3,
+      "ref": "PRD §12, §44",
+      "group": "platform"
+    }
+  ],
+  "relationships": [
+    {
+      "id": "r_role_member",
+      "from": "role",
+      "to": "project_member",
+      "label": "assigned in",
+      "from_card": "one",
+      "to_card": "zero_many"
+    },
+    {
+      "id": "r_user_member",
+      "from": "user",
+      "to": "project_member",
+      "label": "holds",
+      "from_card": "one",
+      "to_card": "zero_many"
+    },
+    {
+      "id": "r_project_member",
+      "from": "project",
+      "to": "project_member",
+      "label": "has",
+      "from_card": "one",
+      "to_card": "one_many"
+    },
+    {
+      "id": "r_user_project",
+      "from": "user",
+      "to": "project",
+      "label": "owns",
+      "from_card": "one",
+      "to_card": "zero_many",
+      "exit": [
+        "bottom",
+        0.2
+      ],
+      "entry": [
+        "top",
+        0.8
+      ],
+      "points": [
+        [
+          796,
+          350
+        ],
+        [
+          574,
+          350
+        ]
+      ]
+    },
+    {
+      "id": "r_user_notification",
+      "from": "user",
+      "to": "notification",
+      "label": "receives",
+      "from_card": "one",
+      "to_card": "zero_many"
+    },
+    {
+      "id": "r_user_audit",
+      "from": "user",
+      "to": "audit_log",
+      "label": "performs",
+      "from_card": "zero_one",
+      "to_card": "zero_many",
+      "exit": [
+        "top",
+        0.5
+      ],
+      "entry": [
+        "left",
+        0.5
+      ],
+      "points": [
+        [
+          850,
+          140
+        ],
+        [
+          50,
+          140
+        ],
+        [
+          50,
+          460
+        ]
+      ]
+    },
+    {
+      "id": "r_project_audit",
+      "from": "project",
+      "to": "audit_log",
+      "label": "scopes",
+      "from_card": "zero_one",
+      "to_card": "zero_many"
+    },
+    {
+      "id": "r_user_frame_review",
+      "from": "user",
+      "to": "frame_review",
+      "label": "submits",
+      "from_card": "one",
+      "to_card": "zero_many"
+    },
+    {
+      "id": "r_run_frame_review",
+      "from": "run",
+      "to": "frame_review",
+      "label": "reviewed in",
+      "from_card": "one",
+      "to_card": "zero_many"
+    },
+    {
+      "id": "r_user_comment",
+      "from": "user",
+      "to": "comment",
+      "label": "writes",
+      "from_card": "one",
+      "to_card": "zero_many",
+      "exit": [
+        "bottom",
+        0.8
+      ],
+      "entry": [
+        "top",
+        0.5
+      ],
+      "points": [
+        [
+          904,
+          350
+        ],
+        [
+          1180,
+          350
+        ]
+      ]
+    },
+    {
+      "id": "r_run_comment",
+      "from": "run",
+      "to": "comment",
+      "label": "discussed in",
+      "from_card": "one",
+      "to_card": "zero_many",
+      "exit": [
+        "top",
+        0.8
+      ],
+      "entry": [
+        "bottom",
+        0.2
+      ],
+      "points": [
+        [
+          904,
+          570
+        ],
+        [
+          1126,
+          570
+        ]
+      ]
+    },
+    {
+      "id": "r_artifact_comment",
+      "from": "run_artifact",
+      "to": "comment",
+      "label": "annotated by",
+      "from_card": "zero_one",
+      "to_card": "zero_many"
+    },
+    {
+      "id": "r_project_dataset",
+      "from": "project",
+      "to": "dataset",
+      "label": "has",
+      "from_card": "one",
+      "to_card": "zero_many",
+      "exit": [
+        "bottom",
+        0.2
+      ],
+      "entry": [
+        "top",
+        0.5
+      ],
+      "points": [
+        [
+          466,
+          570
+        ],
+        [
+          190,
+          570
+        ]
+      ]
+    },
+    {
+      "id": "r_dataset_version",
+      "from": "dataset",
+      "to": "dataset_version",
+      "label": "has",
+      "from_card": "one",
+      "to_card": "one_many"
+    },
+    {
+      "id": "r_project_context",
+      "from": "project",
+      "to": "research_context",
+      "label": "has",
+      "from_card": "one",
+      "to_card": "zero_many"
+    },
+    {
+      "id": "r_project_run",
+      "from": "project",
+      "to": "run",
+      "label": "contains",
+      "from_card": "one",
+      "to_card": "zero_many",
+      "exit": [
+        "right",
+        0.5
+      ],
+      "entry": [
+        "left",
+        0.15
+      ],
+      "points": [
+        [
+          685,
+          460
+        ],
+        [
+          685,
+          652
+        ]
+      ]
+    },
+    {
+      "id": "r_context_run",
+      "from": "research_context",
+      "to": "run",
+      "label": "used by",
+      "from_card": "one",
+      "to_card": "zero_many"
+    },
+    {
+      "id": "r_version_run",
+      "from": "dataset_version",
+      "to": "run",
+      "label": "used by",
+      "from_card": "one",
+      "to_card": "zero_many",
+      "exit": [
+        "right",
+        0.5
+      ],
+      "entry": [
+        "left",
+        0.8
+      ],
+      "points": [
+        [
+          685,
+          900
+        ],
+        [
+          685,
+          704
+        ]
+      ]
+    },
+    {
+      "id": "r_run_artifact",
+      "from": "run",
+      "to": "run_artifact",
+      "label": "produces",
+      "from_card": "one",
+      "to_card": "zero_many"
+    }
+  ]
+}
