@@ -4,6 +4,18 @@ Lịch sử thay đổi và registry của toàn bộ tài liệu canonical tron
 `capstone-project-docs`. Các đường dẫn bên dưới là đường dẫn tương đối từ
 repository root.
 
+## 2026-10-02 — Conceptual ERD: bỏ Organization, Project là scope cao nhất
+
+### Changed
+
+- Cập nhật [Conceptual ERD](diagrams/erd/conceptual-erd/AI-Research-Experimentation-Platform-Conceptual-ERD.drawio) và [ERD model](diagrams/erd/conceptual-erd/conceptual_erd.json): còn 42 entity, 69 relationship.
+- Bỏ entity `Organization` và ba relationship của nó (`owns` Project, `has member` User, `billed through` BillingAccount). BRD (BR-03, BRule-01) và PRD (§9, §10 FR-AUTH-03, §11, §44) không định nghĩa organization hay workspace: user đăng nhập rồi tạo project trực tiếp, và project là ranh giới cách ly dữ liệu. Tenant mà Popper yêu cầu (architecture §7) chính là Project.
+- Thêm `User owns Project` (1 — 0..n): người tạo project là owner (PRD FR-PROJ-01).
+- Thêm `Project billed through BillingAccount` (1 — 0..1) thay cho liên kết qua Organization, vì usage/cost được theo dõi theo project (PRD §37).
+- Khung Platform của sơ đồ: User, Role, ProjectMember, Project, BillingAccount, Dataset/DatasetSnapshot, Comment, Notification, PublicationRelease.
+- File `.drawio` được vá trực tiếp (không chạy lại builder) để giữ các chỉnh tay trước đó; `build_conceptual_erd.py --check` vẫn pass trên model mới.
+- Không sửa BRD/PRD: thay đổi này đưa ERD về đúng với hai tài liệu đó.
+
 ## 2026-10-01 — Điều chỉnh BRD/PRD theo kiến trúc Popper cập nhật
 
 ### Changed
