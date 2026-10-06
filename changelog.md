@@ -4,6 +4,59 @@ Lịch sử thay đổi và registry của toàn bộ tài liệu canonical tron
 `capstone-project-docs`. Các đường dẫn bên dưới là đường dẫn tương đối từ
 repository root.
 
+## 2026-10-06 — Handoff cho luồng topic → hypothesis: engine và Platform BE (DRAFT)
+
+### Added
+
+- [Engine handoff](engine-handoff-topic-to-hypothesis.md): cho team repo lõi chạy pipeline stage 1–8. Gồm ranh giới trách nhiệm với Platform BE; API engine cung cấp (`POST /runs` idempotent theo `platform_run_id`, đọc trạng thái, đọc lại event, trả lời gate, pause, resume, cancel); cách đẩy event về Platform BE với `source_seq` và chính sách retry; danh mục event chi tiết cho từng stage kèm validate; gate; quy tắc chia nhỏ event; 10 tình huống lỗi; cách test.
+- [Platform BE handoff](be-handoff-topic-to-hypothesis.md): viết lại cho `ai-research-platform-be`. Platform BE vẫn là API duy nhất của FE: tạo run bằng `topic`, `domains`; đọc lại event; SSE theo mẫu notification stream; trả lời gate; pause, resume; sửa `sync` và `abandon`. Thêm endpoint nhận event từ engine, sửa `PopperClient`, pacer, happy case, 15 unhappy case, migration (`run_events`, `run_gates`, cột mới của `research_runs`), cách test và checklist.
+
+### Changed
+
+- [Research run event stream](research-run-event-stream.md): tách SSE sang `GET …/events/stream`; `GET …/events` trả JSON phân trang. `run.started.dataset` thành tuỳ chọn, vì run đi từ topic không có dataset. FE đã sửa `contract.ts` và mock tương ứng.
+- Không cần sửa BRD/PRD/ERD trong đợt này: đây là tài liệu triển khai cho contract nháp, chưa đổi requirement.
+
+### Validation
+
+- `npx tsc --noEmit` và `npx vitest run src/lib/run-stream` trong repo FE: 9 test pass.
+- Đối chiếu với `contract.ts`, `reducer.ts`, `mock-run.ts` (thứ tự event, payload, nhịp gửi), và với code Platform BE hiện tại: `api/v1/runs.py`, `api/v1/internal_popper.py`, `api/v1/notifications.py`, `services/popper_client.py`, `core/responses.py`, `core/config.py`.
+
+## 2026-10-06 — Event stream: tên artifact cho người dùng, `StagePlan.reads` và phần còn thiếu của stage 1, 4, 7 (DRAFT)
+
+### Changed
+
+- [Research run event stream](research-run-event-stream.md): `StagePlanStep.artifact` nay là tên cho người dùng đọc (ví dụ "Research goal", "Gap map") thay vì đường dẫn như `stage-01/goal.md`; thêm `StagePlan.reads` tuỳ chọn để FE hiện stage dựa vào gì và viết ra gì.
+- Bổ sung phần còn thiếu so với [hướng dẫn pipeline](../ai-research-platform-fe/docs/pipeline_stage_1_to_8_guide.md):
+  - Stage 1: event `scope.approved` (`at`, `note`) cho bước PI duyệt goal, kèm mốc giờ lưu.
+  - Stage 4: `literature.merged` đổi `sources[]` thành `records[]` (nguồn, ID, số trích dẫn, có DOI) cộng với `kept`. `literature.collected` thêm `collected_at`. `ShortlistPaper` thêm `source` và `citations`.
+  - Stage 7: thêm event `synthesis.overview` và `synthesis.ranked` (cơ hội nghiên cứu xếp ưu tiên).
+- Bỏ hiển thị skill trên UI. Event `skills.loaded` vẫn nằm trong contract.
+- Lý do: màn hình run từ topic tới hypothesis không còn lộ tên file (`.md`, `.json`, `.jsonl`, `.yaml`) hay tên cột dữ liệu cho người dùng.
+- Không cần sửa BRD/PRD/ERD: chỉ đổi cách hiển thị và một trường tuỳ chọn của contract nháp.
+
+### Validation
+
+- `npx tsc --noEmit`, `npx vitest run src/lib/run-stream` (9 test pass) và `npx biome check` (không có lỗi) trong repo FE.
+- Chạy trọn luồng topic → hypothesis trên FE thật bằng Playwright, cả desktop và màn hình điện thoại: không có lỗi console.
+
+## 2026-10-06 — Event stream: pipeline stage 1–8 thay cho Understand và Hypothesize (DRAFT)
+
+### Changed
+
+- [Research run event stream](research-run-event-stream.md): thay stage `understand` bằng 5 stage theo pipeline stage 1–7 ([hướng dẫn pipeline](../ai-research-platform-fe/docs/pipeline_stage_1_to_8_guide.md)): `scope` (1–2), `search` (3–4), `screen` (5), `read` (6), `synthesize` (7). `hypothesize` (stage 8) nay sinh hypothesis qua tranh luận 3 góc nhìn, mỗi hypothesis có 4 phần gồm tiêu chí bác bỏ `falsify`, kèm kiểm tra tính mới và khả thi.
+- Khoá test plan (`plan.locked`, thêm `design`) chuyển sang step đầu của `experiment` (stage 9).
+- Thêm event `skills.loaded`; thêm agent `strategist`, đổi `knowledge` thành `librarian`; thêm luật 5 (hypothesis phải bác bỏ được) và luật 6 (con số nhớ ra chưa kiểm chứng cho tới khi có bài báo xác nhận).
+- Gate: `framing` đổi thành `scope`; thêm gate `screen` (HITL stage 5) cho Copilot và Full, cho phép bỏ bài khỏi shortlist.
+- Lý do: luồng từ đầu tới sinh hypothesis của Popper đổi theo AutoResearchClaw stage 1–8; các stage từ Experiment về sau giữ nguyên.
+- Run bắt đầu từ **topic** người dùng nhập, không còn dùng Research context: `run.started` đổi `question`, `context_version` thành `topic`, `domains[]`; body `POST …/runs` đề xuất nhận `topic`, `domains[]`. Sub-question do Popper tự sinh ở stage 2.
+- Tạm thời run chỉ đi từ topic tới hypothesis (stage 1–8): ẩn bước chọn dataset và stage Check the data, ẩn bước chọn review mode (mặc định Copilot, chỉ dừng ở gate `screen`), và kết thúc ngay sau khi PI chọn bộ hypothesis. `run.completed` khi đó không có `paper_title`. Phần Experiment, Report, Paper vẫn giữ trong contract và code, bật lại bằng cờ trong `src/lib/run-stream/features.ts` của repo FE.
+- Chưa sửa BRD/PRD/ERD, cùng lý do với entry bên dưới.
+
+### Validation
+
+- `npx tsc --noEmit` và `npx vitest run src/lib/run-stream` trong repo FE: 8 test pass, gồm run Copilot bỏ một bài ở shortlist và H4, và run Full kiểm tra `plan.locked` nằm trong `r1-experiment`, trước `node.created` đầu tiên.
+- Chạy trọn luồng trên FE thật (Playwright, desktop và màn hình điện thoại, Copilot): không có lỗi console.
+
 ## 2026-10-06 — Contract event stream cho research run (DRAFT)
 
 ### Added
