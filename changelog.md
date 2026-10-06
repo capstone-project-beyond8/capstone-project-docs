@@ -4,6 +4,19 @@ Lịch sử thay đổi và registry của toàn bộ tài liệu canonical tron
 `capstone-project-docs`. Các đường dẫn bên dưới là đường dẫn tương đối từ
 repository root.
 
+## 2026-10-06 — Contract event stream cho research run (DRAFT)
+
+### Added
+
+- [Research run event stream](research-run-event-stream.md): contract giữa Platform BE và FE cho workspace của research run. Nội dung gồm endpoint SSE `GET …/runs/{runId}/events` (resume bằng `Last-Event-ID`), lệnh trả lời gate, pause/resume, envelope event, toàn bộ danh mục event theo 7 stage (Data, Understand, Hypothesize, Experiment, Interpret, Report, Write), điểm dừng theo 4 review mode và cách ánh xạ với `research_runs.status`, `frame_reviews`, `run_artifacts` hiện có.
+- Lý do: FE đã dựng workspace từ event (đang dùng mock phát đúng contract này), nên BE và Popper cần một spec chung để phát event thật.
+- Chưa sửa BRD/PRD/ERD: contract đề xuất thêm `review_mode`, bảng event và gate tổng quát; các thay đổi này cần team BE xác nhận trước khi đưa vào tài liệu canonical.
+
+### Validation
+
+- Đối chiếu từng event với `ai-research-platform-fe/src/lib/run-stream/contract.ts`.
+- `npx vitest run src/lib/run-stream` trong repo FE: 7 test pass, gồm phát trọn một run Auto và một run Copilot có bỏ hypothesis theo đúng thứ tự gate trong tài liệu.
+
 ## 2026-10-02 — Conceptual ERD: chỉ vẽ cho Platform BE
 
 ### Changed
