@@ -584,10 +584,27 @@ Checklist:
 
 ---
 
-## 13. Việc FE sẽ làm khi Platform BE xong
+## 13. Phía FE: đã nối sẵn, chờ Platform BE
 
-- Thay `MockRun` bằng client thật trong `run-store.ts`: `POST /runs`, rồi `GET /events?after=` cho tới khi hết, rồi `new EventSource("…/events/stream?after=<last>", { withCredentials: true })`. Bật bằng `NEXT_PUBLIC_RUN_STREAM_SOURCE`.
-- `answerGate`, `pause` và `resume` gọi mục 3.5 và 3.6 (kèm CSRF), hiện lỗi bằng toast theo `error.code`.
-- Thêm `maxLength` 1000 cho ô topic và giới hạn 6 field.
-- Hiện `reason` khi run Failed, và màn chờ khi run còn `queued`.
-- Ẩn nút tốc độ 1×/2×/4× khi chạy với BE thật.
+FE đã viết sẵn client theo tài liệu này. Bật bằng `NEXT_PUBLIC_RUN_STREAM_SOURCE=api`; mặc định vẫn là `mock` cho tới khi Platform BE xong.
+
+**Đã làm**
+
+- [`fetch-runs.ts`](../ai-research-platform-fe/src/lib/api/services/fetch-runs.ts): `POST /runs` với `topic`, `domains`, `review_mode`; `GET /events?after=&limit=`; `POST /gates/{gate_id}`; `POST /pause`, `POST /resume`. `RunItem` có thêm `label`, `topic`, `domains`, `review_mode`, `last_seq`; `RunStatus` có thêm `paused`.
+- [`run-events.ts`](../ai-research-platform-fe/src/lib/realtime/run-events.ts): đọc hết event đã lưu qua `GET /events` (trang 500), rồi mở `EventSource(".../events/stream?after=<seq cuối>", { withCredentials: true })`.
+  - Mất kết nối: đóng stream, lấy bù bằng `GET /events?after=`, rồi nối lại sau 1, 2, 5, 10, 30 giây.
+  - `run-ended`: đóng. `session-ended` hoặc 401: về trang đăng nhập. 403 hoặc 404: dừng và hiện toast.
+  - Chỉ kiểm tra envelope (`seq`, `run_id`, `ts`, `type`, `payload`). `stage_key` hoặc `actor` là `null` đều được chấp nhận.
+- [`api-run.ts`](../ai-research-platform-fe/src/lib/run-stream/api-run.ts) và [`run-store.ts`](../ai-research-platform-fe/src/lib/run-stream/run-store.ts): tạo run, lấy `id` và `label` từ BE. Gặp `RUN_ACTIVE` thì hiện toast rồi mở run đang chạy. Lỗi API hiện bằng toast với `message` của BE.
+- **Mở lại sau khi reload:** FE gọi `GET /runs?limit=1` và dùng run mới nhất có `topic`. Nếu run còn active thì đọc lại event rồi nối SSE; nếu đã xong thì chỉ đọc lại. Vì vậy `GET /runs` phải sắp mới nhất trước và trả `topic`, `label`, `status`.
+- Run cũ có `topic` trong "Past runs" mở thẳng trong workspace và dựng lại từ event.
+- **UI:** trạng thái chờ khi bấm Start và khi trả lời gate; màn chờ khi run chưa có stage nào; run Failed hiện `reason` của `run.status`. Ô topic giới hạn 1000 ký tự; tối đa 6 field, mỗi field 2–60 ký tự. Nút 1×/2×/4× chỉ có khi chạy mock.
+- Experiment, Interpret, Report và Write hiện trên UI nhưng bị khoá, với nhãn "Coming soon".
+
+**Đã thử:** chạy trọn luồng trên FE thật với một BE giả theo đúng các endpoint 3.1–3.6 (SSE thật, có giãn nhịp), gồm happy case, pause và resume, reload giữa chừng (nối lại từ `after` đúng chỗ, không lặp event), trả lời gate sau reload, run fail giữa chừng (U4, U5), và mở lại run đã xong (H11). Không có lỗi console.
+
+**Còn lại sau khi Platform BE xong**
+
+- Đặt `NEXT_PUBLIC_RUN_STREAM_SOURCE=api` và chạy lại mục 10 với BE thật.
+- Đạt rồi mới bỏ mock của topic → hypothesis (`discovery.ts` và stage 1–8 trong `mock-run.ts`). Lưu ý: mock của experiment và paper đang chạy tiếp từ chính stage 1–8 và bộ hypothesis H1–H4 của mock, nên phải tách ra trước.
+- Các màn hình cũ vẫn giả định run có dataset: tổng quan của Project Manager (`fetch-manager.ts` lấy context và dataset của run mới nhất), researcher overview và trang chi tiết run. Với run đi từ topic, các trường đó là `null`, nên cần sửa khi bật `api`.

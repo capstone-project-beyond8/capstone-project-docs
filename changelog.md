@@ -4,6 +4,20 @@ Lịch sử thay đổi và registry của toàn bộ tài liệu canonical tron
 `capstone-project-docs`. Các đường dẫn bên dưới là đường dẫn tương đối từ
 repository root.
 
+## 2026-10-06 — FE nối sẵn API cho luồng topic → hypothesis, chờ Platform BE (DRAFT)
+
+### Changed
+
+- [Platform BE handoff](be-handoff-topic-to-hypothesis.md), mục 13: đổi từ "việc FE sẽ làm" thành những gì FE đã làm. Gồm client cho mục 3.1–3.6, cách đọc lại event rồi nối SSE, cách mở lại run sau reload (`GET /runs?limit=1`, nên `GET /runs` phải sắp mới nhất trước và trả `topic`, `label`, `status`), và các việc còn lại khi BE xong.
+- Repo FE: chọn nguồn run bằng `NEXT_PUBLIC_RUN_STREAM_SOURCE` (`mock` mặc định, hoặc `api`). Mock của topic → hypothesis giữ lại cho tới khi BE chạy qua checklist. Experiment, Interpret, Report và Write hiện trên UI ở dạng khoá.
+- Không cần sửa BRD/PRD/ERD: chưa đổi requirement hay contract, chỉ nối FE theo tài liệu đã có.
+
+### Validation
+
+- Repo FE: `npx tsc --noEmit`; `npx biome check` không có lỗi trên các file đã sửa; `npx vitest run` 184 test pass, gồm 5 test mới cho SSE (`run-events.test.ts`).
+- Playwright trên FE thật, chế độ `mock`: trọn luồng trên desktop và điện thoại, không lỗi console, so khớp với ảnh chụp trước khi sửa.
+- Playwright trên FE thật, chế độ `api` với một BE giả theo mục 3.1–3.6: happy case, pause và resume, reload giữa chừng, gate sau reload, run fail giữa chừng, mở lại run đã xong. Không lỗi console, không request lỗi.
+
 ## 2026-10-06 — Handoff cho luồng topic → hypothesis: engine và Platform BE (DRAFT)
 
 ### Added
